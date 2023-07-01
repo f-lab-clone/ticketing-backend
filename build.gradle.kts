@@ -6,8 +6,6 @@ plugins {
 	kotlin("jvm") version "1.8.21"
 	kotlin("plugin.spring") version "1.8.21"
 	kotlin("plugin.jpa") version "1.8.21"
-	kotlin("plugin.allopen") version "1.6.21"
-	kotlin("plugin.noarg") version "1.6.21"
 }
 
 group = "com.example"
@@ -44,9 +42,13 @@ tasks.withType<Test> {
 }
 
 allOpen {
-	annotation("javax.persistence.Entity")
+	annotation("jakarta.persistence.Entity")
+	annotation("jakarta.persistence.MappedSuperclass")
+	annotation("jakarta.persistence.Embeddable")
 }
 
 noArg {
-	annotation("javax.persistence.Entity")
+	annotation("jakarta.persistence.Entity")
+	annotation("jakarta.persistence.MappedSuperclass")
+	annotation("jakarta.persistence.Embeddable")
 }
