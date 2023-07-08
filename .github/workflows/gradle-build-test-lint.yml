@@ -20,8 +20,8 @@ jobs:
       - name: Build And Test with Gradle
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
         with:
-          arguments: build -x ktlintMainSourceSetCheck -x ktlintTestSourceSetCheck
-          
+          arguments: build -x ktlintMainSourceSetCheck -x ktlintTestSourceSetCheck -x ktlintKotlinScriptCheck
+
       - name: Ktlint check
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
         with:
