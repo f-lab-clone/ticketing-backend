@@ -76,13 +76,13 @@ subprojects {
 }
 
 tasks.jacocoTestReport {
-
     dependsOn(tasks.test)
+
     reports {
-        html.setEnabled(true)
-        csv.setEnabled(false)
-        xml.setEnabled(true)
-        html.destination = File("${rootProject.rootDir}/jacocoRepost")Z
+        html.required.set(true)
+        xml.required.set(true)
+        csv.required.set(false)
+        html.outputLocation.set(layout.buildDirectory.dir("${rootProject.rootDir}/jacocoReport"))
     }
 
     finalizedBy(tasks.jacocoTestCoverageVerification)
