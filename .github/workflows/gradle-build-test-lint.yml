@@ -1,9 +1,6 @@
 name: Gradlew build-test-ktlint
 
-on:
-  pull_request:
-  push:
-    branches: [main]
+on: [push]
 
 jobs:
   build:
@@ -16,16 +13,41 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@ccb4328a959376b642e027874838f60f8e596de3
 
-      - name: Build And Test with Gradle
+      - name: Build 
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
         with:
-          arguments: build -x ktlintMainSourceSetCheck -x ktlintTestSourceSetCheck -x ktlintKotlinScriptCheck
+          arguments: bootJar
 
       - name: Ktlint check
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
+        if: always()
         with:
           arguments: ktlintCheck
+
+      - name: Test
+        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
+        if: always()
+        with:
+          arguments: test -x jacocoTestReport
+
+      - name: Jacoco Coverage Report
+        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
+        if: always()
+        with:
+          arguments: jacocoTestReport -x test -x jacocoTestCoverageVerification
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        if: always()
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./build/reports/jacoco/test/jacocoTestReport.xml
+
+      - name: Jacoco Coverage Verification
+        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
+        if: always()
+        with:
+          arguments: jacocoTestCoverageVerification
