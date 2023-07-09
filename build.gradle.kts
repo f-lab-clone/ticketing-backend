@@ -79,10 +79,10 @@ tasks.jacocoTestReport {
 
     dependsOn(tasks.test)
     reports {
-        html.isEnabled = true
-        csv.isEnabled = false
-        xml.isEnabled = true
-        html.destination = File("${rootProject.rootDir}/jacocoRepost")
+        html.setEnabled(true)
+        csv.setEnabled(false)
+        xml.setEnabled(true)
+        html.destination = File("${rootProject.rootDir}/jacocoRepost")Z
     }
 
     finalizedBy(tasks.jacocoTestCoverageVerification)
