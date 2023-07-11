@@ -10,7 +10,9 @@ class PerformanceController(private val performanceService: PerformanceService) 
 
     @PostMapping
     fun createPerformance(@RequestBody request: PerformanceCreateRequest): ResponseEntity<PerformanceResponse> {
-        val performance = performanceService.createPerformance(request.name, request.date, request.time, request.price)
+        val performance = performanceService.createPerformance(
+            request.name, request.date, request.bookingStartTime, request.bookingEndTime
+        )
         val response = PerformanceResponse(
             id = performance.id!!,
             title = performance.title
