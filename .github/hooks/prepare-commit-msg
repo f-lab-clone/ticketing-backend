@@ -5,7 +5,7 @@ echo "prepare-commit-msg hook script is running"
 commit_template_file=$(git config commit.template)
 
 if [ -z "$commit_template_file" ]; then
-  echo "Commit template is not configured. Please set the commit.template configuration."
+  echo "Commit template is not configured. Please set the commit.template configuration. (git config --local commit.template commit-msg-template.txt)"
   exit 1
 fi
 
