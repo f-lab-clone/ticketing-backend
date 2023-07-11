@@ -36,7 +36,7 @@ class User(name: String, email: String, password: String,authority : Authority) 
         protected set
 
     @Column(nullable = false)
-    var password: String = password
+    var pw: String = password
         protected set
 
     @Column(nullable = false)
@@ -49,7 +49,7 @@ class User(name: String, email: String, password: String,authority : Authority) 
         return authority
     }
 
-    override fun getPassword(): String=password
+    override fun getPassword(): String=pw
 
     override fun getUsername(): String = id.toString()
 
