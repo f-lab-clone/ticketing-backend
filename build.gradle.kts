@@ -55,7 +55,7 @@ noArg {
 }
 
 val installLocalGitHook = tasks.register<Copy>("installLocalGitHook") {
-    from("${rootProject.rootDir}/scripts/git-hooks")
+    from("${rootProject.rootDir}/.github/hooks")
     into(File("${rootProject.rootDir}/.git/hooks"))
 
     eachFile {
