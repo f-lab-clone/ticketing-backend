@@ -1,33 +1,64 @@
 package com.group4.ticketingservice.entity
 
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import com.group4.ticketingservice.Authority
+import com.group4.ticketingservice.controller.SignUpRequest
+import jakarta.persistence.*
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.crypto.password.PasswordEncoder
 
 
 @Entity
 @Table(name = "users")
 
-class User(name: String, id: String, password: String) : BaseEntity() {
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+class User(name: String, email: String, password: String,authority : Authority) : BaseTimeEntity(), UserDetails {
+    companion object{
+        fun from(request : SignUpRequest, encoder : PasswordEncoder)=User(
+                name = request.name,
+                email = request.email,
+                password = encoder.encode(request.password),
+                authority = Authority.USER
+        )
+    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     var id: Long? = null
 
     @Column(nullable = false)
     var name: String = name
-        protected  set
+        protected set
 
     @Column(nullable = false)
-    var loginId: String = id
-        protected  set
+    var email: String = email
+        protected set
 
     @Column(nullable = false)
     var password: String = password
-        protected  set
+        protected set
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    var role : Authority =authority
+
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
+        val authority= mutableListOf<GrantedAuthority>()
+        authority.add(SimpleGrantedAuthority(role.toString()))
+        return authority
+    }
+
+    override fun getPassword(): String=password
+
+    override fun getUsername(): String = id.toString()
+
+    override fun isAccountNonExpired(): Boolean = true
+
+    override fun isAccountNonLocked(): Boolean = true
+
+    override fun isCredentialsNonExpired(): Boolean =true
+
+    override fun isEnabled(): Boolean = true
 
 }
