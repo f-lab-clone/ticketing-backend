@@ -1,7 +1,7 @@
 package com.group4.ticketingservice.entity
 
 
-import com.group4.ticketingservice.Authority
+import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.controller.SignUpRequest
 import jakarta.persistence.*
 import org.springframework.security.core.GrantedAuthority
