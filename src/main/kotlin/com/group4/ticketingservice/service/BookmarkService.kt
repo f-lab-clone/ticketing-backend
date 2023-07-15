@@ -5,6 +5,7 @@ import com.group4.ticketingservice.model.Bookmark
 import com.group4.ticketingservice.repository.BookmarkRepository
 import org.modelmapper.ModelMapper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
@@ -13,12 +14,12 @@ class BookmarkService @Autowired constructor(
     val modelMapper: ModelMapper
 ) {
 
-    fun create(boardFormDto: BookmarkFromdto): Int? {
-        return bookmarkRepository.save(modelMapper.map(boardFormDto, Bookmark::class.java)).id
+    fun create(bookmarkFormDto: BookmarkFromdto): Int? {
+        return bookmarkRepository.save(modelMapper.map(bookmarkFormDto, Bookmark::class.java)).id
     }
 
     fun get(id: Long): Bookmark? {
-        return bookmarkRepository.findById(id).get()
+        return bookmarkRepository.findByIdOrNull(id)
     }
 
     fun delete(id: Long) {
