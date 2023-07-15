@@ -6,7 +6,8 @@ data class PerformanceCreateRequest(
     val title: String,
     val date: LocalDateTime,
     val bookingStartTime: LocalDateTime,
-    val bookingEndTime: LocalDateTime
+    val bookingEndTime: LocalDateTime,
+    val maxAttendees: Int
 )
 
 data class PerformanceResponse(
@@ -14,5 +15,6 @@ data class PerformanceResponse(
     val title: String,
     val date: LocalDateTime,
     val bookingStartTime: LocalDateTime,
-    val bookingEndTime: LocalDateTime
+    val bookingEndTime: LocalDateTime,
+    val maxAttendees: Int
 )

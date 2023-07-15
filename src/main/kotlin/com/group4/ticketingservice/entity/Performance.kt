@@ -1,10 +1,14 @@
 package com.group4.ticketingservice.entity
 
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.Column
 import java.time.LocalDateTime
-import javax.persistence.*
 
 @Entity
-data class Performance(
+class Performance(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,

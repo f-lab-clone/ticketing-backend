@@ -1,22 +1,45 @@
 package com.group4.ticketingservice.dto
 
+import com.group4.ticketingservice.entity.Booking
+import com.group4.ticketingservice.service.BookingService
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.DeleteMapping
+
 @RestController
 @RequestMapping("/bookings")
-class BookingController(private val bookingService: BookingService) {
+class BookingController(val bookingService: BookingService) {
     @PostMapping
     fun createBooking(@RequestBody request: BookingCreateRequest): ResponseEntity<BookingResponse> {
-        val booking = bookingService.createBooking(request.performanceId, request.userId, request.seatIds)
+        val booking: Booking = bookingService.createBooking(
+            request.performanceId,
+            request.userId
+        )
         val response = BookingResponse(
             id = booking.id!!,
-            performanceId = booking.performanceId,
-            userId = booking.userId,
-            seatIds = booking.seatId
+            performanceId = booking.performance.id!!,
+            userId = booking.user.id!!,
+            bookedAt = booking.bookedAt
         )
         return ResponseEntity.ok(response)
     }
 
     @GetMapping("/{id}")
     fun getBooking(@PathVariable id: Long): ResponseEntity<BookingResponse> {
+        val booking = bookingService.getBooking(id)
+        val response = BookingResponse(
+            id = booking.id!!,
+            performanceId = booking.performance.id!!,
+            userId = booking.user.id!!,
+            bookedAt = booking.bookedAt
+        )
+        return ResponseEntity.ok(response)
     }
 
     @PutMapping("/{id}")
@@ -27,8 +50,8 @@ class BookingController(private val bookingService: BookingService) {
         val booking = bookingService.updateBooking(id, request.performanceId)
         val response = BookingResponse(
             id = booking.id!!,
-            user = booking.user,
-            performance = booking.performance,
+            performanceId = booking.performance.id!!,
+            userId = booking.user.id!!,
             bookedAt = booking.bookedAt
         )
         return ResponseEntity.ok(response)

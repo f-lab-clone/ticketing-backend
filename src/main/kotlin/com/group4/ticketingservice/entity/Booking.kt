@@ -1,10 +1,16 @@
 package com.group4.ticketingservice.entity
 
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Column
 import java.time.LocalDateTime
-import javax.persistence.*
 
 @Entity
-data class Booking(
+class Booking(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,

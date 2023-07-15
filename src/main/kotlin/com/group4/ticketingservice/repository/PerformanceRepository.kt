@@ -1,6 +1,8 @@
 package com.group4.ticketingservice.repository
 
+import com.group4.ticketingservice.entity.Performance
 import org.springframework.data.jpa.repository.JpaRepository
-import com.group4.ticketingservice.model.Performance
+import org.springframework.stereotype.Repository
 
-interface PerformanceRepository: JpaRepository<Performance, Long>
+@Repository
+interface PerformanceRepository : JpaRepository<Performance, Long>

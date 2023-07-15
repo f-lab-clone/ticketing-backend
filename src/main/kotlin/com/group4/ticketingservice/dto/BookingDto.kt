@@ -1,12 +1,10 @@
 package com.group4.ticketingservice.dto
 
-import com.group4.ticketingservice.model.Performance
-import com.group4.ticketingservice.model.User
+import java.time.LocalDateTime
 
 data class BookingCreateRequest(
-    val performance: Performance,
-    val user: User,
-    val seatIds: List<Long>
+    val performanceId: Long,
+    val userId: Long
 )
 
 data class BookingUpdateRequest(
@@ -15,9 +13,7 @@ data class BookingUpdateRequest(
 
 data class BookingResponse(
     val id: Long,
-    val performance: Performance,
-    val user: User,
-    val seatIds: List<Long>,
+    val performanceId: Long,
+    val userId: Long,
     val bookedAt: LocalDateTime
 )
-
