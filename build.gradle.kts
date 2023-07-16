@@ -34,7 +34,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 // 	implementation("org.modelmapper:modelmapper:2.4.2")
     implementation("mysql:mysql-connector-java:8.0.33")
-
 }
 
 tasks.withType<KotlinCompile> {
