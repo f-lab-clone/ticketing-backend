@@ -26,15 +26,15 @@ class BookingService(
         return bookingRepository.save(booking)
     }
 
-    fun getBooking(id: Long): Booking {
-        return bookingRepository.findById(id).orElseThrow {
+    fun getBooking(bookingId: Long): Booking {
+        return bookingRepository.findById(bookingId).orElseThrow {
             IllegalArgumentException("Booking not found")
         }
     }
 
     @Transactional
-    fun updateBooking(id: Long, performanceId: Long): Booking {
-        val booking: Booking = bookingRepository.findById(id).orElseThrow {
+    fun updateBooking(bookingId: Long, performanceId: Long): Booking {
+        val booking: Booking = bookingRepository.findById(bookingId).orElseThrow {
             IllegalArgumentException("Booking not found")
         }
         val performance = performanceRepository.findById(performanceId).orElseThrow {
