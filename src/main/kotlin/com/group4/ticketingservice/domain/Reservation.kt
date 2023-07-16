@@ -8,7 +8,8 @@ import java.time.LocalDateTime
 data class Reservation(
         @Id
 //        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val uid: String = "",
+        val userId: Int = 0,
+        val showId: Int = 0,
         val name: String = "",
         val startTime: LocalDateTime = LocalDateTime.now(),
         val endTime: LocalDateTime = LocalDateTime.now(),

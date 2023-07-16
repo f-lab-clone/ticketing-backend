@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class ReservationController(@Autowired private val ReservationRepository: ReservationRepository) {
 
-    @GetMapping("/read")
-    fun getUsers(): List<Reservation> {
+    @GetMapping("/reservation")
+    fun getReservations(): List<Reservation> {
         return ReservationRepository.findAll()
     }
 
-    @PostMapping("/write")
-    fun createUser(@RequestBody user: Reservation): Reservation {
+    @PostMapping("/reservation")
+    fun reservePerformance(@RequestBody user: Reservation): Reservation {
         return ReservationRepository.save(user)
     }
 }
