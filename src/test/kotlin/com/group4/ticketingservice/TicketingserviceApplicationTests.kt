@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest
 class TicketingserviceApplicationTests {
 
     @Test
-    fun contextLoads() {
+    fun contextLoads(): Boolean {
+        return true
     }
 }
