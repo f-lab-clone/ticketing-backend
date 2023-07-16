@@ -1,7 +1,7 @@
 package com.group4.ticketingservice.bookmark
 
 import com.group4.ticketingservice.dto.BookmarkFromdto
-import com.group4.ticketingservice.model.Bookmark
+import com.group4.ticketingservice.entity.Bookmark
 import com.group4.ticketingservice.repository.BookmarkRepository
 import com.group4.ticketingservice.service.BookmarkService
 import io.mockk.every
