@@ -44,9 +44,7 @@ class BookmarkServiceTest {
     fun `bookmarkService_getList() should return emptyList`() {
         every { repository.findAll() } returns listOf()
 
-        bookmarkService.getList()
-
-        verify(exactly = 1) { repository.findAll() }
+        assert(bookmarkService.getList() == listOf<Bookmark>())
     }
 
     @Test
