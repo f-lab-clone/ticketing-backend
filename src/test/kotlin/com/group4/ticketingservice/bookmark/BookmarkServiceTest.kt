@@ -41,6 +41,15 @@ class BookmarkServiceTest {
     }
 
     @Test
+    fun `bookmarkService_getList() should return emptyList`() {
+        every { repository.findAll() } returns listOf()
+
+        bookmarkService.getList()
+
+        verify(exactly = 1) { repository.findAll() }
+    }
+
+    @Test
     fun `bookmarkService_get() invoke repository_findById`() {
         every { repository.findByIdOrNull(1) } returns sampleBookmark
 
