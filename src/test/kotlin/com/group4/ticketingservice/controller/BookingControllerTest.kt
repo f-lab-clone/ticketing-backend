@@ -55,7 +55,8 @@ class BookingControllerTest(
     )
 
     @Test
-    fun createBooking() {
+    // createBooking
+    fun `POST bookings should return created booking`() {
         every { bookingService.createBooking(1, 1) } returns sampleBooking
 
         mockMvc.perform(
@@ -71,7 +72,7 @@ class BookingControllerTest(
     }
 
     @Test
-    fun getBooking() {
+    fun `GET bookings should return booking`() {
         every { bookingService.getBooking(1) } returns sampleBooking
 
         mockMvc.perform(
@@ -86,7 +87,7 @@ class BookingControllerTest(
     }
 
     @Test
-    fun updateBooking() {
+    fun `PUT bookings should return updated booking`() {
         val bookingUpdateRequest = BookingUpdateRequest(
             performanceId = 2
         )
@@ -117,7 +118,7 @@ class BookingControllerTest(
     }
 
     @Test
-    fun deleteBooking() {
+    fun `DELETE bookings should return no content`() {
         every { bookingService.deleteBooking(1) } returns Unit
 
         mockMvc.perform(

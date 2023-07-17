@@ -24,7 +24,7 @@ class PerformanceServiceTest {
     )
 
     @Test
-    fun createPerformance() {
+    fun `PerformanceService_getPerformance invoke PerformanceRepository_findById`() {
         every { performanceRepository.save(any()) } returns samplePerformance
         performanceService.createPerformance(
             title = samplePerformance.title,
