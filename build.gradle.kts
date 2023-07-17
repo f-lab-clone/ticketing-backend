@@ -92,7 +92,7 @@ tasks.jacocoTestReport {
 
 tasks.jacocoTestCoverageVerification {
 
-    val Qdomains = mutableListOf<String>()
+    var Qdomains = mutableListOf<String>()
 
     for (qPattern in 'A'..'Z') {
         Qdomains.add("*.Q$qPattern*")

@@ -17,7 +17,7 @@ class ReservationController(@Autowired private val ReservationRepository: Reserv
     }
 
     @PostMapping("/reservation")
-    fun reservePerformance(@RequestBody user: Reservation): Reservation {
-        return ReservationRepository.save(user)
+    fun reservePerformance(@RequestBody reservation: Reservation): Reservation {
+        return ReservationRepository.save(reservation)
     }
 }
