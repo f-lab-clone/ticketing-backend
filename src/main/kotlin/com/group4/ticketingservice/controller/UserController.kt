@@ -1,6 +1,8 @@
 package com.group4.ticketingservice.controller
 
 
+import com.group4.ticketingservice.dto.SignInRequest
+import com.group4.ticketingservice.dto.SignUpRequest
 import com.group4.ticketingservice.dto.UserDto
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.service.UserService
@@ -46,13 +48,3 @@ class UserController(private val userService: UserService) {
 
 }
 
-data class SignUpRequest(
-        val email: String,
-        val name: String,
-        val password: String)
-
-data class SignInRequest(
-        val email: String,
-        val password: String
-
-)
