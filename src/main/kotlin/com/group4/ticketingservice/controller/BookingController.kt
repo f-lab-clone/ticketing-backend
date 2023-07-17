@@ -5,8 +5,6 @@ import com.group4.ticketingservice.dto.BookingResponse
 import com.group4.ticketingservice.dto.BookingUpdateRequest
 import com.group4.ticketingservice.entity.Booking
 import com.group4.ticketingservice.service.BookingService
-import io.mockk.InternalPlatformDsl.toStr
-import kotlinx.datetime.LocalDateTime
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -30,7 +28,7 @@ class BookingController(val bookingService: BookingService) {
             id = booking.id!!,
             performanceId = booking.performance.id!!,
             userId = booking.user.id!!,
-            bookedAt = LocalDateTime.parse(booking.bookedAt.toStr())
+            bookedAt = booking.bookedAt
         )
         return ResponseEntity.ok(response)
     }
@@ -42,7 +40,7 @@ class BookingController(val bookingService: BookingService) {
             id = booking.id!!,
             performanceId = booking.performance.id!!,
             userId = booking.user.id!!,
-            bookedAt = LocalDateTime.parse(booking.bookedAt.toStr())
+            bookedAt = booking.bookedAt
         )
         return ResponseEntity.ok(response)
     }
@@ -57,7 +55,7 @@ class BookingController(val bookingService: BookingService) {
             id = booking.id!!,
             performanceId = booking.performance.id!!,
             userId = booking.user.id!!,
-            bookedAt = LocalDateTime.parse(booking.bookedAt.toStr())
+            bookedAt = booking.bookedAt
         )
         return ResponseEntity.ok(response)
     }

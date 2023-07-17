@@ -10,7 +10,6 @@ plugins {
     kotlin("plugin.noarg") version "1.6.21"
     id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
     id("jacoco")
-    kotlin("plugin.serialization") version "1.8.21"
 }
 
 group = "com.example"
@@ -30,12 +29,9 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.ninja-squad:springmockk:4.0.2")
+    implementation("com.google.code.gson:gson:2.10.1")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
-// 	runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-// 	implementation("org.modelmapper:modelmapper:2.4.2")
 }
 
 tasks.withType<KotlinCompile> {

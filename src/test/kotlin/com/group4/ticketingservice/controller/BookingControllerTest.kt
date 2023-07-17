@@ -1,5 +1,6 @@
 package com.group4.ticketingservice.controller
 
+import com.google.gson.Gson
 import com.group4.ticketingservice.dto.BookingCreateRequest
 import com.group4.ticketingservice.dto.BookingUpdateRequest
 import com.group4.ticketingservice.entity.Booking
@@ -9,8 +10,6 @@ import com.group4.ticketingservice.service.BookingService
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -54,15 +53,15 @@ class BookingControllerTest(
         performance = samplePerformance
     )
 
-    @Test
     // createBooking
+    @Test
     fun `POST bookings should return created booking`() {
         every { bookingService.createBooking(1, 1) } returns sampleBooking
 
         mockMvc.perform(
             post("/bookings")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Json.encodeToString(sampleBookingCreateRequest))
+                .content(Gson().toJson(sampleBookingCreateRequest))
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -108,7 +107,7 @@ class BookingControllerTest(
         mockMvc.perform(
             put("/bookings/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Json.encodeToString(bookingUpdateRequest))
+                .content(Gson().toJson(bookingUpdateRequest))
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
