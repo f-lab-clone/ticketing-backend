@@ -4,7 +4,7 @@ import com.google.gson.GsonBuilder
 import com.group4.ticketingservice.dto.PerformanceCreateRequest
 import com.group4.ticketingservice.entity.Performance
 import com.group4.ticketingservice.service.PerformanceService
-import com.group4.ticketingservice.util.LocalDateTimeConverter
+import com.group4.ticketingservice.util.DateTimeConverter
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
@@ -48,7 +48,7 @@ class PerformanceControllerTest(
     @Test
     fun `POST performances should return created performance`() {
         every { performanceService.createPerformance(any(), any(), any(), any(), any()) } returns samplePerformance
-        val gson = GsonBuilder().registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeConverter()).create()
+        val gson = GsonBuilder().registerTypeAdapter(LocalDateTime::class.java, DateTimeConverter()).create()
 
         mockMvc.perform(
             post("/performances")
