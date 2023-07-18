@@ -38,7 +38,8 @@
 			"extensions": [
 				"mathiasfrohlich.Kotlin",
 				"GitHub.copilot",
-				"vscjava.vscode-gradle"
+				"vscjava.vscode-gradle",
+				"ritwickdey.LiveServer"
 			]
 		}
 	}
