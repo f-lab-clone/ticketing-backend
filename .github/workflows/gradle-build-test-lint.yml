@@ -3,7 +3,7 @@ name: Gradlew build-test-ktlint
 on: [push]
 
 jobs:
-  validation:
+  set-up:
     runs-on: ubuntu-latest
 
     steps:
