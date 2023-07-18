@@ -28,7 +28,11 @@
 	// Configure tool-specific properties.
 	"customizations": {
 		"vscode": {
-			"extensions": []
+			"extensions": [
+				"mathiasfrohlich.Kotlin",
+				"GitHub.copilot",
+				"vscjava.vscode-gradle"
+			]
 		}
 	}
 
