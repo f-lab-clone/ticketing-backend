@@ -18,12 +18,12 @@ class BookmarkService @Autowired constructor(
         return bookmarkRepository.save(modelMapper.map(bookmarkFormDto, Bookmark::class.java)).id
     }
 
-    fun get(id: Long): Bookmark? {
-        return bookmarkRepository.findByIdOrNull(id)
+    fun get(id: Int): Bookmark? {
+        return bookmarkRepository.findByIdOrNull(id.toLong())
     }
 
-    fun delete(id: Long) {
-        bookmarkRepository.deleteById(id)
+    fun delete(id: Int) {
+        bookmarkRepository.deleteById(id.toLong())
     }
     fun getList(): List<Bookmark> {
         return bookmarkRepository.findAll()

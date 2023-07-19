@@ -29,7 +29,7 @@ class BookmarkController @Autowired constructor(val bookmarkService: BookmarkSer
 
     // 특정 북마크 조회하기
     @GetMapping("/{id}")
-    fun getBookmark(@PathVariable id: Long): ResponseEntity<out Any?> {
+    fun getBookmark(@PathVariable id: Int): ResponseEntity<out Any?> {
         try {
             val foundBookmark = bookmarkService.get(id)
             return ResponseEntity.status(HttpStatus.OK).body(foundBookmark ?: "null")
@@ -40,7 +40,7 @@ class BookmarkController @Autowired constructor(val bookmarkService: BookmarkSer
 
     // 북마크 삭제
     @DeleteMapping("/{id}")
-    fun deleteBookmark(@PathVariable id: Long): ResponseEntity<Any> {
+    fun deleteBookmark(@PathVariable id: Int): ResponseEntity<Any> {
         bookmarkService.delete(id)
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
