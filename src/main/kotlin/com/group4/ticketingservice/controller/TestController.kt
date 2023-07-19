@@ -16,14 +16,14 @@ class TestController @Autowired constructor(val testService: TestService) {
     }
 
     @GetMapping("/set")
-    fun addBookmark(): ResponseEntity<Any> {
+    fun add(): ResponseEntity<Any> {
         val userFormDto = UserFromdto(1, 1)
         val created = testService.create(userFormDto)
         return ResponseEntity.ok().body(created)
     }
 
     @GetMapping("/list")
-    fun getBookmarks(): ResponseEntity<Any> {
+    fun get(): ResponseEntity<Any> {
         return ResponseEntity.ok().body(testService.getList())
     }
 }
