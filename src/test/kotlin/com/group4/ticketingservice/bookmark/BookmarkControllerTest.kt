@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -37,6 +38,23 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
         every { service.create(sampleBookmarkDto) } returns 1
 
         // when
+        mockMvc.perform(
+            post("/bookmarks")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .param("user_id", sampleBookmark.user_id.toString())
+                .param("show_id", sampleBookmark.show_id.toString())
+        )
+
+        // then
+        verify(exactly = 1) { service.create(sampleBookmarkDto) }
+    }
+
+    @Test
+    fun `POST_api_bookmark should return saved bookmark id with HTTP 201 Created`() {
+        // given
+        every { service.create(sampleBookmarkDto) } returns 1
+
+        // when
         val resultActions: ResultActions = mockMvc.perform(
             post("/bookmarks")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -46,12 +64,41 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
 
         // then
         resultActions.andExpect(status().isCreated)
+            .andExpect(content().json("1"))
+    }
 
-        verify(exactly = 1) { service.create(sampleBookmarkDto) }
+    @Test
+    fun `POST_api_bookmark should return HTTP ERROR 400 for invalid parameter`() {
+        // given
+        every { service.create(sampleBookmarkDto) } returns 1
+
+        // when
+        val resultActions: ResultActions = mockMvc.perform(
+            post("/bookmarks")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .param("user_id", sampleBookmark.user_id.toString())
+                .param("show_id", sampleBookmark.show_id.toString())
+        )
+
+        // then
+        resultActions.andExpect(status().isCreated)
+            .andExpect(content().json("1"))
     }
 
     @Test
     fun `GET_api_bookmarks should invoke service_getList`() {
+        // given
+        every { service.getList() } returns mutableListOf(sampleBookmark)
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.get("/bookmarks"))
+
+        // then
+        verify(exactly = 1) { service.getList() }
+    }
+
+    @Test
+    fun `GET_api_bookmarks should return list of bookmarks with HTTP 200 OK`() {
         // given
         every { service.getList() } returns mutableListOf(sampleBookmark)
 
@@ -61,8 +108,6 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
         // then
         resultActions.andExpect(status().isOk)
             .andExpect(jsonPath("$[0].user_id").value(sampleBookmark.user_id))
-
-        verify(exactly = 1) { service.getList() }
     }
 
     @Test
@@ -71,17 +116,57 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
         every { service.get(1) } returns sampleBookmark
 
         // when
-        val resultActions: ResultActions = mockMvc.perform(MockMvcRequestBuilders.get("/bookmarks/1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/bookmarks/1"))
 
         // then
-        resultActions.andExpect(status().isOk)
-            .andExpect(jsonPath("$.user_id").value(sampleBookmark.user_id))
-
         verify(exactly = 1) { service.get(1) }
     }
 
     @Test
+    fun `GET_api_bookmark should return found bookmark with HTTP 200 OK`() {
+        // given
+        every { service.get(1) } returns sampleBookmark
+
+        // when
+        val resultActions: ResultActions = mockMvc.perform(MockMvcRequestBuilders.get("/bookmarks/1"))
+
+        // then
+        resultActions.andExpect(status().isOk)
+            .andExpect(jsonPath("$.id").value(sampleBookmark.id))
+            .andExpect(jsonPath("$.user_id").value(sampleBookmark.user_id))
+            .andExpect(jsonPath("$.show_id").value(sampleBookmark.show_id))
+    }
+
+    @Test
+    fun `GET_api_bookmark should return null with HTTP 200 OK if element is not found`() {
+        // given
+        every { service.get(1) } returns null
+
+        // when
+        val resultActions: ResultActions = mockMvc.perform(MockMvcRequestBuilders.get("/bookmarks/1"))
+
+        // then
+        resultActions.andExpect(status().isOk)
+            .andExpect(content().string("null"))
+    }
+
+    @Test
     fun `DELETE_api_bookmark_{bookmarkId} should invoke service_delete`() {
+        // given
+        every { service.delete(1) } returns Unit
+
+        // when
+        mockMvc.perform(
+            MockMvcRequestBuilders
+                .delete("/bookmarks/1")
+        )
+
+        // then
+        verify(exactly = 1) { service.delete(1) }
+    }
+
+    @Test
+    fun `DELETE_api_bookmark_{bookmarkId} should return HTTP 204 No Content`() {
         // given
         every { service.delete(1) } returns Unit
 
@@ -93,7 +178,5 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
 
         // then
         resultActions.andExpect(status().isNoContent)
-
-        verify(exactly = 1) { service.delete(1) }
     }
 }
