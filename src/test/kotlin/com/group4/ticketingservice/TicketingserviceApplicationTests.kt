@@ -2,8 +2,7 @@ package com.group4.ticketingservice
 
 import org.junit.jupiter.api.Test
 
-// @SpringBootTest
-class TicketingserviceApplicationTests {
+class TicketingserviceApplicationTests : AbstractIntegrationTest() {
 
     @Test
     fun contextLoads() {

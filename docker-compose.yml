@@ -20,7 +20,7 @@ services:
 
     networks:
       - spring-network
-
+      
   api:
     container_name: api
     build:

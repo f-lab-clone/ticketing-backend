@@ -1,5 +1,6 @@
 package com.group4.ticketingservice.controller
 
+import com.group4.ticketingservice.dto.UserFromdto
 import com.group4.ticketingservice.service.TestService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -14,7 +15,13 @@ class TestController @Autowired constructor(val testService: TestService) {
         return "Hello, World!"
     }
 
-    // 전체사용자 북마크 목록
+    @GetMapping("/set")
+    fun addBookmark(): ResponseEntity<Any> {
+        val userFormDto = UserFromdto(1, 1)
+        val created = testService.create(userFormDto)
+        return ResponseEntity.ok().body(created)
+    }
+
     @GetMapping("/list")
     fun getBookmarks(): ResponseEntity<Any> {
         return ResponseEntity.ok().body(testService.getList())
