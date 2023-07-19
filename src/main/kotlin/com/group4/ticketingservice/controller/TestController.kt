@@ -1,13 +1,22 @@
 package com.group4.ticketingservice.controller
 
+import com.group4.ticketingservice.service.TestService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class TestController {
+class TestController @Autowired constructor(val testService: TestService) {
     @GetMapping("/")
     fun index(): String {
         println("Hello, World!")
         return "Hello, World!"
+    }
+
+    // 전체사용자 북마크 목록
+    @GetMapping("/list")
+    fun getBookmarks(): ResponseEntity<Any> {
+        return ResponseEntity.ok().body(testService.getList())
     }
 }
