@@ -11,6 +11,10 @@ data class BookingUpdateRequest(
     val performanceId: Long
 )
 
+data class BookingDeleteRequest(
+    val id: Long
+)
+
 data class BookingResponse(
     val id: Long,
     val performanceId: Long,

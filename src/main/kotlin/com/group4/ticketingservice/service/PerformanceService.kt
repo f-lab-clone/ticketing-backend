@@ -25,4 +25,38 @@ class PerformanceService(
         )
         return performanceRepository.save(performance)
     }
+
+    fun getPerformance(id: Long): Performance {
+        return performanceRepository.findById(id).orElseThrow {
+            IllegalArgumentException("Performance not found")
+        }
+    }
+
+    fun updatePerformance(
+        id: Long,
+        title: String,
+        date: LocalDateTime,
+        bookingStartTime: LocalDateTime,
+        bookingEndTime: LocalDateTime,
+        maxAttendees: Int
+    ): Performance {
+        val performance = performanceRepository.findById(id).orElseThrow {
+            IllegalArgumentException("Performance not found")
+        }
+        performance.title = title
+        performance.date = date
+        performance.bookingStartTime = bookingStartTime
+        performance.bookingEndTime = bookingEndTime
+        performance.maxAttendees = maxAttendees
+
+        return performanceRepository.save(performance)
+    }
+
+    fun deletePerformance(id: Long) {
+        if (performanceRepository.existsById(id)) {
+            performanceRepository.deleteById(id)
+        } else {
+            throw IllegalArgumentException("Performance not found")
+        }
+    }
 }

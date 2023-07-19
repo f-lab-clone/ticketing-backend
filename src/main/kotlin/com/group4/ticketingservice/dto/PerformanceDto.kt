@@ -10,6 +10,10 @@ data class PerformanceCreateRequest(
     val maxAttendees: Int
 )
 
+data class PerformanceDeleteRequest(
+    val id: Long
+)
+
 data class PerformanceResponse(
     val id: Long,
     val title: String,

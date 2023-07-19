@@ -1,7 +1,9 @@
 package com.group4.ticketingservice.controller
 
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.group4.ticketingservice.dto.PerformanceCreateRequest
+import com.group4.ticketingservice.dto.PerformanceDeleteRequest
 import com.group4.ticketingservice.entity.Performance
 import com.group4.ticketingservice.service.PerformanceService
 import com.group4.ticketingservice.util.DateTimeConverter
@@ -14,7 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -44,11 +49,14 @@ class PerformanceControllerTest(
         bookingStartTime = LocalDateTime.now() + Duration.ofHours(1),
         maxAttendees = 10
     )
+    private val samplePerformanceDeleteRequest: PerformanceDeleteRequest = PerformanceDeleteRequest(
+        id = 1
+    )
+    private val gson: Gson = GsonBuilder().registerTypeAdapter(LocalDateTime::class.java, DateTimeConverter()).create()
 
     @Test
     fun `POST performances should return created performance`() {
         every { performanceService.createPerformance(any(), any(), any(), any(), any()) } returns samplePerformance
-        val gson = GsonBuilder().registerTypeAdapter(LocalDateTime::class.java, DateTimeConverter()).create()
 
         mockMvc.perform(
             post("/performances")
@@ -60,6 +68,51 @@ class PerformanceControllerTest(
             .andExpect(jsonPath("$.id").value(samplePerformance.id))
             .andExpect(jsonPath("$.title").value(samplePerformance.title))
             .andExpect(jsonPath("$.maxAttendees").value(samplePerformance.maxAttendees))
-            .andDo { println(it) }
+    }
+
+    @Test
+    fun `GET performances should return performance`() {
+        every { performanceService.getPerformance(any()) } returns samplePerformance
+        mockMvc.perform(
+            get("/performances/${samplePerformance.id}")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.id").value(samplePerformance.id))
+    }
+
+    @Test
+    fun `PUT performance should return updated performance`() {
+        every {
+            performanceService.updatePerformance(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns samplePerformance
+        mockMvc.perform(
+            put("/performances/${samplePerformance.id}")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(samplePerformanceCreateRequest))
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.id").value(samplePerformance.id))
+            .andExpect(jsonPath("$.title").value(samplePerformance.title))
+            .andExpect(jsonPath("$.maxAttendees").value(samplePerformance.maxAttendees))
+    }
+
+    @Test
+    fun `DELETE performance should return no content`() {
+        every { performanceService.deletePerformance(any()) } returns Unit
+        mockMvc.perform(
+            delete("/performances/${samplePerformanceDeleteRequest.id}")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isNoContent)
     }
 }
