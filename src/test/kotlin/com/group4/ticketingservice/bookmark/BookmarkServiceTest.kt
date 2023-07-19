@@ -33,43 +33,63 @@ class BookmarkServiceTest {
 
     @Test
     fun `bookmarkService_getList() invoke repository_findAll`() {
+        // given
         every { repository.findAll() } returns listOf(EmptyBookmark)
 
+        // when
         bookmarkService.getList()
 
+        // then
         verify(exactly = 1) { repository.findAll() }
     }
 
     @Test
     fun `bookmarkService_getList() should return emptyList`() {
+        // given
         every { repository.findAll() } returns listOf()
 
-        assert(bookmarkService.getList() == listOf<Bookmark>())
+        // when
+        val result: List<Bookmark> = bookmarkService.getList()
+
+        // then
+        verify(exactly = 1) { repository.findAll() }
+        assert(result == listOf<Bookmark>())
     }
 
     @Test
     fun `bookmarkService_get() invoke repository_findById`() {
+        // given
         every { repository.findByIdOrNull(1) } returns sampleBookmark
 
-        bookmarkService.get(1)
+        // when
+        val result: Bookmark? = bookmarkService.get(1)
 
+        // then
         verify(exactly = 1) { repository.findById(1) }
+        assert(result == sampleBookmark)
     }
 
     @Test
     fun `bookmarkService_create() invoke repository_save`() {
+        // given
         every { repository.save(any()) } returns sampleBookmark
 
+        // when
         bookmarkService.create(sampleBookmarkDto)
 
+        // then
         verify(exactly = 1) { repository.save(any()) }
     }
 
     @Test
     fun `bookmarkService_delete() invoke repository_deleteById`() {
+        // given
         every { repository.deleteById(1) } returns Unit
 
+        // when
         bookmarkService.delete(1)
+
+        // then
         verify(exactly = 1) { repository.deleteById(1) }
     }
 }
