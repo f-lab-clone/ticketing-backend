@@ -3,15 +3,15 @@ version: "3"
 services:
   db:
     container_name: mysqldb
-    image: mysql:8.0
+    image: mysql:8.0.33
     restart: "no"
     environment:
       MYSQL_ROOT_PASSWORD: test
     ports:
       - 3306:3306
     volumes:
-      - ./db/mysql/conf.d:/etc/mysql/conf.d
-      - ./db/mysql/initdb.d:/docker-entrypoint-initdb.d
+      - ./src/test/resources/db/mysql/conf.d:/etc/mysql/conf.d
+      - ./src/test/resources/db/mysql/initdb.d:/docker-entrypoint-initdb.d
     healthcheck:
       test: ['CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD']
       interval: 10s
