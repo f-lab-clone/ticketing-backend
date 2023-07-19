@@ -25,7 +25,7 @@ class TokenProvider(
 ) {
     private val signatureAlgorithm = SignatureAlgorithm.HS256
 
-    fun createKey(): Key {
+    fun  createKey(): Key {
         val secretBytes = Base64.getDecoder().decode(secretKey)
         val key = SecretKeySpec(secretBytes, signatureAlgorithm.jcaName)
         return key

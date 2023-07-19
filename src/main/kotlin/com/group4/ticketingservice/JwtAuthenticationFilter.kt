@@ -7,6 +7,7 @@ import com.group4.ticketingservice.utils.TokenProvider
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.hibernate.query.sqm.tree.SqmNode.log
 import org.springframework.core.annotation.Order
 import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -29,6 +30,13 @@ class JwtAuthenticationFilter(
                                   filterChain: FilterChain) {
 
         val token = parseBearerToken(request)
+
+        if (token == null) {
+            SecurityContextHolder.getContext().authentication = null;
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         val user = parseUserSpecification(token)
         UsernamePasswordAuthenticationToken.authenticated(user, token, user.authorities)
                 .apply { details = WebAuthenticationDetails(request) }
@@ -38,8 +46,9 @@ class JwtAuthenticationFilter(
 
     }
 
+
     private fun parseBearerToken(request: HttpServletRequest) = request.getHeader(HttpHeaders.AUTHORIZATION)
-            .takeIf { it?.startsWith("Bearer", true) ?: false }?.substring(7)
+            ?.takeIf { it?.startsWith("Bearer", true) ?: false }?.substring(7)
 
     private fun parseUserSpecification(token: String?) = (
             token?.takeIf { it.length >= 10 }
