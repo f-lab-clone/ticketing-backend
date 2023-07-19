@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController // REST API
-@RequestMapping("bookmark")
+@RequestMapping("bookmarks")
 class BookmarkController @Autowired constructor(val bookmarkService: BookmarkService) {
 
     // 북마크 등록
@@ -48,7 +48,7 @@ class BookmarkController @Autowired constructor(val bookmarkService: BookmarkSer
     }
 
     // 전체사용자 북마크 목록
-    @GetMapping("/list")
+    @GetMapping()
     fun getBookmarks(): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.OK).body(bookmarkService.getList())
     }
