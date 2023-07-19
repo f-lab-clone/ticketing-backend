@@ -29,14 +29,12 @@ class BookmarkController @Autowired constructor(val bookmarkService: BookmarkSer
 
     // 특정 북마크 조회하기
     @GetMapping("/{id}")
-    fun getBookmark(@PathVariable id: Long): ResponseEntity<Any> {
+    fun getBookmark(@PathVariable id: Long): ResponseEntity<out Any?> {
         try {
             val foundBookmark = bookmarkService.get(id)
-            return ResponseEntity.status(HttpStatus.OK).body(foundBookmark)
+            return ResponseEntity.status(HttpStatus.OK).body(foundBookmark ?: "null")
         } catch (e: MethodArgumentNotValidException) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
-        } catch (e: NoSuchElementException) {
-            return ResponseEntity.status(HttpStatus.OK).body(null)
         }
     }
 
