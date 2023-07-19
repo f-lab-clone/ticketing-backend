@@ -23,6 +23,31 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    create("intTest") {
+        compileClasspath += sourceSets.main.get().output
+        runtimeClasspath += sourceSets.main.get().output
+    }
+}
+
+val intTestImplementation by configurations.getting {
+    extendsFrom(configurations.implementation.get())
+}
+
+configurations["intTestRuntimeOnly"].extendsFrom(configurations.runtimeOnly.get())
+configurations["intTestImplementation"].extendsFrom(configurations.testImplementation.get())
+
+val integrationTest = task<Test>("integrationTest") {
+    description = "Runs integration tests."
+    group = "verification"
+
+    testClassesDirs = sourceSets["intTest"].output.classesDirs
+    classpath = sourceSets["intTest"].runtimeClasspath
+    shouldRunAfter("test")
+}
+
+tasks.check { dependsOn(integrationTest) }
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -32,9 +57,9 @@ dependencies {
     runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation("org.modelmapper:modelmapper:2.4.2")
-    testImplementation("org.springframework.boot:spring-boot-testcontainers")
-    testImplementation("org.testcontainers:junit-jupiter")
-    testImplementation("org.testcontainers:mysql")
+    intTestImplementation("org.springframework.boot:spring-boot-testcontainers")
+    intTestImplementation("org.testcontainers:junit-jupiter")
+    intTestImplementation("org.testcontainers:mysql")
     implementation("com.ninja-squad:springmockk:4.0.2")
 }
 
