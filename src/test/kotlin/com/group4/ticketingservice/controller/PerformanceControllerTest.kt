@@ -149,5 +149,4 @@ class PerformanceControllerTest(
         )
             .andExpect(status().isNoContent)
     }
-
 }
