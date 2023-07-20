@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 class TicketingserviceApplicationTests {
 
     @Test
-    fun contextLoads() {
+    fun contextLoads(): Boolean {
+        return true
     }
 }

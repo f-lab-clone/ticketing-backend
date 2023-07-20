@@ -53,6 +53,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("com.ninja-squad:springmockk:4.0.2")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -61,6 +62,8 @@ dependencies {
     intTestImplementation("org.testcontainers:junit-jupiter")
     intTestImplementation("org.testcontainers:mysql")
     implementation("com.ninja-squad:springmockk:4.0.2")
+    testImplementation("com.h2database:h2")
+    implementation("org.modelmapper:modelmapper:2.4.2")
 }
 
 tasks.withType<KotlinCompile> {

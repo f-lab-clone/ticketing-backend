@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class Config {
+
     @Bean
     fun modelMapper(): ModelMapper {
         val modelMapper = ModelMapper()
