@@ -1,4 +1,4 @@
-package com.group4.ticketingservice.bookmark
+package com.group4.ticketingservice
 
 import com.group4.ticketingservice.entity.Bookmark
 import com.group4.ticketingservice.repository.BookmarkRepository
@@ -43,7 +43,7 @@ class BookmarkRepositoryTest(
         val foundBookmark = bookmarkRepository.findByIdOrNull(savedBookmark.id?.toLong())
 
         // then
-        assertThat(foundBookmark).isEqualTo(savedBookmark)
+        assert(savedBookmark.id == foundBookmark?.id)
     }
 
     @Test

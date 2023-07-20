@@ -15,7 +15,6 @@ abstract class AbstractIntegrationTest {
         @Container
         val mysqlContainer = MySQLContainer("mysql:8.0.33")
             .withConfigurationOverride("./db/mysql/conf.d")
-            .withInitScript("./db/mysql/initdb.d/init-db.sql") // it refers to src/test/resources/...
 
         @JvmStatic
         @DynamicPropertySource
