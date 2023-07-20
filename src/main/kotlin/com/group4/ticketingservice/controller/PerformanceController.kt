@@ -42,17 +42,41 @@ class PerformanceController @Autowired constructor(
     }
 
     @GetMapping("/{id}")
-    fun getPerformance(@PathVariable id: Long): ResponseEntity<PerformanceResponse> {
-        val performance = performanceService.getPerformance(id)
-        val response = PerformanceResponse(
-            id = performance.id!!,
-            title = performance.title,
-            date = performance.date,
-            bookingStartTime = performance.bookingStartTime,
-            bookingEndTime = performance.bookingEndTime,
-            maxAttendees = performance.maxAttendees
-        )
-        return ResponseEntity.status(HttpStatus.OK).body(response)
+    fun getPerformance(@PathVariable id: Long): ResponseEntity<PerformanceResponse?> {
+        return performanceService.getPerformance(id)?.let {
+            ResponseEntity.status(HttpStatus.OK).body(
+                PerformanceResponse(
+                    id = it.id!!,
+                    title = it.title,
+                    date = it.date,
+                    bookingStartTime = it.bookingStartTime,
+                    bookingEndTime = it.bookingEndTime,
+                    maxAttendees = it.maxAttendees
+                )
+            )
+        } ?: kotlin.run {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body(null)
+        }
+    }
+
+    @GetMapping("/")
+    fun getPerformances(): ResponseEntity<List<PerformanceResponse>> {
+        val performances = performanceService.getPerformances()
+        val response: List<PerformanceResponse> = performances.map {
+            PerformanceResponse(
+                id = it.id!!,
+                title = it.title,
+                date = it.date,
+                bookingStartTime = it.bookingStartTime,
+                bookingEndTime = it.bookingEndTime,
+                maxAttendees = it.maxAttendees
+            )
+        }
+        return if (performances.isEmpty()) {
+            ResponseEntity.status(HttpStatus.NO_CONTENT).body(response)
+        } else {
+            ResponseEntity.status(HttpStatus.OK).body(response)
+        }
     }
 
     @PutMapping("/{id}")

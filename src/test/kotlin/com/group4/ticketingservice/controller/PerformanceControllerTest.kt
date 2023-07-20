@@ -83,6 +83,40 @@ class PerformanceControllerTest(
     }
 
     @Test
+    fun `GET performances should return not found`() {
+        every { performanceService.getPerformance(any()) } returns null
+        mockMvc.perform(
+            get("/performances/${samplePerformance.id}")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isNotFound)
+    }
+
+    @Test
+    fun `GET List of performances should return list of performances`() {
+        every { performanceService.getPerformances() } returns listOf(samplePerformance)
+        mockMvc.perform(
+            get("/performances/")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$[0].id").value(samplePerformance.id))
+    }
+
+    @Test
+    fun `GET List of performances should return empty list`() {
+        every { performanceService.getPerformances() } returns listOf()
+        mockMvc.perform(
+            get("/performances/")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isNoContent)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$").isEmpty)
+    }
+
+    @Test
     fun `PUT performance should return updated performance`() {
         every {
             performanceService.updatePerformance(
@@ -115,4 +149,5 @@ class PerformanceControllerTest(
         )
             .andExpect(status().isNoContent)
     }
+
 }

@@ -45,6 +45,13 @@ class PerformanceServiceTest {
     }
 
     @Test
+    fun `PerformanceService_getPerformances invoke PerformanceRepository_findAll`() {
+        every { performanceRepository.findAll() } returns listOf(samplePerformance)
+        performanceService.getPerformances()
+        verify(exactly = 1) { performanceRepository.findAll() }
+    }
+
+    @Test
     fun `PerformanceService_updatePerformance invoke PerformanceRepository_findById`() {
         val updatedPerformance = Performance(
             id = samplePerformance.id!!,

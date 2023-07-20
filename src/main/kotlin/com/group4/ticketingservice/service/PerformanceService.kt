@@ -26,10 +26,12 @@ class PerformanceService(
         return performanceRepository.save(performance)
     }
 
-    fun getPerformance(id: Long): Performance {
-        return performanceRepository.findById(id).orElseThrow {
-            IllegalArgumentException("Performance not found")
-        }
+    fun getPerformance(id: Long): Performance? {
+        return performanceRepository.findById(id).orElse(null)
+    }
+
+    fun getPerformances(): List<Performance> {
+        return performanceRepository.findAll()
     }
 
     fun updatePerformance(
