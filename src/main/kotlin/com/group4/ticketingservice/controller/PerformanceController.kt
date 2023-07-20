@@ -3,6 +3,7 @@ package com.group4.ticketingservice.controller
 import com.group4.ticketingservice.dto.PerformanceCreateRequest
 import com.group4.ticketingservice.dto.PerformanceResponse
 import com.group4.ticketingservice.service.PerformanceService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/performances")
-class PerformanceController(val performanceService: PerformanceService) {
+class PerformanceController @Autowired constructor(
+    val performanceService: PerformanceService
+) {
 
     @PostMapping
     fun createPerformance(@RequestBody request: PerformanceCreateRequest): ResponseEntity<PerformanceResponse> {
@@ -35,7 +38,7 @@ class PerformanceController(val performanceService: PerformanceService) {
             bookingEndTime = performance.bookingEndTime,
             maxAttendees = performance.maxAttendees
         )
-        return ResponseEntity.ok(response)
+        return ResponseEntity.status(HttpStatus.OK).body(response)
     }
 
     @GetMapping("/{id}")
@@ -49,7 +52,7 @@ class PerformanceController(val performanceService: PerformanceService) {
             bookingEndTime = performance.bookingEndTime,
             maxAttendees = performance.maxAttendees
         )
-        return ResponseEntity.ok(response)
+        return ResponseEntity.status(HttpStatus.OK).body(response)
     }
 
     @PutMapping("/{id}")
@@ -73,7 +76,7 @@ class PerformanceController(val performanceService: PerformanceService) {
             bookingEndTime = performance.bookingEndTime,
             maxAttendees = performance.maxAttendees
         )
-        return ResponseEntity.ok(response)
+        return ResponseEntity.status(HttpStatus.OK).body(response)
     }
 
     @DeleteMapping("/{id}")

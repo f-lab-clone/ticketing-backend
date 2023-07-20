@@ -2,6 +2,7 @@ package com.group4.ticketingservice.controller
 
 import com.google.gson.Gson
 import com.group4.ticketingservice.dto.BookingCreateRequest
+import com.group4.ticketingservice.dto.BookingDeleteRequest
 import com.group4.ticketingservice.dto.BookingUpdateRequest
 import com.group4.ticketingservice.entity.Booking
 import com.group4.ticketingservice.entity.Performance
@@ -37,6 +38,9 @@ class BookingControllerTest(
     private val sampleBookingCreateRequest = BookingCreateRequest(
         performanceId = 1,
         userId = 1
+    )
+    private val sampleBookingDeleteRequest = BookingDeleteRequest(
+        id = 1
     )
     private val sampleUser: User = User(id = 1, name = "John Doe", email = "john@email.com")
     private val samplePerformance: Performance = Performance(
@@ -121,7 +125,7 @@ class BookingControllerTest(
         every { bookingService.deleteBooking(1) } returns Unit
 
         mockMvc.perform(
-            delete("/bookings/1")
+            delete("/bookings/${sampleBookingDeleteRequest.id}")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isNoContent)
