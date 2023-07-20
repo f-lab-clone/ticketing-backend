@@ -11,6 +11,13 @@
 			"gradleVersion": "latest",
 			"mavenVersion": "latest",
 			"antVersion": "latest"
+		},
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+			"moby": true,
+			"azureDnsAutoDetection": true,
+			"installDockerBuildx": true,
+			"version": "20.10",
+			"dockerDashComposeVersion": "v1"
 		}
 	},
 
@@ -31,7 +38,8 @@
 			"extensions": [
 				"mathiasfrohlich.Kotlin",
 				"GitHub.copilot",
-				"vscjava.vscode-gradle"
+				"vscjava.vscode-gradle",
+				"ritwickdey.LiveServer"
 			]
 		}
 	}

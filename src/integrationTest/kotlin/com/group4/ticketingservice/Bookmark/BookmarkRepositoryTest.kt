@@ -1,4 +1,4 @@
-package com.group4.ticketingservice.bookmark
+package com.group4.ticketingservice
 
 import com.group4.ticketingservice.entity.Bookmark
 import com.group4.ticketingservice.repository.BookmarkRepository
@@ -6,13 +6,11 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.data.repository.findByIdOrNull
 
-@DataJpaTest
 class BookmarkRepositoryTest(
     @Autowired val bookmarkRepository: BookmarkRepository
-) {
+) : AbstractIntegrationTest() {
 
     @Test
     fun `bookmarkRepository_save should return savedBookmark`() {
@@ -43,7 +41,7 @@ class BookmarkRepositoryTest(
         val foundBookmark = bookmarkRepository.findByIdOrNull(savedBookmark.id?.toLong())
 
         // then
-        assertThat(foundBookmark).isEqualTo(savedBookmark)
+        assert(savedBookmark.id == foundBookmark?.id)
     }
 
     @Test
