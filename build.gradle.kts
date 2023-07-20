@@ -62,7 +62,6 @@ dependencies {
     integrationTestImplementation("org.testcontainers:junit-jupiter")
     integrationTestImplementation("org.testcontainers:mysql")
     implementation("com.ninja-squad:springmockk:4.0.2")
-    testImplementation("com.h2database:h2")
 }
 
 tasks.withType<KotlinCompile> {
