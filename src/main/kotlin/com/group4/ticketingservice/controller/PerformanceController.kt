@@ -55,7 +55,7 @@ class PerformanceController @Autowired constructor(
                 )
             )
         } ?: kotlin.run {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body(null)
+            ResponseEntity.status(HttpStatus.OK).body(null)
         }
     }
 

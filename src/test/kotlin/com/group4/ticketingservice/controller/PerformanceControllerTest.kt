@@ -89,7 +89,7 @@ class PerformanceControllerTest(
             get("/performances/${samplePerformance.id}")
                 .contentType(MediaType.APPLICATION_JSON)
         )
-            .andExpect(status().isNotFound)
+            .andExpect(status().isOk)
     }
 
     @Test
