@@ -5,7 +5,6 @@ import com.group4.ticketingservice.repository.BookingRepository
 import com.group4.ticketingservice.repository.PerformanceRepository
 import com.group4.ticketingservice.repository.UserRepository
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 @Service
 class BookingService(
@@ -13,7 +12,6 @@ class BookingService(
     private val performanceRepository: PerformanceRepository,
     private val bookingRepository: BookingRepository
 ) {
-    @Transactional
     fun createBooking(userId: Long, performanceId: Long): Booking {
         val user = userRepository.findById(userId).orElseThrow {
             IllegalArgumentException("User not found")
@@ -32,7 +30,6 @@ class BookingService(
         }
     }
 
-    @Transactional
     fun updateBooking(bookingId: Long, performanceId: Long): Booking {
         val booking: Booking = bookingRepository.findById(bookingId).orElseThrow {
             IllegalArgumentException("Booking not found")
@@ -45,7 +42,6 @@ class BookingService(
         return bookingRepository.save(booking)
     }
 
-    @Transactional
     fun deleteBooking(id: Long) {
         if (bookingRepository.existsById(id)) {
             bookingRepository.deleteById(id)
