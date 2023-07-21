@@ -1,6 +1,5 @@
 package com.group4.ticketingservice
 
-import com.group4.ticketingservice.entity.Bookmark
 import com.group4.ticketingservice.entity.Reservation
 import com.group4.ticketingservice.repository.ReservationRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -67,6 +66,6 @@ class ReservationRepositoryTest(
 
         // then
         assertInstanceOf(ArrayList::class.java, listofReservations)
-        assertInstanceOf(Bookmark::class.java, listofReservations[0])
+        assertInstanceOf(Reservation::class.java, listofReservations[0])
     }
 }
