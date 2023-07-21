@@ -11,7 +11,7 @@ data class Reservation(
     val userId: Int = 0,
     val showId: Int = 0,
     val name: String = "",
-    val startTime: LocalDateTime = LocalDateTime.now(),
-    val endTime: LocalDateTime = LocalDateTime.now(),
-    val bookingTime: LocalDateTime = LocalDateTime.now()
+    val startTime: LocalDateTime? = null,
+    val endTime: LocalDateTime? = null,
+    val bookingTime: LocalDateTime? = null
 )
