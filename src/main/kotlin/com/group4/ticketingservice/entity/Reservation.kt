@@ -7,10 +7,11 @@ import jakarta.persistence.Id
 import java.time.LocalDateTime
 
 @Entity
-data class Reservation(
+class Reservation(
     //        @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Int? = null,
     val userId: Int = 0,
     val showId: Int = 0,
     val name: String = "",

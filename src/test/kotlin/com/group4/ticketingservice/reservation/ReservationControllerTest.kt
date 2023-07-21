@@ -1,8 +1,8 @@
 package com.group4.ticketingservice.reservation
 
 import com.group4.ticketingservice.controller.ReservationController
-import com.group4.ticketingservice.entity.Reservation
-import com.group4.ticketingservice.repository.ReservationRepository
+import com.group4.ticketingservice.dto.ReservationFromdto
+import com.group4.ticketingservice.service.ReservationService
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.verify
@@ -17,13 +17,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @WebMvcTest(ReservationController::class)
 class ReservationControllerTest(@Autowired val mockMvc: MockMvc) {
     @MockkBean
-    private lateinit var repository: ReservationRepository
-    private val sampleReservation = Reservation(1)
+    private lateinit var service: ReservationService
+    private val sampleReservation = ReservationFromdto(1, 1, "hong")
 
     @Test
     fun `POST_api_reservation should invoke service_save`() {
         // given
-        every { repository.save(sampleReservation) } returns sampleReservation
+        every { service.create(sampleReservation) } returns 1
 
         // when
         mockMvc.perform(
@@ -32,22 +32,22 @@ class ReservationControllerTest(@Autowired val mockMvc: MockMvc) {
                 .content(
                     """
             {
-              "userId": ${sampleReservation.userId},
-              "showId": ${sampleReservation.showId},
-              "name": "${sampleReservation.name}"
+                "name": "${sampleReservation.name}",
+                "user_id": ${sampleReservation.user_id},
+                "show_id": ${sampleReservation.show_id}
             }
                     """.trimIndent()
                 )
         )
 
         // then
-        verify(exactly = 1) { repository.save(sampleReservation) }
+        verify(exactly = 1) { service.create(sampleReservation) }
     }
 
     @Test
     fun `POST_api_reservation should return saved reservation HTTP 200 Created`() {
         // given
-        every { repository.save(sampleReservation) } returns sampleReservation
+        every { service.create(sampleReservation) } returns 1
 
         // when
         val resultActions = mockMvc.perform(
@@ -56,9 +56,9 @@ class ReservationControllerTest(@Autowired val mockMvc: MockMvc) {
                 .content(
                     """
             {
-              "userId": ${sampleReservation.userId},
-              "showId": ${sampleReservation.showId},
-              "name": "${sampleReservation.name}"
+                "name": "${sampleReservation.name}",
+                "user_id": ${sampleReservation.user_id},
+                "show_id": ${sampleReservation.show_id}
             }
                     """.trimIndent()
                 )
