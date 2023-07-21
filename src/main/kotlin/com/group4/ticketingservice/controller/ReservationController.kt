@@ -1,6 +1,6 @@
 package com.group4.ticketingservice.controller
 
-import com.group4.ticketingservice.domain.Reservation
+import com.group4.ticketingservice.entity.Reservation
 import com.group4.ticketingservice.repository.ReservationRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
