@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  db:
+    container_name: mysqldb
+    image: mysql:8.0.33
+    restart: "no"
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+    ports:
+      - 3306:3306
+    volumes:
+      - ./src/intTest/resources/db/mysql/conf.d:/etc/mysql/conf.d
+      - ./src/intTest/resources/db/mysql/initdb.d:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ['CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD']
+      interval: 10s
+      timeout: 2s
+      retries: 100
+
+    networks:
+      - spring-network
+      
+  api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: "no"
+    ports:
+      - 8080:8080
+    environment:
+      MYSQL_HOST: mysqldb
+      MYSQL_PORT: 3306
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: test
+      MYSQL_SCHEMA: test
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - spring-network
+
+networks:
+  spring-network:
