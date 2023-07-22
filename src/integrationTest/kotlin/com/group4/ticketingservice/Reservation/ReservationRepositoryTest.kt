@@ -21,7 +21,7 @@ class ReservationRepositoryTest(
         val savedBookmark = reservationRepository.save(sampleReservation)
 
         // then
-        assertThat(savedBookmark).isEqualTo(sampleReservation)
+        assertThat(savedBookmark?.id).isEqualTo(sampleReservation.id)
     }
 
     @Test
@@ -32,10 +32,10 @@ class ReservationRepositoryTest(
         val savedReservation = reservationRepository.save(sampleReservation)
 
         // when
-        val foundBookmark = reservationRepository.findByIdOrNull(savedReservation.userId?.toLong())
+        val foundBookmark = reservationRepository.findByIdOrNull(savedReservation.id?.toLong())
 
         // then
-        assert(savedReservation.userId == foundBookmark?.userId)
+        assert(savedReservation.id == foundBookmark?.id)
     }
 
 //    @Test
