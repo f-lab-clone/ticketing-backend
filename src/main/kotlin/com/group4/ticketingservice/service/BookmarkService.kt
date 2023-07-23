@@ -25,6 +25,7 @@ class BookmarkService @Autowired constructor(
     fun delete(id: Int) {
         bookmarkRepository.deleteById(id.toLong())
     }
+
     fun getList(): List<Bookmark> {
         return bookmarkRepository.findAll()
     }
