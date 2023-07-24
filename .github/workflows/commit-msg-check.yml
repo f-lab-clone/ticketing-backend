@@ -1,0 +1,30 @@
+name: Commit Message Check
+
+on: [push]
+
+jobs:
+  commit_message_check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Read Commit Regular Expression
+        id: read_commit_regex
+        run: |
+          commit_msg_regex=$(cat ./.github/commit-regular.txt)
+          echo "Commit Regular Expression: $commit_msg_regex"
+          echo "::set-output name=commit_regex::$commit_msg_regex"
+
+      - name: Validate Commit Message
+        run: |
+          commit_msg=$(git log --format=%B -n 1 ${{ github.sha }})
+          echo "Commit Message: $commit_msg"
+          commit_regex="${{ steps.read_commit_regex.outputs.commit_regex }}"
+          if [[ ! "$commit_msg" =~ $commit_regex ]]; then
+            echo "Invalid commit message format."
+            exit 1
+          else
+            echo "Commit message is valid."
+          fi

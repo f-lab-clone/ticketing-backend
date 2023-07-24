@@ -1,0 +1,19 @@
+# <type>: <subject>
+##### Subject 50 characters ################# -> |
+
+# Body Message
+######## Body 72 characters ####################################### -> |
+
+# Issue Tracker Number or URL
+
+# --- COMMIT END ---
+# Type can be
+#   feat    : new feature
+#   fix     : bug fix
+#   refactor: refactoring production code
+#   style   : formatting, missing semi colons, etc; no code change
+#   docs    : changes to documentation
+#   test    : adding or refactoring tests
+#             no productin code change
+#   chore   : updating grunt tasks etc
+#             no production code change

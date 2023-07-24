@@ -4,6 +4,7 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.PropertySource
+import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 import java.security.Key
 import java.sql.Timestamp
@@ -13,8 +14,8 @@ import java.time.temporal.ChronoUnit
 import java.util.*
 import javax.crypto.spec.SecretKeySpec
 
-@PropertySource("classpath:application-dev.properties")
-@Service
+@Component
+@PropertySource("classpath:application.properties")
 class TokenProvider(
         @Value("\${ticketing.jwt.secret}")
         private val secretKey: String,

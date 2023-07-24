@@ -1,0 +1,1 @@
+(Feat\/\d+ \S+)|((feat|fix|refactor|style|docs|test|chore):.{1,50}(\n.{1,72})?)

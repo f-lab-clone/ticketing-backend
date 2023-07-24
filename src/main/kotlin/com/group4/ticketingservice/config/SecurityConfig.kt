@@ -14,7 +14,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @Configuration
 class SecurityConfig(private val jwtAuthenticationFilter: JwtAuthenticationFilter) {
 
-    private val allowedUrls = arrayOf("/", "/users", "/users/login")
+    private val allowedUrls = arrayOf("/", "/users", "/users/login","/bookmarks","/bookmarks/**")
 
     @Bean
     fun filterChain(http: HttpSecurity) =http
