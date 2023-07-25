@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 
 class User(name: String, email: String, password: String,authority : Authority) : BaseTimeEntity(), UserDetails {
     companion object{
