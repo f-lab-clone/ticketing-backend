@@ -5,8 +5,9 @@ data class SignUpRequest(
         val name: String,
         val password: String)
 
-data class SignInRequest(
-        val email: String,
-        val password: String
+class SignInRequest
+{
+    val email: String=""
+    val password: String=""
 
-)
+}

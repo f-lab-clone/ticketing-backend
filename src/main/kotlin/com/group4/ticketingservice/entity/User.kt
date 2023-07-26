@@ -52,7 +52,7 @@ class User(name: String, email: String, password: String,authority : Authority) 
 
     override fun getPassword(): String=pw
 
-    override fun getUsername(): String = id.toString()
+    override fun getUsername(): String = email
 
     override fun isAccountNonExpired(): Boolean = true
 

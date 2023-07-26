@@ -1,61 +1,77 @@
 package com.group4.ticketingservice
 
-import com.group4.ticketingservice.entity.User
-import com.group4.ticketingservice.service.UserDetailService
-import com.group4.ticketingservice.utils.Authority
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.group4.ticketingservice.dto.SignInRequest
 import com.group4.ticketingservice.utils.TokenProvider
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.hibernate.query.sqm.tree.SqmNode.log
-import org.springframework.core.annotation.Order
-import org.springframework.http.HttpHeaders
+import org.json.JSONObject
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.AuthenticationException
+import org.springframework.security.core.userdetails.UserDetails
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.authentication.WebAuthenticationDetails
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
+import java.io.IOException
+import java.io.PrintWriter
+import java.util.Collections
 
 
-@Order(0)
-@Component
 class JwtAuthenticationFilter(
-        private val tokenProvider: TokenProvider,
-        private val userDetailService: UserDetailService
-) : OncePerRequestFilter() {
-    override fun doFilterInternal(request: HttpServletRequest,
-                                  response: HttpServletResponse,
-                                  filterChain: FilterChain) {
+        authenticationManager: AuthenticationManager?,
+        tokenProvider: TokenProvider
 
-        val token = parseBearerToken(request)
+) : UsernamePasswordAuthenticationFilter() {
 
-        if (token == null) {
-            SecurityContextHolder.getContext().authentication = null;
-            filterChain.doFilter(request, response);
-            return;
+    private var authenticationManager: AuthenticationManager? = authenticationManager
+    private var tokenProvider: TokenProvider = tokenProvider
+
+
+    override fun attemptAuthentication(request: HttpServletRequest?, response: HttpServletResponse?): Authentication? {
+        super.setAuthenticationManager(authenticationManager)
+        val om = ObjectMapper()
+        try {
+
+            val signInRequest = om.readValue(request?.inputStream, SignInRequest::class.java)
+            val authenticationToken = UsernamePasswordAuthenticationToken(signInRequest.email, signInRequest.password)
+            val authentication = getAuthenticationManager().authenticate(authenticationToken)
+            return authentication
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
 
-        val user = parseUserSpecification(token)
-        UsernamePasswordAuthenticationToken.authenticated(user, token, user.authorities)
-                .apply { details = WebAuthenticationDetails(request) }
-                .also { SecurityContextHolder.getContext().authentication = it }
-
-        filterChain.doFilter(request, response)
-
+        return null;
     }
 
 
-    private fun parseBearerToken(request: HttpServletRequest) = request.getHeader(HttpHeaders.AUTHORIZATION)
-            ?.takeIf { it?.startsWith("Bearer", true) ?: false }?.substring(7)
+    override fun successfulAuthentication(request: HttpServletRequest?,
+                                          response: HttpServletResponse?,
+                                          chain: FilterChain?,
+                                          authResult: Authentication?) {
 
-    private fun parseUserSpecification(token: String?) = (
-            token?.takeIf { it.length >= 10 }
-                    ?.let { tokenProvider.validateTokenAndGetSubject(it) }
-                    ?: let { "anonymous:anonymous" }
-            ).split(":")
-            .let { userDetailService.loadUserByUsername(it[0]) }
+        val principal = authResult?.principal as UserDetails
+        val jwt = tokenProvider.createToken("${principal.username}:${principal.authorities}")
 
+        val body=JSONObject(mapOf("Authorization" to "Bearer $jwt"))
+        response?.contentType="application/json"
+        val writer: PrintWriter? = response?.writer
+        writer?.println(body)
+    }
 
+    override fun unsuccessfulAuthentication(request: HttpServletRequest?,
+                                            response: HttpServletResponse?,
+                                            failed: AuthenticationException?) {
+        val body=JSONObject(mapOf("message" to "Authentication failed."))
+        response?.contentType="application/json"
+        val writer: PrintWriter? = response?.writer
+        writer?.println(body)
+
+    }
 }

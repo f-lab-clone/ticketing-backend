@@ -29,15 +29,6 @@ class UserController(private val userService: UserService) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build()
         }
     }
-    @PostMapping("/login")
-    fun login(@RequestBody request: SignInRequest): ResponseEntity<UserDto> {
-        try {
-            val user = userService.login(request)
-            return ResponseEntity.status(HttpStatus.OK).body(user)
-        } catch (e: IllegalArgumentException) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
-        }
-    }
 
     @GetMapping("/test")
     fun test(@AuthenticationPrincipal user : User):ResponseEntity<Map<String,Any>>{

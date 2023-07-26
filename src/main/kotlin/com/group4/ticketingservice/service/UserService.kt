@@ -27,19 +27,6 @@ class UserService(private val userRepository: UserRepository,
         return newUser.toDto()
     }
 
-    fun login(request: SignInRequest): UserDto {
-        val user=userRepository.findByEmail(request.email)
-                ?.takeIf { encoder.matches(request.password,it.password) }
-                ?:throw IllegalArgumentException("아이디 또는 패스워드가 일치하지 않습니다.")
-
-        val token=tokenProvider.createToken("${user.email}:${user.role}")
-        val userDto=user.toDto()
-        userDto.token=token
-
-        return userDto
-    }
-
-
 }
 
 
