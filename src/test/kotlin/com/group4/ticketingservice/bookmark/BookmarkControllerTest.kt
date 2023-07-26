@@ -1,6 +1,6 @@
 package com.group4.ticketingservice.bookmark
 
-import com.group4.ticketingservice.JwtAuthenticationFilter
+import com.group4.ticketingservice.filter.JwtAuthenticationFilter
 import com.group4.ticketingservice.config.SecurityConfig
 import com.group4.ticketingservice.controller.BookmarkController
 import com.group4.ticketingservice.dto.BookmarkFromdto

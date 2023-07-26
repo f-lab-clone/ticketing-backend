@@ -1,11 +1,9 @@
 package com.group4.ticketingservice.config
 
-import com.group4.ticketingservice.JwtAuthenticationEntryPoint
-import com.group4.ticketingservice.JwtAuthenticationFilter
-import com.group4.ticketingservice.service.UserDetailService
+import com.group4.ticketingservice.JwtAuthorizationEntryPoint
+import com.group4.ticketingservice.filter.JwtAuthenticationFilter
+import com.group4.ticketingservice.filter.JwtAuthorizationFilter
 import com.group4.ticketingservice.utils.TokenProvider
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.config.CustomEditorConfigurer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -16,17 +14,16 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.DefaultSecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.stereotype.Component
 
 
 @EnableMethodSecurity
 @Configuration
 class SecurityConfig(
-        private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
+        private val jwtAuthorizationEntryPoint: JwtAuthorizationEntryPoint,
         private val tokenProvider: TokenProvider
 ) {
 
-    private val allowedUrls = arrayOf("/")
+    private val allowedUrls = arrayOf("/","/users")
 
     @Bean
     fun filterChain(http: HttpSecurity): DefaultSecurityFilterChain {
@@ -42,19 +39,24 @@ class SecurityConfig(
                 }
 
                 .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
-                .exceptionHandling { it.authenticationEntryPoint(jwtAuthenticationEntryPoint) }
-                .apply(CustomFilterConfigurer(tokenProvider))
+                .exceptionHandling { it.authenticationEntryPoint(jwtAuthorizationEntryPoint) }
+                .apply(CustomFilterConfigurer(tokenProvider,jwtAuthorizationEntryPoint))
 
 
         return http.build()!!
     }
 
-    class CustomFilterConfigurer(private val tokenProvider: TokenProvider) :
-            AbstractHttpConfigurer<CustomFilterConfigurer?, HttpSecurity?>() {
+    class CustomFilterConfigurer(
+            private val tokenProvider: TokenProvider,
+            private val jwtAuthorizationEntryPoint: JwtAuthorizationEntryPoint
+            )
+        : AbstractHttpConfigurer<CustomFilterConfigurer?, HttpSecurity?>() {
         override fun configure(builder: HttpSecurity?) {
             val authenticationManager = builder?.getSharedObject(AuthenticationManager::class.java)
             val jwtAuthenticationFilter = JwtAuthenticationFilter(authenticationManager, tokenProvider)
             jwtAuthenticationFilter.setFilterProcessesUrl("/users/login")
+            val jwtAuthorizationFilter=JwtAuthorizationFilter(authenticationManager,jwtAuthorizationEntryPoint,tokenProvider)
+            builder?.addFilter(jwtAuthorizationFilter)
             builder?.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
         }
 

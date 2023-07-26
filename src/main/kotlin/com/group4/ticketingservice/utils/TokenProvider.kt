@@ -51,10 +51,9 @@ class TokenProvider(
                     .build()
                     .parseClaimsJws(token)
                     .body
-    fun parseUserSpecification(token: String) = getClaimsFromToken(token).subject
-
-    private fun parseBearerToken(request: HttpServletRequest) = request.getHeader(HttpHeaders.AUTHORIZATION)
-            ?.takeIf { it.startsWith("Bearer", true) }?.substring(7)
+     fun parseUserSpecification(token: String) =
+            getClaimsFromToken(token).subject.split(":")
+     fun parseBearerToken(header: String) = header.substring(7)
 
     fun validateToken(token: String): Boolean {
         try {

@@ -1,24 +1,20 @@
-package com.group4.ticketingservice
+package com.group4.ticketingservice.filter
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.group4.ticketingservice.dto.SignInRequest
+import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.utils.TokenProvider
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.json.JSONObject
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.userdetails.UserDetails
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.security.web.authentication.WebAuthenticationDetails
-import org.springframework.stereotype.Component
-import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
 import java.io.PrintWriter
 import java.util.Collections
@@ -56,8 +52,8 @@ class JwtAuthenticationFilter(
                                           chain: FilterChain?,
                                           authResult: Authentication?) {
 
-        val principal = authResult?.principal as UserDetails
-        val jwt = tokenProvider.createToken("${principal.username}:${principal.authorities}")
+        val user = authResult?.principal as User
+        val jwt = tokenProvider.createToken("${user.username}:${user.role}")
 
         val body=JSONObject(mapOf("Authorization" to "Bearer $jwt"))
         response?.contentType="application/json"
