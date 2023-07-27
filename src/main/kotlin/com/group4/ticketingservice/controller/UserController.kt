@@ -30,9 +30,17 @@ class UserController(private val userService: UserService) {
         }
     }
 
-    @GetMapping("/test")
-    fun test(@AuthenticationPrincipal username : String):ResponseEntity<Map<String,Any>>{
-     return ResponseEntity.ok(mapOf("name" to username))
+
+    /**
+     * This Endpoint is example that how to get Username from Authentication object.
+     *   Email is specification of User.
+     *  If you want user entity, you should call userRepository.findByEmail(email) at Service Layer
+     * This is not provided method, so you should define at repository interface.
+     * @author MinJun Kim
+     */
+    @GetMapping("/username")
+    fun test(@AuthenticationPrincipal email: String): ResponseEntity<Map<String, Any>> {
+        return ResponseEntity.ok(mapOf("name" to email))
     }
 
 
