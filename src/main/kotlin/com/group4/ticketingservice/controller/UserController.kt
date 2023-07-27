@@ -39,8 +39,8 @@ class UserController(private val userService: UserService) {
      * @author MinJun Kim
      */
     @GetMapping("/username")
-    fun test(@AuthenticationPrincipal email: String): ResponseEntity<Map<String, Any>> {
-        return ResponseEntity.ok(mapOf("name" to email))
+    fun test(@AuthenticationPrincipal username: String): ResponseEntity<Map<String, Any>> {
+        return ResponseEntity.ok(mapOf("username" to username))
     }
 
 

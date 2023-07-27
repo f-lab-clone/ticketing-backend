@@ -19,6 +19,7 @@ class JwtAuthorizationFilter(
 ) : BasicAuthenticationFilter(authenticationManager, jwtAuthorizationEntryPoint) {
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
+
         val authorizationHeader = request.getHeader("Authorization")
         val jwt = tokenProvider.parseBearerToken(authorizationHeader)
 

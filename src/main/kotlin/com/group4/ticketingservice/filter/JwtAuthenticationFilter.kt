@@ -34,7 +34,6 @@ class JwtAuthenticationFilter(
         super.setAuthenticationManager(authenticationManager)
         val om = ObjectMapper()
         try {
-
             val signInRequest = om.readValue(request?.inputStream, SignInRequest::class.java)
             val authenticationToken = UsernamePasswordAuthenticationToken(signInRequest.email, signInRequest.password)
             val authentication = getAuthenticationManager().authenticate(authenticationToken)
@@ -66,6 +65,7 @@ class JwtAuthenticationFilter(
                                             failed: AuthenticationException?) {
         val body=JSONObject(mapOf("message" to "Authentication failed."))
         response?.contentType="application/json"
+        response?.status=HttpServletResponse.SC_BAD_REQUEST
         val writer: PrintWriter? = response?.writer
         writer?.println(body)
 

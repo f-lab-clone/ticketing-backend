@@ -25,10 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WebMvcTest(controllers = [BookmarkController::class],
-        excludeFilters = [
-            ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = [SecurityConfig::class, JwtAuthenticationFilter::class])
-        ])
+@WebMvcTest(controllers = [BookmarkController::class])
 class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
     @MockkBean
     private lateinit var service: BookmarkService

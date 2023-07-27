@@ -7,7 +7,7 @@ data class SignUpRequest(
 
 class SignInRequest
 {
-    val email: String=""
-    val password: String=""
+    var email: String=""
+    var password: String=""
 
 }

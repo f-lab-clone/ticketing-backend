@@ -57,7 +57,7 @@ class SecurityConfig(
             jwtAuthenticationFilter.setFilterProcessesUrl("/users/login")
             val jwtAuthorizationFilter=JwtAuthorizationFilter(authenticationManager,jwtAuthorizationEntryPoint,tokenProvider)
             builder?.addFilter(jwtAuthorizationFilter)
-            builder?.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            builder?.addFilterAfter(jwtAuthenticationFilter, JwtAuthorizationFilter::class.java)
         }
 
     }
