@@ -24,5 +24,5 @@ class Booking(
     var performance: Performance,
 
     @Column(nullable = false)
-    var bookedAt: LocalDateTime = LocalDateTime.now()
+    var bookedAt: LocalDateTime
 )

@@ -9,7 +9,6 @@ import java.time.LocalDateTime
 class DateTimeConverterTest {
     private val gson: Gson = GsonBuilder().registerTypeAdapter(LocalDateTime::class.java, DateTimeConverter()).create()
 
-
     @Test
     fun serialize() {
         val sampleLocalDateTimeObj = LocalDateTime.of(2021, 1, 1, 1, 1, 1, 1)
