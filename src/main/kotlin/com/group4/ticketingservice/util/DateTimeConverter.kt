@@ -11,14 +11,13 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class DateTimeConverter : JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
-    private val FORMATTER = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSS"
-        .let { DateTimeFormatter.ofPattern(it) }
+    private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
 
-    override fun serialize(src: LocalDateTime?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
-        return JsonPrimitive(FORMATTER.format(src))
+    override fun serialize(src: LocalDateTime, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
+        return JsonPrimitive(formatter.format(src))
     }
 
-    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): LocalDateTime? {
-        return FORMATTER.parse(json!!.asJsonPrimitive.asString) as LocalDateTime?
+    override fun deserialize(json: JsonElement, typeOfT: Type?, context: JsonDeserializationContext?): LocalDateTime {
+        return formatter.parse(json.asJsonPrimitive.asString).let { LocalDateTime.from(it) }
     }
 }
