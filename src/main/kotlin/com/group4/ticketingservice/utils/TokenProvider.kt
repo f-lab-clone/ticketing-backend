@@ -48,6 +48,30 @@ class TokenProvider(
             .setExpiration(Date.from(Instant.now().plus(expirationHours, ChronoUnit.HOURS)))
             .compact()!!
 
+    fun createExpiredTokenForTest(userSpecification: String) = Jwts.builder()
+            .signWith(createKey())
+            .setSubject(userSpecification)
+            .setIssuer(issuer)
+            .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
+            .setExpiration(Date.from(Instant.now().minusSeconds(100)))
+            .compact()!!
+
+    fun createWrongTokenForTest(userSpecification: String) {
+        val secretBytes = Base64.getDecoder()
+                .decode("bGFmZGo7ZGRkZGRkZmRhc2Rma2phcztrYWpkZjtkZmxrc2RqanNkYWZqYXNlaWZqb2FzZWppZmVqZmllamZpamVmaWplZmY=")
+          //not .decode(secretKey)
+        val key = SecretKeySpec(secretBytes, signatureAlgorithm.jcaName)
+
+        Jwts.builder()
+                .signWith(key)
+                .setSubject(userSpecification)
+                .setIssuer(issuer)
+                .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
+                .setExpiration(Date.from(Instant.now().plus(expirationHours, ChronoUnit.HOURS)))
+                .compact()!!
+    }
+
+
     fun getClaimsFromToken(token: String): Claims =
             Jwts.parserBuilder()
                     .setSigningKey(createKey())
