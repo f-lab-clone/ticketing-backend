@@ -63,8 +63,8 @@ class UserControllerTest(@Autowired
             password = password
     )
     val sampleUserDTO = UserDto(
-            name = testUserName,
-            email = testName,
+            name = testName,
+            email = testUserName,
             createdAt = LocalDateTime.now()
     )
 
@@ -107,13 +107,12 @@ class UserControllerTest(@Autowired
     }
 
     @Test
-    @WithMockUser
     fun `POST_api_user should invoke service_create_user`() {
         // given
         every { service.createUser(sampleSignUpRequest) } returns sampleUserDTO
 
         // when
-        mockMvc.perform(
+                mockMvc.perform(
                 MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JSONObject(sampleSignUpRequest).toString())
@@ -123,6 +122,44 @@ class UserControllerTest(@Autowired
 
         // then
         verify(exactly = 1) { service.createUser(sampleSignUpRequest) }
+    }
+
+
+
+    @Test
+    fun `POST_api_users should return 201 HttpStatus Code for unique user`() {
+        // given
+        every { service.createUser(any()) } returns sampleUserDTO
+
+        // when
+        val resultActions: ResultActions=
+                mockMvc.perform(
+                        MockMvcRequestBuilders.post("/users")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(JSONObject(sampleSignUpRequest).toString())
+
+                )
+
+        // then
+        resultActions.andExpect(MockMvcResultMatchers.status().isCreated)
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(testUserName))
+    }
+    @Test
+    fun `POST_api_users should return 409 HttpStatus Code for Duplicate user`() {
+        // given
+        every { service.createUser(any()) } throws IllegalArgumentException()
+
+        // when
+        val resultActions: ResultActions=
+            mockMvc.perform(
+                    MockMvcRequestBuilders.post("/users")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(JSONObject(sampleSignUpRequest).toString())
+
+        )
+
+        // then
+        resultActions.andExpect(MockMvcResultMatchers.status().isConflict)
     }
 
 }
