@@ -21,7 +21,7 @@ class User(name: String, email: String, password: String,authority : Authority) 
         fun toDto(user :User)= UserDto(
         name = user.name,
         email = user.email,
-        createdAt =user.createdAt!!
+        createdAt =user.createdAt
         )
     }
     @Id
