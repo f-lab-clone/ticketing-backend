@@ -17,7 +17,7 @@ class TestUserDetailService :
         UserDetailsService {
 
     override fun loadUserByUsername(username: String): UserDetails {
-        return User(name = "minjun", email = "minjun3021@qwer.com", BCryptPasswordEncoder().encode("1234"),Authority.USER
+        return User(name = UserControllerTest.testFields.testName, email = UserControllerTest.testFields.testUserName, BCryptPasswordEncoder().encode(UserControllerTest.testFields.password),Authority.USER
         )
     }
 }

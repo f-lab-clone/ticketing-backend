@@ -10,6 +10,8 @@ import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.service.UserDetailService
 import com.group4.ticketingservice.service.UserService
+import com.group4.ticketingservice.user.UserControllerTest.testFields.password
+import com.group4.ticketingservice.user.UserControllerTest.testFields.testName
 import com.group4.ticketingservice.user.UserControllerTest.testFields.testUserName
 import com.group4.ticketingservice.user.UserControllerTest.testFields.testUserRole
 import com.group4.ticketingservice.utils.Authority
@@ -49,26 +51,28 @@ class UserControllerTest(@Autowired
     private lateinit var service: UserService
 
     object testFields {
-        const val testUserName = "qwer@asdf.com"
+        const val testName="minjun"
+        const val testUserName = "minjun3021@qwer.com"
         const val testUserRole = "USER"
+        const val password ="1234"
     }
 
     val sampleSignUpRequest = SignUpRequest(
-            email = "minjun3021@qwer.com",
-            name = "minjun",
-            password = "1234"
+            email = testUserName,
+            name = testName,
+            password = password
     )
     val sampleUserDTO = UserDto(
-            name = "minjun3021@qwer.com",
-            email = "minjun",
+            name = testUserName,
+            email = testName,
             createdAt = LocalDateTime.now()
     )
 
 
 
     val sampleSignInRequest = SignInRequest().apply {
-        email = "minjun3021@qwer.com"
-        password = "1234"
+        email = testUserName
+        password = testFields.password
     }
 
     /**
