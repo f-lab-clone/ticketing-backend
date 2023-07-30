@@ -2,7 +2,6 @@ jacocoReport/
 
 HELP.md
 .gradle
-src/main/resources/application-dev.properties
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
