@@ -116,7 +116,6 @@ class UserControllerTest(@Autowired
                 MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JSONObject(sampleSignUpRequest).toString())
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
 
         )
 
