@@ -1,6 +1,7 @@
-package com.group4.ticketingservice
+package com.group4.ticketingservice.User
 
 
+import com.group4.ticketingservice.AbstractIntegrationTest
 import com.group4.ticketingservice.dto.SignInRequest
 import com.group4.ticketingservice.dto.SignUpRequest
 import com.group4.ticketingservice.entity.User
