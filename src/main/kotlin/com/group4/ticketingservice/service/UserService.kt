@@ -6,6 +6,7 @@ import com.group4.ticketingservice.dto.SignUpRequest
 import com.group4.ticketingservice.dto.UserDto
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.UserRepository
+import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.TokenProvider
 import com.group4.ticketingservice.utils.toDto
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserService(private val userRepository: UserRepository,
-                  private val tokenProvider: TokenProvider,
                   private val encoder: PasswordEncoder)  {
 
     fun createUser(request: SignUpRequest): UserDto {
@@ -21,10 +21,18 @@ class UserService(private val userRepository: UserRepository,
             throw IllegalArgumentException("Email is already used")
         }
 
-        val newUser = User.from(request,encoder)
+        val newUser = User(
+                name = request.name,
+                email = request.email,
+                password = encoder.encode(request.password),
+                authority = Authority.USER
+        )
+
+
         userRepository.save(newUser)
 
-        return newUser.toDto()
+        return User.toDto(newUser)
+
     }
 
 }

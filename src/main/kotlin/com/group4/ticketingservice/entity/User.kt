@@ -2,6 +2,7 @@ package com.group4.ticketingservice.entity
 
 
 import com.group4.ticketingservice.dto.SignUpRequest
+import com.group4.ticketingservice.dto.UserDto
 import com.group4.ticketingservice.utils.Authority
 
 import jakarta.persistence.*
@@ -9,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
+import java.time.LocalDateTime
 
 
 @Entity
@@ -16,11 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder
 
 class User(name: String, email: String, password: String,authority : Authority) : BaseTimeEntity(), UserDetails {
     companion object{
-        fun from(request : SignUpRequest, encoder : PasswordEncoder)=User(
-                name = request.name,
-                email = request.email,
-                password = encoder.encode(request.password),
-                authority = Authority.USER
+        fun toDto(user :User)= UserDto(
+        name = user.name,
+        email = user.email,
+        createdAt =user.createdAt!!
         )
     }
     @Id
