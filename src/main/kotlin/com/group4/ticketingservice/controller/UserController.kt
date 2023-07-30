@@ -6,9 +6,11 @@ import com.group4.ticketingservice.dto.SignUpRequest
 import com.group4.ticketingservice.dto.UserDto
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.service.UserService
+import com.group4.ticketingservice.utils.TokenProvider
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -18,7 +20,9 @@ import java.lang.IllegalArgumentException
 
 @RestController
 @RequestMapping("/users")
-class UserController(private val userService: UserService) {
+class UserController(private val userService: UserService,
+                     private val tokenProvider: TokenProvider
+) {
 
     @PostMapping
     fun register(@RequestBody request: SignUpRequest): ResponseEntity<UserDto> {
@@ -38,9 +42,15 @@ class UserController(private val userService: UserService) {
      * This is not provided method, so you should define at repository interface.
      * @author MinJun Kim
      */
-    @GetMapping("/username")
+    @GetMapping("/access_token_info")
     fun test(@AuthenticationPrincipal username: String): ResponseEntity<Map<String, Any>> {
-        return ResponseEntity.ok(mapOf("username" to username))
+        val jwt = SecurityContextHolder.getContext().authentication.credentials.toString()
+        val expiresInMillis= tokenProvider.parseTokenExpirationTime(jwt)
+        val map =mapOf(
+                "username" to username,
+                "expires_in" to expiresInMillis
+        )
+        return ResponseEntity.ok(map)
     }
 
 

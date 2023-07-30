@@ -30,7 +30,7 @@ class JwtAuthorizationFilter(
             authorties.add(SimpleGrantedAuthority(authority))
 
             val authentication =
-                    UsernamePasswordAuthenticationToken.authenticated(username,null,authorties)
+                    UsernamePasswordAuthenticationToken.authenticated(username,jwt,authorties)
             SecurityContextHolder.getContext().authentication = authentication;
 
         }

@@ -7,8 +7,7 @@ import com.group4.ticketingservice.dto.UserDto
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.utils.Authority
-import com.group4.ticketingservice.utils.TokenProvider
-import com.group4.ticketingservice.utils.toDto
+
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 

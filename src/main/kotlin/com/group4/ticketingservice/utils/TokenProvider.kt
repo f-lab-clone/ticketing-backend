@@ -3,6 +3,7 @@ package com.group4.ticketingservice.utils
 import io.jsonwebtoken.*
 import io.jsonwebtoken.security.SecurityException
 import jakarta.servlet.http.HttpServletRequest
+import net.bytebuddy.asm.Advice.Local
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.PropertySource
@@ -13,9 +14,11 @@ import java.security.Key
 import java.sql.Timestamp
 import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import java.util.*
 import javax.crypto.spec.SecretKeySpec
+import kotlin.time.Duration
 
 
 @Component
@@ -55,6 +58,15 @@ class TokenProvider(
             getClaimsFromToken(token).subject.split(":")
      fun parseBearerToken(header: String) = header.substring(7)
 
+    fun parseTokenExpirationTime(token :String): Long {
+        val expirationTime=getClaimsFromToken(token).expiration
+        val localDateTime = expirationTime.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+
+        val expiresInMillis=ChronoUnit.MILLIS.between(LocalDateTime.now(),localDateTime)
+        return expiresInMillis
+    }
     fun validateToken(token: String): Boolean {
         try {
             getClaimsFromToken(token)
