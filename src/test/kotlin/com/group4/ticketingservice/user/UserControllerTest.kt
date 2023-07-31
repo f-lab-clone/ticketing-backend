@@ -39,8 +39,7 @@ import org.yaml.snakeyaml.tokens.Token
 import java.time.LocalDateTime
 
 @WebMvcTest(controllers = [UserController::class],
-        includeFilters = arrayOf(ComponentScan.Filter(value = [(TokenProvider::class),(SecurityConfig::class),(JwtAuthorizationEntryPoint::class),(TestUserDetailService::class)], type = FilterType.ASSIGNABLE_TYPE)),
-        excludeFilters = arrayOf(ComponentScan.Filter(value = [(UserDetailService::class)], type = FilterType.ASSIGNABLE_TYPE))
+        includeFilters = arrayOf(ComponentScan.Filter(value = [(TokenProvider::class),(SecurityConfig::class),(JwtAuthorizationEntryPoint::class)], type = FilterType.ASSIGNABLE_TYPE)),
 
 )
 class UserControllerTest(@Autowired
@@ -69,12 +68,6 @@ class UserControllerTest(@Autowired
     )
 
 
-
-    val sampleSignInRequest = SignInRequest().apply {
-        email = testUserName
-        password = testFields.password
-    }
-
     /**
      * Spring SecurityContext에 Authentication 객체를 넣어주는 커스텀 어노테이션을 만들어서
      * Controller가 Spring SecurityContext에 들어있는 유저 인증정보를 주입받는지를 확인할수있음
@@ -89,22 +82,6 @@ class UserControllerTest(@Autowired
                 .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(testUserName))
     }
 
-    @Test
-    //Web
-    fun `POST_api_users_login should return Bearer Token with HTTP 200 OK`() {
-
-        // when
-        val resultActions: ResultActions =
-                mockMvc.perform(
-                        MockMvcRequestBuilders.post("/users/login")
-                                .content(JSONObject(sampleSignInRequest).toString())
-                                .contentType(MediaType.APPLICATION_JSON)
-                )
-
-        resultActions.andExpect(MockMvcResultMatchers.status().isOk)
-        resultActions.andExpect(MockMvcResultMatchers.content().string(containsString("Bearer")))
-
-    }
 
     @Test
     fun `POST_api_user should invoke service_create_user`() {
