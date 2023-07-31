@@ -74,7 +74,7 @@ class UserControllerTest(@Autowired
      */
     @Test
     @WithAuthUser(email = testUserName, role = testUserRole)
-    fun `GET_api_users_username should return username injected by Spring Security with HTTP 200 OK`() {
+    fun `GET_api_users_access_token_info should return username injected by Spring Security with HTTP 200 OK`() {
         // when
         val resultActions: ResultActions =
                 mockMvc.perform(MockMvcRequestBuilders.get("/users/access_token_info"))
