@@ -1,5 +1,6 @@
 package com.group4.ticketingservice.user
 
+import com.google.gson.GsonBuilder
 import com.group4.ticketingservice.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.config.SecurityConfig
 import com.group4.ticketingservice.controller.UserController
@@ -21,7 +22,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.hamcrest.core.StringContains.containsString
-import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
 import org.springframework.beans.factory.annotation.Autowired
@@ -92,7 +92,7 @@ class UserControllerTest(@Autowired
                 mockMvc.perform(
                 MockMvcRequestBuilders.post("/users/signup")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JSONObject(sampleSignUpRequest).toString())
+                        .content(GsonBuilder().create().toJson(sampleSignUpRequest).toString())
 
         )
 
@@ -112,7 +112,7 @@ class UserControllerTest(@Autowired
                 mockMvc.perform(
                         MockMvcRequestBuilders.post("/users/signup")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(JSONObject(sampleSignUpRequest).toString())
+                                .content(GsonBuilder().create().toJson(sampleSignUpRequest).toString())
 
                 )
 
@@ -130,7 +130,7 @@ class UserControllerTest(@Autowired
             mockMvc.perform(
                     MockMvcRequestBuilders.post("/users/signup")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(JSONObject(sampleSignUpRequest).toString())
+                            .content(GsonBuilder().create().toJson(sampleSignUpRequest).toString())
 
         )
 

@@ -68,7 +68,7 @@ dependencies {
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
-    implementation("org.json:json:20230227")
+    implementation("com.google.code.gson:gson:2.10.1")
 }
 
 tasks.withType<KotlinCompile> {

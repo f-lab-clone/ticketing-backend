@@ -1,6 +1,8 @@
 package com.group4.ticketingservice.User
 
 
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
 import com.group4.ticketingservice.AbstractIntegrationTest
 import com.group4.ticketingservice.dto.SignInRequest
 import com.group4.ticketingservice.dto.SignUpRequest
@@ -9,7 +11,6 @@ import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.TokenProvider
 import org.hamcrest.core.StringContains
-import org.json.JSONObject
 import org.junit.Before
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -71,20 +72,23 @@ class UserControllerTest : AbstractIntegrationTest() {
 
 
     fun getJwt(): String {
+        val gson= GsonBuilder().create()
+
         val result = mockMvc.perform(
                 MockMvcRequestBuilders.post("/users/signin")
-                        .content(JSONObject(sampleSignInRequest).toString())
+                        .content(gson.toJson(sampleSignInRequest).toString())
                         .contentType(MediaType.APPLICATION_JSON)
         ).andReturn()
-        val jwt=JSONObject(result.response.getContentAsString())
-        return jwt.get("Authorization") as String
+        val jwt=gson.fromJson(result.response.contentAsString, JsonObject::class.java)
+        return jwt.get("Authorization").asString
     }
 
     @Test
     fun `POST_api_users_login should return jwt with HTTPStatus 200 OK`() {
+
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/users/signin")
-                        .content(JSONObject(sampleSignInRequest).toString())
+                        .content(GsonBuilder().create().toJson(sampleSignInRequest).toString())
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk)
                 .andExpect(content().string(StringContains.containsString("Bearer")))
@@ -96,7 +100,7 @@ class UserControllerTest : AbstractIntegrationTest() {
         sampleSignInRequest.password = "4321" // wrong password
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/users/signin")
-                        .content(JSONObject(sampleSignInRequest).toString())
+                        .content(GsonBuilder().create().toJson(sampleSignInRequest).toString())
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isBadRequest)
 
@@ -108,7 +112,7 @@ class UserControllerTest : AbstractIntegrationTest() {
         sampleSignInRequest.email = "asdf@asdf.com" // user doesn't exist
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/users/signin")
-                        .content(JSONObject(sampleSignInRequest).toString())
+                        .content(GsonBuilder().create().toJson(sampleSignInRequest).toString())
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isBadRequest)
 
