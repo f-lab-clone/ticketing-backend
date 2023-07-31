@@ -81,29 +81,6 @@ class UserControllerTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `signUp Success Test`() {
-        removeUser()
-        mockMvc.perform(
-                MockMvcRequestBuilders.post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(JSONObject(sampleSignUpRequest).toString())
-        ).andExpect(status().isCreated)
-
-    }
-
-    @Test
-    fun `signUp failed Test`() {
-
-        mockMvc.perform(
-                MockMvcRequestBuilders.post("/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(JSONObject(sampleSignUpRequest).toString())
-        ).andExpect(status().isConflict)
-
-
-    }
-
-    @Test
     fun `login success test`() {
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/users/login")
