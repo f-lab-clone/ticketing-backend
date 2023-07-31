@@ -1,11 +1,13 @@
 package com.group4.ticketingservice.bookmark
 
+import com.group4.ticketingservice.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.filter.JwtAuthenticationFilter
 import com.group4.ticketingservice.config.SecurityConfig
 import com.group4.ticketingservice.controller.BookmarkController
 import com.group4.ticketingservice.dto.BookmarkFromdto
 import com.group4.ticketingservice.entity.Bookmark
 import com.group4.ticketingservice.service.BookmarkService
+import com.group4.ticketingservice.utils.TokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.verify
@@ -25,7 +27,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WebMvcTest(controllers = [BookmarkController::class])
+@WebMvcTest(controllers = [BookmarkController::class],
+        includeFilters = [ComponentScan.Filter(value = [(SecurityConfig::class),(JwtAuthorizationEntryPoint::class),(TokenProvider::class)], type = FilterType.ASSIGNABLE_TYPE)],
+        )
 class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
     @MockkBean
     private lateinit var service: BookmarkService
@@ -39,7 +43,6 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
     )
 
     @Test
-    @WithMockUser(roles = ["USER"])
     fun `POST_api_bookmark should invoke service_create`() {
         // given
         every { service.create(sampleBookmarkDto) } returns 1
@@ -48,7 +51,6 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
         mockMvc.perform(
                 post("/bookmarks")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .param("user_id", sampleBookmark.user_id.toString())
                         .param("show_id", sampleBookmark.show_id.toString())
         )
@@ -58,7 +60,6 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
     }
 
     @Test
-    @WithMockUser(roles = ["USER"])
     fun `POST_api_bookmark should return saved bookmark id with HTTP 201 Created`() {
         // given
         every { service.create(sampleBookmarkDto) } returns 1
@@ -67,7 +68,6 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
         val resultActions: ResultActions = mockMvc.perform(
                 post("/bookmarks")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .param("user_id", sampleBookmark.user_id.toString())
                         .param("show_id", sampleBookmark.show_id.toString())
         )
@@ -78,7 +78,6 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
     }
 
     @Test
-    @WithMockUser(roles = ["USER"])
     fun `POST_api_bookmark should return HTTP ERROR 400 for invalid parameter`() {
         // given
         every { service.create(sampleBookmarkDto) } returns 1
@@ -86,7 +85,6 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
         // when
         val resultActions: ResultActions = mockMvc.perform(
                 post("/bookmarks")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                         .param("user_id", sampleBookmark.user_id.toString())
                         .param("show_id", sampleBookmark.show_id.toString())
@@ -98,7 +96,6 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
     }
 
     @Test
-    @WithMockUser(roles = ["USER"])
     fun `GET_api_bookmarks should invoke service_getList`() {
         // given
         every { service.getList() } returns mutableListOf(sampleBookmark)
@@ -111,7 +108,6 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
     }
 
     @Test
-    @WithMockUser(roles = ["USER"])
     fun `GET_api_bookmarks should return list of bookmarks with HTTP 200 OK`() {
         // given
         every { service.getList() } returns mutableListOf(sampleBookmark)
@@ -125,7 +121,6 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
     }
 
     @Test
-    @WithMockUser(roles = ["USER"])
     fun `GET_api_bookmark should invoke service_get`() {
         // given
         every { service.get(1) } returns sampleBookmark
@@ -138,7 +133,6 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
     }
 
     @Test
-    @WithMockUser(roles = ["USER"])
     fun `GET_api_bookmark should return found bookmark with HTTP 200 OK`() {
         // given
         every { service.get(1) } returns sampleBookmark
@@ -154,7 +148,6 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
     }
 
     @Test
-    @WithMockUser(roles = ["USER"])
     fun `GET_api_bookmark should return null with HTTP 200 OK if element is not found`() {
         // given
         every { service.get(1) } returns null
@@ -168,7 +161,6 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
     }
 
     @Test
-    @WithMockUser(roles = ["USER"])
     fun `DELETE_api_bookmark_{bookmarkId} should invoke service_delete`() {
         // given
         every { service.delete(1) } returns Unit
@@ -185,7 +177,6 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
     }
 
     @Test
-    @WithMockUser(roles = ["USER"])
     fun `DELETE_api_bookmark_{bookmarkId} should return HTTP 204 No Content`() {
         // given
         every { service.delete(1) } returns Unit
@@ -194,7 +185,6 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
         val resultActions: ResultActions = mockMvc.perform(
                 MockMvcRequestBuilders
                         .delete("/bookmarks/1")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
         )
 
         // then
