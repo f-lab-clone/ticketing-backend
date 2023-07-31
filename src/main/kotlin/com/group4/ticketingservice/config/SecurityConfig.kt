@@ -23,7 +23,7 @@ class SecurityConfig(
         private val tokenProvider: TokenProvider
 ) {
 
-    private val allowedUrls = arrayOf("/","/users","/bookmarks/**")
+    private val allowedUrls = arrayOf("/","/users/signup","/bookmarks/**")
 
     @Bean
     fun filterChain(http: HttpSecurity): DefaultSecurityFilterChain {
@@ -54,7 +54,7 @@ class SecurityConfig(
         override fun configure(builder: HttpSecurity?) {
             val authenticationManager = builder?.getSharedObject(AuthenticationManager::class.java)
             val jwtAuthenticationFilter = JwtAuthenticationFilter(authenticationManager, tokenProvider)
-            jwtAuthenticationFilter.setFilterProcessesUrl("/users/login")
+            jwtAuthenticationFilter.setFilterProcessesUrl("/users/signin")
             val jwtAuthorizationFilter=JwtAuthorizationFilter(authenticationManager,jwtAuthorizationEntryPoint,tokenProvider)
             builder?.addFilter(jwtAuthorizationFilter)
             builder?.addFilterAfter(jwtAuthenticationFilter, JwtAuthorizationFilter::class.java)

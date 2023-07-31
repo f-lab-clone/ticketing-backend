@@ -24,8 +24,8 @@ class UserController(private val userService: UserService,
                      private val tokenProvider: TokenProvider
 ) {
 
-    @PostMapping
-    fun register(@RequestBody request: SignUpRequest): ResponseEntity<UserDto> {
+    @PostMapping("/signup")
+    fun signup(@RequestBody request: SignUpRequest): ResponseEntity<UserDto> {
         try {
             val user = userService.createUser(request)
             return ResponseEntity.status(HttpStatus.CREATED).body(user)
@@ -43,7 +43,7 @@ class UserController(private val userService: UserService,
      * @author MinJun Kim
      */
     @GetMapping("/access_token_info")
-    fun test(@AuthenticationPrincipal username: String): ResponseEntity<Map<String, Any>> {
+    fun getAccessTokenInfo(@AuthenticationPrincipal username: String): ResponseEntity<Map<String, Any>> {
         val jwt = SecurityContextHolder.getContext().authentication.credentials.toString()
         val expiresInMillis= tokenProvider.parseTokenExpirationTime(jwt)
         val map =mapOf(

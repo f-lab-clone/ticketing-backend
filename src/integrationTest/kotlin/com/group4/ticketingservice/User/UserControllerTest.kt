@@ -72,7 +72,7 @@ class UserControllerTest : AbstractIntegrationTest() {
 
     fun getJwt(): String {
         val result = mockMvc.perform(
-                MockMvcRequestBuilders.post("/users/login")
+                MockMvcRequestBuilders.post("/users/signin")
                         .content(JSONObject(sampleSignInRequest).toString())
                         .contentType(MediaType.APPLICATION_JSON)
         ).andReturn()
@@ -83,7 +83,7 @@ class UserControllerTest : AbstractIntegrationTest() {
     @Test
     fun `POST_api_users_login should return jwt with HTTPStatus 200 OK`() {
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/users/login")
+                MockMvcRequestBuilders.post("/users/signin")
                         .content(JSONObject(sampleSignInRequest).toString())
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk)
@@ -95,7 +95,7 @@ class UserControllerTest : AbstractIntegrationTest() {
     fun `POST_api_users_login should return HTTPStatus 400 BAD_REQUEST when password is invalid`() {
         sampleSignInRequest.password = "4321" // wrong password
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/users/login")
+                MockMvcRequestBuilders.post("/users/signin")
                         .content(JSONObject(sampleSignInRequest).toString())
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isBadRequest)
@@ -107,7 +107,7 @@ class UserControllerTest : AbstractIntegrationTest() {
     fun `POST_api_users_login should return HTTPStatus 400 BAD_REQUEST when user doesn't exist`() {
         sampleSignInRequest.email = "asdf@asdf.com" // user doesn't exist
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/users/login")
+                MockMvcRequestBuilders.post("/users/signin")
                         .content(JSONObject(sampleSignInRequest).toString())
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isBadRequest)

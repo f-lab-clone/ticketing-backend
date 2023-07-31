@@ -90,7 +90,7 @@ class UserControllerTest(@Autowired
 
         // when
                 mockMvc.perform(
-                MockMvcRequestBuilders.post("/users")
+                MockMvcRequestBuilders.post("/users/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JSONObject(sampleSignUpRequest).toString())
 
@@ -110,7 +110,7 @@ class UserControllerTest(@Autowired
         // when
         val resultActions: ResultActions=
                 mockMvc.perform(
-                        MockMvcRequestBuilders.post("/users")
+                        MockMvcRequestBuilders.post("/users/signup")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(JSONObject(sampleSignUpRequest).toString())
 
@@ -128,7 +128,7 @@ class UserControllerTest(@Autowired
         // when
         val resultActions: ResultActions=
             mockMvc.perform(
-                    MockMvcRequestBuilders.post("/users")
+                    MockMvcRequestBuilders.post("/users/signup")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(JSONObject(sampleSignUpRequest).toString())
 
