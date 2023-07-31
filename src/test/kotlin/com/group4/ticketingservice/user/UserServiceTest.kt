@@ -60,6 +60,25 @@ class UserServiceTest() {
     }
 
     @Test
+    fun `userService_createUser() invoke encoder_encode`() {
+
+        val encryptedPassword = passwordEncoder.encode(sampleSignUpRequest.password)
+        val encoder:PasswordEncoder= mockk()
+        val service = UserService(repository,encoder)
+
+        every { repository.existsByEmail(any())} returns false
+        every { encoder.encode(any())} returns encryptedPassword
+        every { repository.save(any()) } returns sampleUser
+
+        // when
+        service.createUser(sampleSignUpRequest)
+
+        // then
+        verify(exactly = 1) {encoder.encode(any())}
+    }
+
+
+    @Test
     fun `userService_create_user() return UserDto when request_email  not existed at repository`() {
         // given
         every { repository.existsByEmail(sampleSignUpRequest.email)} returns false
@@ -67,7 +86,7 @@ class UserServiceTest() {
 
         // when
         val result=userService.createUser(sampleSignUpRequest)
-        
+
         //then
         assertEquals(sampleSignUpRequest.email, result.email)
 
