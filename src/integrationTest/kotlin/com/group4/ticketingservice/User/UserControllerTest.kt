@@ -81,7 +81,7 @@ class UserControllerTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `login success test`() {
+    fun `POST_api_users_login should return jwt with HTTPStatus 200 OK`() {
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/users/login")
                         .content(JSONObject(sampleSignInRequest).toString())
@@ -92,7 +92,7 @@ class UserControllerTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `login failed test(password)`() {
+    fun `POST_api_users_login should return HTTPStatus 400 BAD_REQUEST when password is invalid`() {
         sampleSignInRequest.password = "4321" // wrong password
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/users/login")
@@ -104,8 +104,8 @@ class UserControllerTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `login failed test(id)`() {
-        sampleSignInRequest.email = "asdf@asdf.com" // wrong password
+    fun `POST_api_users_login should return HTTPStatus 400 BAD_REQUEST when user doesn't exist`() {
+        sampleSignInRequest.email = "asdf@asdf.com" // user doesn't exist
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/users/login")
                         .content(JSONObject(sampleSignInRequest).toString())
@@ -116,7 +116,7 @@ class UserControllerTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `access_token_info success test`() {
+    fun `GET_api_users_access_token_info should return username with HTTPStatus 200 OK`() {
         val jwt=getJwt()
 
         val resultActions: ResultActions =
@@ -124,10 +124,11 @@ class UserControllerTest : AbstractIntegrationTest() {
                         .header("Authorization",jwt))
         resultActions.andExpect(status().isOk)
                 .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(testFields.testUserName))
+
     }
 
     @Test
-    fun `access_token_info fail test(no token)`() {
+    fun `GET_api_users_access_token_info should return HTTPStatus 401 Unauthorized when header not exist`() {
 
         val resultActions: ResultActions =
                 mockMvc.perform(MockMvcRequestBuilders.get("/users/access_token_info"))
@@ -135,7 +136,7 @@ class UserControllerTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `access_token_info fail test(token Expired)`() {
+    fun `GET_api_users_access_token_info should return HTTPStatus 401 Unauthorized when jwt is expired`() {
 
         val jwt=tokenProvider.createWrongTokenForTest("${testFields.testUserName}:USER")
         val resultActions: ResultActions =
