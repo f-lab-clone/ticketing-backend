@@ -19,18 +19,17 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.AnnotationConfigContextLoader
 import java.time.Clock
 import java.time.Duration.ofHours
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.util.*
 
-@SpringBootTest
 @ContextConfiguration(
     classes = [ClockConfig::class],
     loader = AnnotationConfigContextLoader::class
 )
-class BookingServiceTest {
-    @Autowired
-    private lateinit var clock: Clock
-
+@SpringBootTest
+class BookingServiceTest(
+    @Autowired private val clock: Clock
+) {
     private val userRepository: UserRepository = mockk()
     private val performanceRepository: PerformanceRepository = mockk()
     private val bookingRepository: BookingRepository = mockk()
@@ -44,16 +43,16 @@ class BookingServiceTest {
     private val samplePerformance: Performance = Performance(
         id = 1,
         title = "test title",
-        date = LocalDateTime.now(clock),
-        bookingEndTime = LocalDateTime.now(clock) + ofHours(2),
-        bookingStartTime = LocalDateTime.now(clock) + ofHours(1),
+        date = OffsetDateTime.now(clock),
+        bookingEndTime = OffsetDateTime.now(clock) + ofHours(2),
+        bookingStartTime = OffsetDateTime.now(clock) + ofHours(1),
         maxAttendees = 10
     )
 
     private val sampleBooking: Booking = Booking(
         user = sampleUser,
         performance = samplePerformance,
-        bookedAt = LocalDateTime.now(clock)
+        bookedAt = OffsetDateTime.now(clock)
     )
 
     @Test

@@ -7,7 +7,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 @Entity
 class Booking(
@@ -24,5 +24,5 @@ class Booking(
     var performance: Performance,
 
     @Column(nullable = false)
-    var bookedAt: LocalDateTime
+    var bookedAt: OffsetDateTime
 )

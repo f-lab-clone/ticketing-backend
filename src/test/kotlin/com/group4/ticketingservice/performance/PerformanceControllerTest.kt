@@ -2,6 +2,7 @@ package com.group4.ticketingservice.performance
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.group4.ticketingservice.config.ClockConfig
 import com.group4.ticketingservice.controller.PerformanceController
 import com.group4.ticketingservice.dto.PerformanceCreateRequest
 import com.group4.ticketingservice.dto.PerformanceDeleteRequest
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
@@ -24,13 +26,16 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.Clock
 import java.time.Duration
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 @ExtendWith(MockKExtension::class)
+@Import(ClockConfig::class)
 @WebMvcTest(PerformanceController::class)
 class PerformanceControllerTest(
-    @Autowired val mockMvc: MockMvc
+    @Autowired val mockMvc: MockMvc,
+    @Autowired val clock: Clock
 ) {
     @MockkBean
     private lateinit var performanceService: PerformanceService
@@ -38,22 +43,22 @@ class PerformanceControllerTest(
     private val samplePerformance: Performance = Performance(
         id = 1,
         title = "test title",
-        date = LocalDateTime.now(),
-        bookingEndTime = LocalDateTime.now() + Duration.ofHours(2),
-        bookingStartTime = LocalDateTime.now() + Duration.ofHours(1),
+        date = OffsetDateTime.now(clock),
+        bookingEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
+        bookingStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
         maxAttendees = 10
     )
     private val samplePerformanceCreateRequest: PerformanceCreateRequest = PerformanceCreateRequest(
         title = "test title",
-        date = LocalDateTime.now(),
-        bookingEndTime = LocalDateTime.now() + Duration.ofHours(2),
-        bookingStartTime = LocalDateTime.now() + Duration.ofHours(1),
+        date = OffsetDateTime.now(clock),
+        bookingEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
+        bookingStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
         maxAttendees = 10
     )
     private val samplePerformanceDeleteRequest: PerformanceDeleteRequest = PerformanceDeleteRequest(
         id = 1
     )
-    private val gson: Gson = GsonBuilder().registerTypeAdapter(LocalDateTime::class.java, DateTimeConverter()).create()
+    private val gson: Gson = GsonBuilder().registerTypeAdapter(OffsetDateTime::class.java, DateTimeConverter()).create()
 
     @Test
     fun `POST performances should return created performance`() {

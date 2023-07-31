@@ -7,7 +7,7 @@ import com.group4.ticketingservice.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.Clock
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 @Service
 class BookingService @Autowired constructor(
@@ -23,7 +23,7 @@ class BookingService @Autowired constructor(
         val performance = performanceRepository.findById(performanceId).orElseThrow {
             IllegalArgumentException("Performance not found")
         }
-        val booking = Booking(user = user, performance = performance, bookedAt = LocalDateTime.now(clock))
+        val booking = Booking(user = user, performance = performance, bookedAt = OffsetDateTime.now(clock))
 
         return bookingRepository.save(booking)
     }

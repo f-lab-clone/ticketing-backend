@@ -33,7 +33,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.Clock
 import java.time.Duration
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 @ExtendWith(MockKExtension::class)
 @Import(ClockConfig::class)
@@ -56,20 +56,19 @@ class BookingControllerTest(
     private val samplePerformance: Performance = Performance(
         id = 1,
         title = "test title",
-        date = LocalDateTime.now(clock),
-        bookingEndTime = LocalDateTime.now(clock) + Duration.ofHours(2),
-        bookingStartTime = LocalDateTime.now(clock) + Duration.ofHours(1),
+        date = OffsetDateTime.now(clock),
+        bookingEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
+        bookingStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
         maxAttendees = 10
     )
     private val sampleBooking: Booking = Booking(
         id = 1,
         user = sampleUser,
         performance = samplePerformance,
-        bookedAt = LocalDateTime.now(clock)
+        bookedAt = OffsetDateTime.now(clock)
     )
 
-    // TODO: Make gson as a bean
-    private val gson: Gson = GsonBuilder().registerTypeAdapter(LocalDateTime::class.java, DateTimeConverter()).create()
+    private val gson: Gson = GsonBuilder().registerTypeAdapter(OffsetDateTime::class.java, DateTimeConverter()).create()
 
     @Test
     fun `POST bookings should return created booking`() {
@@ -78,7 +77,7 @@ class BookingControllerTest(
             id = 1,
             userId = 1,
             performanceId = 1,
-            bookedAt = LocalDateTime.now(clock)
+            bookedAt = OffsetDateTime.now(clock)
         )
 
         mockMvc.perform(
@@ -127,12 +126,12 @@ class BookingControllerTest(
             performance = Performance(
                 id = 2,
                 title = "test title 2",
-                date = LocalDateTime.now(clock),
-                bookingEndTime = LocalDateTime.now(clock) + Duration.ofHours(2),
-                bookingStartTime = LocalDateTime.now(clock) + Duration.ofHours(1),
+                date = OffsetDateTime.now(clock),
+                bookingEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
+                bookingStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
                 maxAttendees = 10
             ),
-            bookedAt = LocalDateTime.now(clock)
+            bookedAt = OffsetDateTime.now(clock)
         )
         every { bookingService.updateBooking(1, 2) } returns updatedBooking
 

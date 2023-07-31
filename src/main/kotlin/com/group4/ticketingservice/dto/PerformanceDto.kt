@@ -1,12 +1,12 @@
 package com.group4.ticketingservice.dto
 
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 data class PerformanceCreateRequest(
     val title: String,
-    val date: LocalDateTime,
-    val bookingStartTime: LocalDateTime,
-    val bookingEndTime: LocalDateTime,
+    val date: OffsetDateTime,
+    val bookingStartTime: OffsetDateTime,
+    val bookingEndTime: OffsetDateTime,
     val maxAttendees: Int
 )
 
@@ -17,8 +17,8 @@ data class PerformanceDeleteRequest(
 data class PerformanceResponse(
     val id: Long,
     val title: String,
-    val date: LocalDateTime,
-    val bookingStartTime: LocalDateTime,
-    val bookingEndTime: LocalDateTime,
+    val date: OffsetDateTime,
+    val bookingStartTime: OffsetDateTime,
+    val bookingEndTime: OffsetDateTime,
     val maxAttendees: Int
 )
