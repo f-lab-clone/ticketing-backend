@@ -1,10 +1,8 @@
 package com.group4.ticketingservice.controller
 
 
-import com.group4.ticketingservice.dto.SignInRequest
 import com.group4.ticketingservice.dto.SignUpRequest
 import com.group4.ticketingservice.dto.UserDto
-import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.service.UserService
 import com.group4.ticketingservice.utils.TokenProvider
 import org.springframework.http.HttpStatus

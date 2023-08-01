@@ -2,17 +2,13 @@ package com.group4.ticketingservice.user
 
 import com.group4.ticketingservice.dto.SignUpRequest
 import com.group4.ticketingservice.dto.UserDto
-import com.group4.ticketingservice.entity.Bookmark
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.service.UserService
 import com.group4.ticketingservice.utils.Authority
-import com.group4.ticketingservice.utils.TokenProvider
-import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test

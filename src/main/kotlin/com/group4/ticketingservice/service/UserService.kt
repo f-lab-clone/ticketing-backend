@@ -1,7 +1,6 @@
 package com.group4.ticketingservice.service
 
 
-import com.group4.ticketingservice.dto.SignInRequest
 import com.group4.ticketingservice.dto.SignUpRequest
 import com.group4.ticketingservice.dto.UserDto
 import com.group4.ticketingservice.entity.User

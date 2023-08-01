@@ -1,16 +1,12 @@
 package com.group4.ticketingservice.entity
 
 
-import com.group4.ticketingservice.dto.SignUpRequest
 import com.group4.ticketingservice.dto.UserDto
 import com.group4.ticketingservice.utils.Authority
-
 import jakarta.persistence.*
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.crypto.password.PasswordEncoder
-import java.time.LocalDateTime
 
 
 @Entity

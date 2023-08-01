@@ -1,7 +1,6 @@
 package com.group4.ticketingservice.bookmark
 
 import com.group4.ticketingservice.JwtAuthorizationEntryPoint
-import com.group4.ticketingservice.filter.JwtAuthenticationFilter
 import com.group4.ticketingservice.config.SecurityConfig
 import com.group4.ticketingservice.controller.BookmarkController
 import com.group4.ticketingservice.dto.BookmarkFromdto
@@ -17,7 +16,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.http.MediaType
-import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders

@@ -11,14 +11,12 @@ import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.TokenProvider
 import org.hamcrest.core.StringContains
-import org.junit.Before
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.http.MediaType
-import org.springframework.http.StreamingHttpOutputMessage.Body
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
