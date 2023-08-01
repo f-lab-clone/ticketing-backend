@@ -13,35 +13,31 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 
 class JwtAuthorizationFilter(
-        authenticationManager: AuthenticationManager?,
-        jwtAuthorizationEntryPoint: JwtAuthorizationEntryPoint,
-        private val tokenProvider: TokenProvider
+    authenticationManager: AuthenticationManager?,
+    jwtAuthorizationEntryPoint: JwtAuthorizationEntryPoint,
+    private val tokenProvider: TokenProvider
 ) : BasicAuthenticationFilter(authenticationManager, jwtAuthorizationEntryPoint) {
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
-
         val authorizationHeader = request.getHeader("Authorization")
         val jwt = tokenProvider.parseBearerToken(authorizationHeader)
 
-        if(tokenProvider.validateToken(jwt)){
-            val (username,authority)=tokenProvider.parseUserSpecification(jwt)
+        if (tokenProvider.validateToken(jwt)) {
+            val (username, authority) = tokenProvider.parseUserSpecification(jwt)
 
-            val authorties= mutableListOf<GrantedAuthority>()
+            val authorties = mutableListOf<GrantedAuthority>()
             authorties.add(SimpleGrantedAuthority(authority))
 
             val authentication =
-                    UsernamePasswordAuthenticationToken.authenticated(username,jwt,authorties)
-            SecurityContextHolder.getContext().authentication = authentication;
-
+                UsernamePasswordAuthenticationToken.authenticated(username, jwt, authorties)
+            SecurityContextHolder.getContext().authentication = authentication
         }
-        chain.doFilter(request, response);
-
+        chain.doFilter(request, response)
     }
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
+        val authorization = request.getHeader("Authorization")
 
-        val authorization=request.getHeader("Authorization")
-
-        return authorization==null || !authorization.startsWith("Bearer")
+        return authorization == null || !authorization.startsWith("Bearer")
     }
 }

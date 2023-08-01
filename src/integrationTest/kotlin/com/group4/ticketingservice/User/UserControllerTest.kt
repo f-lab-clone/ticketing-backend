@@ -1,6 +1,5 @@
 package com.group4.ticketingservice.User
 
-
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.group4.ticketingservice.AbstractIntegrationTest
@@ -25,11 +24,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-
 @AutoConfigureMockMvc
 class UserControllerTest : AbstractIntegrationTest() {
     @Autowired
     private lateinit var mockMvc: MockMvc
+
     @Autowired
     private lateinit var userRepository: UserRepository
 
@@ -43,9 +42,9 @@ class UserControllerTest : AbstractIntegrationTest() {
     }
 
     val sampleSignUpRequest = SignUpRequest(
-            email = testFields.testUserName,
-            name = testFields.testName,
-            password = testFields.password
+        email = testFields.testUserName,
+        name = testFields.testName,
+        password = testFields.password
     )
 
     val sampleSignInRequest = SignInRequest().apply {
@@ -53,12 +52,11 @@ class UserControllerTest : AbstractIntegrationTest() {
         password = testFields.password
     }
     val sampleUser = User(
-            name = testFields.testName,
-            email = testFields.testUserName,
-            password = BCryptPasswordEncoder().encode(testFields.password),
-            authority = Authority.USER
+        name = testFields.testName,
+        email = testFields.testUserName,
+        password = BCryptPasswordEncoder().encode(testFields.password),
+        authority = Authority.USER
     )
-
 
     @BeforeEach fun addUser() {
         userRepository.save(sampleUser)
@@ -68,84 +66,76 @@ class UserControllerTest : AbstractIntegrationTest() {
         userRepository.deleteAll()
     }
 
-
     fun getJwt(): String {
-        val gson= GsonBuilder().create()
+        val gson = GsonBuilder().create()
 
         val result = mockMvc.perform(
-                MockMvcRequestBuilders.post("/users/signin")
-                        .content(gson.toJson(sampleSignInRequest).toString())
-                        .contentType(MediaType.APPLICATION_JSON)
+            MockMvcRequestBuilders.post("/users/signin")
+                .content(gson.toJson(sampleSignInRequest).toString())
+                .contentType(MediaType.APPLICATION_JSON)
         ).andReturn()
-        val jwt=gson.fromJson(result.response.contentAsString, JsonObject::class.java)
+        val jwt = gson.fromJson(result.response.contentAsString, JsonObject::class.java)
         return jwt.get("Authorization").asString
     }
 
     @Test
     fun `POST_api_users_login should return jwt with HTTPStatus 200 OK`() {
-
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/users/signin")
-                        .content(GsonBuilder().create().toJson(sampleSignInRequest).toString())
-                        .contentType(MediaType.APPLICATION_JSON)
+            MockMvcRequestBuilders.post("/users/signin")
+                .content(GsonBuilder().create().toJson(sampleSignInRequest).toString())
+                .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk)
-                .andExpect(content().string(StringContains.containsString("Bearer")))
-
+            .andExpect(content().string(StringContains.containsString("Bearer")))
     }
 
     @Test
-    fun `POST_api_users_login should return HTTPStatus 400 BAD_REQUEST when password is invalid`() {
+    fun `POST_api_users_login should return HTTPStatus 401 Unauthorized when password is invalid`() {
         sampleSignInRequest.password = "4321" // wrong password
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/users/signin")
-                        .content(GsonBuilder().create().toJson(sampleSignInRequest).toString())
-                        .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isBadRequest)
-
-
+            MockMvcRequestBuilders.post("/users/signin")
+                .content(GsonBuilder().create().toJson(sampleSignInRequest).toString())
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isUnauthorized)
     }
 
     @Test
-    fun `POST_api_users_login should return HTTPStatus 400 BAD_REQUEST when user doesn't exist`() {
+    fun `POST_api_users_login should return HTTPStatus 401 Unauthorized when user doesn't exist`() {
         sampleSignInRequest.email = "asdf@asdf.com" // user doesn't exist
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/users/signin")
-                        .content(GsonBuilder().create().toJson(sampleSignInRequest).toString())
-                        .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isBadRequest)
-
-
+            MockMvcRequestBuilders.post("/users/signin")
+                .content(GsonBuilder().create().toJson(sampleSignInRequest).toString())
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isUnauthorized)
     }
 
     @Test
     fun `GET_api_users_access_token_info should return username with HTTPStatus 200 OK`() {
-        val jwt=getJwt()
+        val jwt = getJwt()
 
         val resultActions: ResultActions =
-                mockMvc.perform(MockMvcRequestBuilders.get("/users/access_token_info")
-                        .header("Authorization",jwt))
+            mockMvc.perform(
+                MockMvcRequestBuilders.get("/users/access_token_info")
+                    .header("Authorization", jwt)
+            )
         resultActions.andExpect(status().isOk)
-                .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(testFields.testUserName))
-
+            .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(testFields.testUserName))
     }
 
     @Test
     fun `GET_api_users_access_token_info should return HTTPStatus 401 Unauthorized when header not exist`() {
-
         val resultActions: ResultActions =
-                mockMvc.perform(MockMvcRequestBuilders.get("/users/access_token_info"))
+            mockMvc.perform(MockMvcRequestBuilders.get("/users/access_token_info"))
         resultActions.andExpect(status().isUnauthorized)
     }
 
     @Test
     fun `GET_api_users_access_token_info should return HTTPStatus 401 Unauthorized when jwt is expired`() {
-
-        val jwt=tokenProvider.createWrongTokenForTest("${testFields.testUserName}:USER")
+        val jwt = tokenProvider.createWrongTokenForTest("${testFields.testUserName}:USER")
         val resultActions: ResultActions =
-                mockMvc.perform(MockMvcRequestBuilders.get("/users/access_token_info")
-                        .header("Authorization",jwt))
+            mockMvc.perform(
+                MockMvcRequestBuilders.get("/users/access_token_info")
+                    .header("Authorization", jwt)
+            )
         resultActions.andExpect(status().isUnauthorized)
     }
-
-
 }

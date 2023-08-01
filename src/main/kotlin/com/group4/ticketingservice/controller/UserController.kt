@@ -1,6 +1,5 @@
 package com.group4.ticketingservice.controller
 
-
 import com.group4.ticketingservice.dto.SignUpRequest
 import com.group4.ticketingservice.dto.UserDto
 import com.group4.ticketingservice.service.UserService
@@ -18,8 +17,9 @@ import java.lang.IllegalArgumentException
 
 @RestController
 @RequestMapping("/users")
-class UserController(private val userService: UserService,
-                     private val tokenProvider: TokenProvider
+class UserController(
+    private val userService: UserService,
+    private val tokenProvider: TokenProvider
 ) {
 
     @PostMapping("/signup")
@@ -32,7 +32,6 @@ class UserController(private val userService: UserService,
         }
     }
 
-
     /**
      * This Endpoint is example that how to get Username from Authentication object.
      *   Email is specification of User.
@@ -43,14 +42,11 @@ class UserController(private val userService: UserService,
     @GetMapping("/access_token_info")
     fun getAccessTokenInfo(@AuthenticationPrincipal username: String): ResponseEntity<Map<String, Any>> {
         val jwt = SecurityContextHolder.getContext().authentication.credentials.toString()
-        val expiresInMillis= tokenProvider.parseTokenExpirationTime(jwt)
-        val map =mapOf(
-                "username" to username,
-                "expires_in" to expiresInMillis
+        val expiresInMillis = tokenProvider.parseTokenExpirationTime(jwt)
+        val map = mapOf(
+            "username" to username,
+            "expires_in" to expiresInMillis
         )
         return ResponseEntity.ok(map)
     }
-
-
 }
-

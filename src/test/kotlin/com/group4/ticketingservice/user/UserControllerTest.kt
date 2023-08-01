@@ -27,35 +27,36 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import java.time.LocalDateTime
 
-@WebMvcTest(controllers = [UserController::class],
-        includeFilters = arrayOf(ComponentScan.Filter(value = [(TokenProvider::class),(SecurityConfig::class),(JwtAuthorizationEntryPoint::class)], type = FilterType.ASSIGNABLE_TYPE)),
+@WebMvcTest(
+    controllers = [UserController::class],
+    includeFilters = arrayOf(ComponentScan.Filter(value = [(TokenProvider::class), (SecurityConfig::class), (JwtAuthorizationEntryPoint::class)], type = FilterType.ASSIGNABLE_TYPE))
 
 )
-class UserControllerTest(@Autowired
-                        private val mockMvc: MockMvc) {
-
+class UserControllerTest(
+    @Autowired
+    private val mockMvc: MockMvc
+) {
 
     @MockkBean
     private lateinit var service: UserService
 
     object testFields {
-        const val testName="minjun"
+        const val testName = "minjun"
         const val testUserName = "minjun3021@qwer.com"
         const val testUserRole = "USER"
-        const val password ="1234"
+        const val password = "1234"
     }
 
     val sampleSignUpRequest = SignUpRequest(
-            email = testUserName,
-            name = testName,
-            password = password
+        email = testUserName,
+        name = testName,
+        password = password
     )
     val sampleUserDTO = UserDto(
-            name = testName,
-            email = testUserName,
-            createdAt = LocalDateTime.now()
+        name = testName,
+        email = testUserName,
+        createdAt = LocalDateTime.now()
     )
-
 
     /**
      * Spring SecurityContext에 Authentication 객체를 넣어주는 커스텀 어노테이션을 만들어서
@@ -66,11 +67,10 @@ class UserControllerTest(@Autowired
     fun `GET_api_users_access_token_info should return username injected by Spring Security with HTTP 200 OK`() {
         // when
         val resultActions: ResultActions =
-                mockMvc.perform(MockMvcRequestBuilders.get("/users/access_token_info"))
+            mockMvc.perform(MockMvcRequestBuilders.get("/users/access_token_info"))
         resultActions.andExpect(MockMvcResultMatchers.status().isOk)
-                .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(testUserName))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(testUserName))
     }
-
 
     @Test
     fun `POST_api_user should invoke service_create_user`() {
@@ -78,10 +78,10 @@ class UserControllerTest(@Autowired
         every { service.createUser(sampleSignUpRequest) } returns sampleUserDTO
 
         // when
-                mockMvc.perform(
-                MockMvcRequestBuilders.post("/users/signup")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(GsonBuilder().create().toJson(sampleSignUpRequest).toString())
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/users/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(GsonBuilder().create().toJson(sampleSignUpRequest).toString())
 
         )
 
@@ -89,42 +89,40 @@ class UserControllerTest(@Autowired
         verify(exactly = 1) { service.createUser(sampleSignUpRequest) }
     }
 
-
-
     @Test
     fun `POST_api_users should return 201 HttpStatus Code for unique user`() {
         // given
         every { service.createUser(any()) } returns sampleUserDTO
 
         // when
-        val resultActions: ResultActions=
-                mockMvc.perform(
-                        MockMvcRequestBuilders.post("/users/signup")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(GsonBuilder().create().toJson(sampleSignUpRequest).toString())
+        val resultActions: ResultActions =
+            mockMvc.perform(
+                MockMvcRequestBuilders.post("/users/signup")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(GsonBuilder().create().toJson(sampleSignUpRequest).toString())
 
-                )
+            )
 
         // then
         resultActions.andExpect(MockMvcResultMatchers.status().isCreated)
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(testUserName))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(testUserName))
     }
+
     @Test
     fun `POST_api_users should return 409 HttpStatus Code for Duplicate user`() {
         // given
         every { service.createUser(any()) } throws IllegalArgumentException()
 
         // when
-        val resultActions: ResultActions=
+        val resultActions: ResultActions =
             mockMvc.perform(
-                    MockMvcRequestBuilders.post("/users/signup")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(GsonBuilder().create().toJson(sampleSignUpRequest).toString())
+                MockMvcRequestBuilders.post("/users/signup")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(GsonBuilder().create().toJson(sampleSignUpRequest).toString())
 
-        )
+            )
 
         // then
         resultActions.andExpect(MockMvcResultMatchers.status().isConflict)
     }
-
 }

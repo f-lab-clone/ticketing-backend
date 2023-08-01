@@ -19,33 +19,30 @@ import java.time.LocalDateTime
 class UserServiceTest() {
 
     private val repository: UserRepository = mockk()
-    private val passwordEncoder:PasswordEncoder= BCryptPasswordEncoder()
-    private val userService: UserService= UserService(repository,passwordEncoder)
+    private val passwordEncoder: PasswordEncoder = BCryptPasswordEncoder()
+    private val userService: UserService = UserService(repository, passwordEncoder)
 
     val sampleSignUpRequest = SignUpRequest(
-            email = "minjun3021@qwer.com",
-            name = "minjun",
-            password = "1234"
+        email = "minjun3021@qwer.com",
+        name = "minjun",
+        password = "1234"
     )
     val sampleUserDTO = UserDto(
-            name = "minjun3021@qwer.com",
-            email = "minjun",
-            createdAt = LocalDateTime.now()
+        name = "minjun3021@qwer.com",
+        email = "minjun",
+        createdAt = LocalDateTime.now()
     )
 
     val sampleUser = User(
-            name = "minjun3021@qwer.com",
-            email = "minjun",
-            password = "1234",
-            authority = Authority.USER
+        name = "minjun3021@qwer.com",
+        email = "minjun",
+        password = "1234",
+        authority = Authority.USER
     )
-
-
 
     @Test
     fun `userService_createUser() invoke repository_save`() {
-
-        every { repository.existsByEmail(any())} returns false
+        every { repository.existsByEmail(any()) } returns false
         every { repository.save(any()) } returns sampleUser
 
         // when
@@ -57,52 +54,46 @@ class UserServiceTest() {
 
     @Test
     fun `userService_createUser() invoke encoder_encode`() {
-
         val encryptedPassword = passwordEncoder.encode(sampleSignUpRequest.password)
-        val encoder:PasswordEncoder= mockk()
-        val service = UserService(repository,encoder)
+        val encoder: PasswordEncoder = mockk()
+        val service = UserService(repository, encoder)
 
-        every { repository.existsByEmail(any())} returns false
-        every { encoder.encode(any())} returns encryptedPassword
+        every { repository.existsByEmail(any()) } returns false
+        every { encoder.encode(any()) } returns encryptedPassword
         every { repository.save(any()) } returns sampleUser
 
         // when
         service.createUser(sampleSignUpRequest)
 
         // then
-        verify(exactly = 1) {encoder.encode(any())}
+        verify(exactly = 1) { encoder.encode(any()) }
     }
-
 
     @Test
     fun `userService_create_user() return UserDto when request_email  not existed at repository`() {
         // given
-        every { repository.existsByEmail(sampleSignUpRequest.email)} returns false
+        every { repository.existsByEmail(sampleSignUpRequest.email) } returns false
         every { repository.save(any()) } returns sampleUser
 
         // when
-        val result=userService.createUser(sampleSignUpRequest)
+        val result = userService.createUser(sampleSignUpRequest)
 
-        //then
+        // then
         assertEquals(sampleSignUpRequest.email, result.email)
-
     }
 
     @Test
     fun `userService_create_user() throw Exception when request_email existed at repository`() {
         // given
-        every { repository.existsByEmail(sampleSignUpRequest.email)} returns true
+        every { repository.existsByEmail(sampleSignUpRequest.email) } returns true
 
         // when
-        //exception을 던져서 주석처리
-        //userService.createUser(sampleSignUpRequest)
+        // exception을 던져서 주석처리
+        // userService.createUser(sampleSignUpRequest)
 
-        //then
+        // then
         assertThrows(IllegalArgumentException::class.java) {
             userService.createUser(sampleSignUpRequest)
         }
-
     }
 }
-
-

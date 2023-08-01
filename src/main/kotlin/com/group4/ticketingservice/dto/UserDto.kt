@@ -3,13 +3,11 @@ package com.group4.ticketingservice.dto
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime
 
-
-
 class UserDto(
-        val name: String,
-        val email: String,
-        val createdAt: LocalDateTime?
-){
+    val name: String,
+    val email: String,
+    val createdAt: LocalDateTime?
+) {
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    var token :String?=null
+    var token: String? = null
 }

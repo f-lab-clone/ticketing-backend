@@ -16,28 +16,29 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.http.MediaType
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WebMvcTest(controllers = [BookmarkController::class],
-        includeFilters = [ComponentScan.Filter(value = [(SecurityConfig::class),(JwtAuthorizationEntryPoint::class),(TokenProvider::class)], type = FilterType.ASSIGNABLE_TYPE)],
-        )
+@WebMvcTest(
+    controllers = [BookmarkController::class],
+    includeFilters = [ComponentScan.Filter(value = [(SecurityConfig::class), (JwtAuthorizationEntryPoint::class), (TokenProvider::class)], type = FilterType.ASSIGNABLE_TYPE)]
+)
 class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
     @MockkBean
     private lateinit var service: BookmarkService
     private val sampleBookmark = Bookmark(
-            user_id = 1,
-            show_id = 1
+        user_id = 1,
+        show_id = 1
     )
     private val sampleBookmarkDto = BookmarkFromdto(
-            user_id = 1,
-            show_id = 1
+        user_id = 1,
+        show_id = 1
     )
 
     @Test
@@ -47,10 +48,10 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
 
         // when
         mockMvc.perform(
-                post("/bookmarks")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                        .param("user_id", sampleBookmark.user_id.toString())
-                        .param("show_id", sampleBookmark.show_id.toString())
+            post("/bookmarks")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .param("user_id", sampleBookmark.user_id.toString())
+                .param("show_id", sampleBookmark.show_id.toString())
         )
 
         // then
@@ -64,15 +65,15 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
 
         // when
         val resultActions: ResultActions = mockMvc.perform(
-                post("/bookmarks")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                        .param("user_id", sampleBookmark.user_id.toString())
-                        .param("show_id", sampleBookmark.show_id.toString())
+            post("/bookmarks")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .param("user_id", sampleBookmark.user_id.toString())
+                .param("show_id", sampleBookmark.show_id.toString())
         )
 
         // then
         resultActions.andExpect(status().isCreated)
-                .andExpect(content().json("1"))
+            .andExpect(content().json("1"))
     }
 
     @Test
@@ -82,15 +83,15 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
 
         // when
         val resultActions: ResultActions = mockMvc.perform(
-                post("/bookmarks")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                        .param("user_id", sampleBookmark.user_id.toString())
-                        .param("show_id", sampleBookmark.show_id.toString())
+            post("/bookmarks")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .param("user_id", sampleBookmark.user_id.toString())
+                .param("show_id", sampleBookmark.show_id.toString())
         )
 
         // then
         resultActions.andExpect(status().isCreated)
-                .andExpect(content().json("1"))
+            .andExpect(content().json("1"))
     }
 
     @Test
@@ -115,7 +116,7 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
 
         // then
         resultActions.andExpect(status().isOk)
-                .andExpect(jsonPath("$[0].user_id").value(sampleBookmark.user_id))
+            .andExpect(jsonPath("$[0].user_id").value(sampleBookmark.user_id))
     }
 
     @Test
@@ -140,9 +141,9 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
 
         // then
         resultActions.andExpect(status().isOk)
-                .andExpect(jsonPath("$.id").value(sampleBookmark.id))
-                .andExpect(jsonPath("$.user_id").value(sampleBookmark.user_id))
-                .andExpect(jsonPath("$.show_id").value(sampleBookmark.show_id))
+            .andExpect(jsonPath("$.id").value(sampleBookmark.id))
+            .andExpect(jsonPath("$.user_id").value(sampleBookmark.user_id))
+            .andExpect(jsonPath("$.show_id").value(sampleBookmark.show_id))
     }
 
     @Test
@@ -155,7 +156,7 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
 
         // then
         resultActions.andExpect(status().isOk)
-                .andExpect(content().string("null"))
+            .andExpect(content().string("null"))
     }
 
     @Test
@@ -165,9 +166,9 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
 
         // when
         mockMvc.perform(
-                MockMvcRequestBuilders
-                        .delete("/bookmarks/1")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+            MockMvcRequestBuilders
+                .delete("/bookmarks/1")
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
         )
 
         // then
@@ -181,8 +182,8 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
 
         // when
         val resultActions: ResultActions = mockMvc.perform(
-                MockMvcRequestBuilders
-                        .delete("/bookmarks/1")
+            MockMvcRequestBuilders
+                .delete("/bookmarks/1")
         )
 
         // then

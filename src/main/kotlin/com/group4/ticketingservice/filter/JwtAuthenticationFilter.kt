@@ -12,21 +12,18 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
-
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import java.io.IOException
 import java.io.PrintWriter
 
-
 class JwtAuthenticationFilter(
-        authenticationManager: AuthenticationManager?,
-        tokenProvider: TokenProvider
+    authenticationManager: AuthenticationManager?,
+    tokenProvider: TokenProvider
 
 ) : UsernamePasswordAuthenticationFilter() {
 
     private var authenticationManager: AuthenticationManager? = authenticationManager
     private var tokenProvider: TokenProvider = tokenProvider
-
 
     override fun attemptAuthentication(request: HttpServletRequest?, response: HttpServletResponse?): Authentication? {
         super.setAuthenticationManager(authenticationManager)
@@ -40,33 +37,34 @@ class JwtAuthenticationFilter(
             e.printStackTrace()
         }
 
-        return null;
+        return null
     }
 
-
-    override fun successfulAuthentication(request: HttpServletRequest?,
-                                          response: HttpServletResponse?,
-                                          chain: FilterChain?,
-                                          authResult: Authentication?) {
-
+    override fun successfulAuthentication(
+        request: HttpServletRequest?,
+        response: HttpServletResponse?,
+        chain: FilterChain?,
+        authResult: Authentication?
+    ) {
         val user = authResult?.principal as User
         val jwt = tokenProvider.createToken("${user.username}:${user.role}")
-        val gson=GsonBuilder().create()
-        val body=gson.toJson(mapOf("Authorization" to "Bearer $jwt"))
-        response?.contentType="application/json"
+        val gson = GsonBuilder().create()
+        val body = gson.toJson(mapOf("Authorization" to "Bearer $jwt"))
+        response?.contentType = "application/json"
         val writer: PrintWriter? = response?.writer
         writer?.println(body)
     }
 
-    override fun unsuccessfulAuthentication(request: HttpServletRequest?,
-                                            response: HttpServletResponse?,
-                                            failed: AuthenticationException?) {
-        val gson= GsonBuilder().create()
-        val body=gson.toJson(mapOf("message" to "Authentication failed."))
-        response?.contentType="application/json"
-        response?.status=HttpServletResponse.SC_BAD_REQUEST
+    override fun unsuccessfulAuthentication(
+        request: HttpServletRequest?,
+        response: HttpServletResponse?,
+        failed: AuthenticationException?
+    ) {
+        val gson = GsonBuilder().create()
+        val body = gson.toJson(mapOf("message" to "Authentication failed."))
+        response?.contentType = "application/json"
+        response?.status = HttpServletResponse.SC_UNAUTHORIZED
         val writer: PrintWriter? = response?.writer
         writer?.println(body)
-
     }
 }

@@ -8,24 +8,19 @@ import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.stereotype.Component
 import java.io.PrintWriter
 
-
-
-
 @Component
 class JwtAuthorizationEntryPoint : AuthenticationEntryPoint {
 
-    override fun commence(request: HttpServletRequest?,
-                          response: HttpServletResponse?,
-                          authException: AuthenticationException?) {
-        val gson= GsonBuilder().create()
-        val body= gson.toJson(mapOf("message" to "JWT Autorization failed."))
-        response?.contentType="application/json"
+    override fun commence(
+        request: HttpServletRequest?,
+        response: HttpServletResponse?,
+        authException: AuthenticationException?
+    ) {
+        val gson = GsonBuilder().create()
+        val body = gson.toJson(mapOf("message" to "JWT Autorization failed."))
+        response?.contentType = "application/json"
         val writer: PrintWriter? = response?.writer
         writer?.println(body)
-        response?.status=HttpServletResponse.SC_UNAUTHORIZED
-
-
-
-
+        response?.status = HttpServletResponse.SC_UNAUTHORIZED
     }
 }

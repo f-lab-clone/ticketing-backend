@@ -35,6 +35,10 @@ services:
       MYSQL_USERNAME: root
       MYSQL_PASSWORD: test
       MYSQL_SCHEMA: test
+      JWT_SECRET: d2VhcmVuYXZ5c3dkZXZlbG9wZXJzLmFuZGlhbW1pbmp1bjMwMjE=
+      JWT_EXPIRATION_HOURS: 24
+      JWT_ISSUER: minjun
+
     depends_on:
       db:
         condition: service_healthy
