@@ -7,6 +7,7 @@ import com.group4.ticketingservice.repository.BookingRepository
 import com.group4.ticketingservice.repository.PerformanceRepository
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.service.BookingService
+import com.group4.ticketingservice.utils.Authority
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -25,7 +26,12 @@ class BookingServiceTest {
         performanceRepository = performanceRepository,
         bookingRepository = bookingRepository
     )
-    private val sampleUser: User = User(id = 1, name = "John Doe", email = "john@email.com")
+    val sampleUser = User(
+        name = "minjun3021@qwer.com",
+        email = "minjun",
+        password = "1234",
+        authority = Authority.USER
+    )
     private val samplePerformance: Performance = Performance(
         id = 1,
         title = "test title",

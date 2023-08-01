@@ -6,8 +6,6 @@ plugins {
     kotlin("jvm") version "1.8.21"
     kotlin("plugin.spring") version "1.8.21"
     kotlin("plugin.jpa") version "1.8.21"
-    kotlin("plugin.allopen") version "1.6.21"
-    kotlin("plugin.noarg") version "1.6.21"
     id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
     id("jacoco")
 }
@@ -51,6 +49,7 @@ tasks.check { dependsOn(integrationTest) }
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.ninja-squad:springmockk:4.0.2")
@@ -64,7 +63,15 @@ dependencies {
     integrationTestImplementation("org.springframework.boot:spring-boot-testcontainers")
     integrationTestImplementation("org.testcontainers:junit-jupiter")
     integrationTestImplementation("org.testcontainers:mysql")
+    testImplementation("org.springframework.security:spring-security-test")
     implementation("com.ninja-squad:springmockk:4.0.2")
+
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
+
+    implementation("com.google.code.gson:gson:2.10.1")
 }
 
 tasks.withType<KotlinCompile> {
@@ -80,11 +87,15 @@ tasks.withType<Test> {
 }
 
 allOpen {
-    annotation("javax.persistence.Entity")
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
 }
 
 noArg {
-    annotation("javax.persistence.Entity")
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
 }
 
 val installLocalGitHook = tasks.register<Copy>("installLocalGitHook") {

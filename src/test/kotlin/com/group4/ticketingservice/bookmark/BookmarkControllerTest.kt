@@ -1,16 +1,22 @@
 package com.group4.ticketingservice.bookmark
 
+import com.group4.ticketingservice.JwtAuthorizationEntryPoint
+import com.group4.ticketingservice.config.SecurityConfig
 import com.group4.ticketingservice.controller.BookmarkController
 import com.group4.ticketingservice.dto.BookmarkFromdto
 import com.group4.ticketingservice.entity.Bookmark
 import com.group4.ticketingservice.service.BookmarkService
+import com.group4.ticketingservice.utils.TokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.FilterType
 import org.springframework.http.MediaType
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -19,7 +25,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WebMvcTest(BookmarkController::class)
+@WebMvcTest(
+    controllers = [BookmarkController::class],
+    includeFilters = [ComponentScan.Filter(value = [(SecurityConfig::class), (JwtAuthorizationEntryPoint::class), (TokenProvider::class)], type = FilterType.ASSIGNABLE_TYPE)]
+)
 class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
     @MockkBean
     private lateinit var service: BookmarkService
@@ -159,6 +168,7 @@ class BookmarkControllerTest(@Autowired val mockMvc: MockMvc) {
         mockMvc.perform(
             MockMvcRequestBuilders
                 .delete("/bookmarks/1")
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
         )
 
         // then
