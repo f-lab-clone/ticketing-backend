@@ -1,4 +1,4 @@
-# ticketing-service
+# ticketing-backend
 
 
 - [Kanban Board](https://github.com/orgs/f-lab-clone/projects/3)
