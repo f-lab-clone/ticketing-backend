@@ -21,7 +21,7 @@ class SecurityConfig(
     private val tokenProvider: TokenProvider
 ) {
 
-    private val allowedUrls = arrayOf("/", "/users/signup", "/bookmarks/**")
+    private val allowedUrls = arrayOf("/", "/users/signup", "/bookmarks/**", "/bookings/**", "/performances/**")
 
     @Bean
     fun filterChain(http: HttpSecurity): DefaultSecurityFilterChain {

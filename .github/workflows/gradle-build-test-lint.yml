@@ -28,7 +28,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Build 
+      - name: Build
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
         with:
           arguments: bootJar
@@ -68,7 +68,7 @@ jobs:
         if: always()
         with:
           arguments: integrationTest
-    
+
   coverage:
     runs-on: ubuntu-latest
     needs: set-up
@@ -111,7 +111,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          
+
       - name: Ktlint check
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
         if: always()

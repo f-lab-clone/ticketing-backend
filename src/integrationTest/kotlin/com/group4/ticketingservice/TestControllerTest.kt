@@ -10,7 +10,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @AutoConfigureMockMvc
 class TestControllerTest : AbstractIntegrationTest() {
-    @Autowired private lateinit var mockMvc: MockMvc
+    @Autowired
+    private lateinit var mockMvc: MockMvc
 
     @Test
     fun contextLoads() {
