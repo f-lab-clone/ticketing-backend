@@ -54,4 +54,3 @@ class BookingRepositoryTest @Autowired constructor(
         assertThat(savedBooking).isEqualTo(sampleBooking)
     }
 }
-
