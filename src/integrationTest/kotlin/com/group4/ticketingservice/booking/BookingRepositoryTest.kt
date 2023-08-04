@@ -45,11 +45,11 @@ class BookingRepositoryTest @Autowired constructor(
     fun `BookingRepository_save without OffsetDateTime should return savedBooking`() {
         // given
         val sampleUser = User(
-            name = "John Doe",
-            email = "john@email.test"
+            name = "James",
+            email = "james@email.test"
         )
         val samplePerformance = Performance(
-            title = "test title",
+            title = "test title 2",
             date = OffsetDateTime.now(),
             bookingEndTime = OffsetDateTime.now() + ofHours(2),
             bookingStartTime = OffsetDateTime.now() + ofHours(1),
