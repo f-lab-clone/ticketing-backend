@@ -44,7 +44,7 @@ class UserControllerTest(
         const val testName = "minjun"
         const val testUserName = "minjun3021@qwer.com"
         const val testUserRole = "USER"
-        const val password = "1234"
+        const val password = "123456789"
     }
 
     val sampleSignUpRequest = SignUpRequest(
@@ -56,6 +56,17 @@ class UserControllerTest(
         name = testName,
         email = testUserName,
         createdAt = LocalDateTime.now()
+    )
+
+    val invalidEmailSignUpRequest = SignUpRequest(
+            email = "qwer@a",
+            name = testName,
+            password = password
+    )
+    val invalidPasswordSignUpRequest = SignUpRequest(
+            email = testUserName,
+            name = testName,
+            password = "1234"
     )
 
     /**
@@ -124,5 +135,35 @@ class UserControllerTest(
 
         // then
         resultActions.andExpect(MockMvcResultMatchers.status().isConflict)
+    }
+
+    @Test
+    fun `POST_api_users should return 400 HttpStatus Code for invalid email`() {
+
+        // when
+        val resultActions: ResultActions =
+                mockMvc.perform(
+                        MockMvcRequestBuilders.post("/users/signup")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(GsonBuilder().create().toJson(invalidEmailSignUpRequest).toString())
+                )
+        // then
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest)
+    }
+
+    @Test
+    fun `POST_api_users should return 400 HttpStatus Code for invalid password`() {
+
+
+        // when
+        val resultActions: ResultActions =
+                mockMvc.perform(
+                        MockMvcRequestBuilders.post("/users/signup")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(GsonBuilder().create().toJson(invalidPasswordSignUpRequest).toString())
+
+                )
+        // then
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
 }

@@ -18,7 +18,6 @@ data class SignUpRequest(
         val email: String?,
         @field:NotNull
         @field:Size(min = 2, message = "이름을 2글자 이상이여야 합니다.")
-        @field:Pattern(regexp = "^[가-힣]{2,4}$", message = "이름을 똑바로 입력해주세요.")
         val name: String?,
         @field:NotNull
         @field:Size(min = 9, message = "비밀번호는 최소 9자 이상이어야 합니다.")
