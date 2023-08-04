@@ -16,7 +16,13 @@ class DateTimeConverterTest {
     @Test
     fun `serialize should return stringified OffsetDateTime`() {
         val sampleOffsetDateTimeObj = OffsetDateTime.of(
-            2021, 1, 1, 1, 1, 1, 0,
+            2021,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
             ZoneOffset.of("+09:00")
         )
 
@@ -32,8 +38,15 @@ class DateTimeConverterTest {
         val sampleOffsetDateTimeObj: OffsetDateTime = gson.fromJson(sampleOffsetDateTimeStr, OffsetDateTime::class.java)
 
         assertEquals(
-            sampleOffsetDateTimeObj, OffsetDateTime.of(
-                2020, 12, 31, 16, 1, 1, 0,
+            sampleOffsetDateTimeObj,
+            OffsetDateTime.of(
+                2020,
+                12,
+                31,
+                16,
+                1,
+                1,
+                0,
                 ZoneOffset.of("+00:00")
             )
         )
@@ -42,7 +55,13 @@ class DateTimeConverterTest {
     @Test
     fun `serialize bookingResponse with KST Datetime should return stringified OffsetDateTime`() {
         val sampleOffsetDateTimeObj = OffsetDateTime.of(
-            2021, 1, 1, 1, 1, 1, 0,
+            2021,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
             ZoneOffset.of("+09:00")
         )
 
@@ -70,8 +89,15 @@ class DateTimeConverterTest {
             gson.fromJson(sampleOffsetDateTimeStr, BookingResponse::class.java)
 
         assertEquals(
-            sampleOffsetDateTimeObj.bookedAt, OffsetDateTime.of(
-                2020, 12, 31, 16, 1, 1, 0,
+            sampleOffsetDateTimeObj.bookedAt,
+            OffsetDateTime.of(
+                2020,
+                12,
+                31,
+                16,
+                1,
+                1,
+                0,
                 ZoneOffset.of("+00:00")
             )
         )
@@ -86,5 +112,4 @@ class DateTimeConverterTest {
             gson.fromJson(sampleOffsetDateTimeStr, BookingResponse::class.java)
         }
     }
-
 }
