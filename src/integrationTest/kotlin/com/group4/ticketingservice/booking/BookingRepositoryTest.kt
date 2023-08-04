@@ -16,17 +16,33 @@ import java.time.Clock
 import java.time.Duration.ofHours
 import java.time.OffsetDateTime
 
-// @ExtendWith(SpringExtension::class)
 @Import(ClockConfig::class)
 class BookingRepositoryTest @Autowired constructor(
     val userRepository: UserRepository,
     val performanceRepository: PerformanceRepository,
     val bookingRepository: BookingRepository,
-    val clock: Clock
+    clock: Clock
 ) : AbstractIntegrationTest() {
 
+    private val sampleUser = User(
+        name = "John Doe",
+        email = "john@email.test"
+    )
+    private val samplePerformance = Performance(
+        title = "test title",
+        date = OffsetDateTime.now(clock),
+        bookingEndTime = OffsetDateTime.now(clock) + ofHours(2),
+        bookingStartTime = OffsetDateTime.now(clock) + ofHours(1),
+        maxAttendees = 10
+    )
+    private val sampleBooking = Booking(
+        user = sampleUser,
+        performance = samplePerformance,
+        bookedAt = OffsetDateTime.now(clock)
+    )
+
     @Test
-    fun `BookingRepository_save should return savedBooking`() {
+    fun `BookingRepository_save without OffsetDateTime should return savedBooking`() {
         // given
         val sampleUser = User(
             name = "John Doe",
@@ -34,16 +50,29 @@ class BookingRepositoryTest @Autowired constructor(
         )
         val samplePerformance = Performance(
             title = "test title",
-            date = OffsetDateTime.now(clock),
-            bookingEndTime = OffsetDateTime.now(clock) + ofHours(2),
-            bookingStartTime = OffsetDateTime.now(clock) + ofHours(1),
+            date = OffsetDateTime.now(),
+            bookingEndTime = OffsetDateTime.now() + ofHours(2),
+            bookingStartTime = OffsetDateTime.now() + ofHours(1),
             maxAttendees = 10
         )
         val sampleBooking = Booking(
             user = sampleUser,
             performance = samplePerformance,
-            bookedAt = OffsetDateTime.now(clock)
+            bookedAt = OffsetDateTime.now()
         )
+        userRepository.save(sampleUser)
+        performanceRepository.save(samplePerformance)
+
+        // when
+        val savedBooking = bookingRepository.save(sampleBooking)
+
+        // then
+        assertThat(savedBooking).isEqualTo(sampleBooking)
+    }
+
+    @Test
+    fun `BookingRepository_save with OffsetDateTime should return savedBooking`() {
+        // given
         userRepository.save(sampleUser)
         performanceRepository.save(samplePerformance)
 
