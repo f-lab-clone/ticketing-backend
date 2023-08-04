@@ -5,8 +5,10 @@ import com.google.gson.GsonBuilder
 import com.group4.ticketingservice.dto.BookingResponse
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
+import java.time.format.DateTimeParseException
 
 class DateTimeConverterTest {
     private val gson: Gson = GsonBuilder().registerTypeAdapter(OffsetDateTime::class.java, DateTimeConverter()).create()
@@ -73,6 +75,16 @@ class DateTimeConverterTest {
                 ZoneOffset.of("+00:00")
             )
         )
+    }
+
+    @Test
+    fun `deserialize bookingResponse without ZoneOffset should return Exception`() {
+        val sampleOffsetDateTimeStr =
+            "{\"id\":1,\"performanceId\":1,\"userId\":1,\"bookedAt\":\"2021-01-01T01:01:01.000\"}"
+
+        assertThrows<DateTimeParseException> {
+            gson.fromJson(sampleOffsetDateTimeStr, BookingResponse::class.java)
+        }
     }
 
 }

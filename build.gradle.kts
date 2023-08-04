@@ -1,3 +1,4 @@
+import com.ewerk.gradle.plugins.tasks.QuerydslCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -10,10 +11,19 @@ plugins {
     kotlin("plugin.noarg") version "1.6.21"
     id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
     id("jacoco")
+    id("com.ewerk.gradle.plugins.querydsl") version "1.0.10"
 }
 
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
+val queryDslVersion = "5.0.0"
+
+configurations {
+    compileOnly {
+        extendsFrom(configurations.annotationProcessor.get())
+    }
+}
+
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -37,6 +47,7 @@ val integrationTestImplementation by configurations.getting {
 configurations["integrationTestRuntimeOnly"].extendsFrom(configurations.runtimeOnly.get())
 configurations["integrationTestImplementation"].extendsFrom(configurations.testImplementation.get())
 
+
 val integrationTest = task<Test>("integrationTest") {
     description = "Runs integration tests."
     group = "verification"
@@ -55,16 +66,15 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.ninja-squad:springmockk:4.0.2")
     implementation("com.google.code.gson:gson:2.10.1")
-    implementation("com.ninja-squad:springmockk:4.0.2")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation("org.modelmapper:modelmapper:2.4.2")
-    implementation("org.modelmapper:modelmapper:2.4.2")
     integrationTestImplementation("org.springframework.boot:spring-boot-testcontainers")
     integrationTestImplementation("org.testcontainers:junit-jupiter")
     integrationTestImplementation("org.testcontainers:mysql")
-    implementation("com.ninja-squad:springmockk:4.0.2")
+    implementation("com.querydsl:querydsl-jpa:${queryDslVersion}")
+    annotationProcessor("com.querydsl:querydsl-apt:${queryDslVersion}")
 }
 
 tasks.withType<KotlinCompile> {
@@ -155,4 +165,23 @@ tasks.jacocoTestCoverageVerification {
             excludes = Qdomains
         }
     }
+}
+
+
+val querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+sourceSets.getByName("main") {
+    java.srcDir(querydslDir)
+}
+configurations {
+    named("querydsl") {
+        extendsFrom(configurations.compileClasspath.get())
+    }
+}
+tasks.withType<QuerydslCompile> {
+    options.annotationProcessorPath = configurations.querydsl.get()
 }
