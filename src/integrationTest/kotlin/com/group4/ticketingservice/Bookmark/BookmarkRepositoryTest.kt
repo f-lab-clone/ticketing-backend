@@ -1,5 +1,6 @@
-package com.group4.ticketingservice
+package com.group4.ticketingservice.Bookmark
 
+import com.group4.ticketingservice.AbstractIntegrationTest
 import com.group4.ticketingservice.entity.Bookmark
 import com.group4.ticketingservice.repository.BookmarkRepository
 import org.assertj.core.api.Assertions.assertThat

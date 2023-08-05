@@ -10,7 +10,7 @@ import jakarta.persistence.ManyToOne
 import java.time.OffsetDateTime
 
 @Entity
-class Booking(
+class Reservation(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -20,8 +20,8 @@ class Booking(
     var user: User,
 
     @ManyToOne
-    @JoinColumn(name = "performance_id", nullable = false)
-    var performance: Performance,
+    @JoinColumn(name = "event_id", nullable = false)
+    var event: Event,
 
     @Column(nullable = false)
     var bookedAt: OffsetDateTime

@@ -2,7 +2,7 @@ package com.group4.ticketingservice.util
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.group4.ticketingservice.dto.BookingResponse
+import com.group4.ticketingservice.dto.ReservationResponse
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -53,7 +53,7 @@ class DateTimeConverterTest {
     }
 
     @Test
-    fun `serialize bookingResponse with KST Datetime should return stringified OffsetDateTime`() {
+    fun `serialize reservationResponse with KST Datetime should return stringified OffsetDateTime`() {
         val sampleOffsetDateTimeObj = OffsetDateTime.of(
             2021,
             1,
@@ -66,27 +66,27 @@ class DateTimeConverterTest {
         )
 
         val sampleOffsetDateTimeStr: String = gson.toJson(
-            BookingResponse(
+            ReservationResponse(
                 id = 1,
                 userId = 1,
-                performanceId = 1,
+                eventId = 1,
                 bookedAt = sampleOffsetDateTimeObj
             )
         )
 
         assertEquals(
             sampleOffsetDateTimeStr,
-            "{\"id\":1,\"performanceId\":1,\"userId\":1,\"bookedAt\":\"2020-12-31T16:01:01.000Z\"}"
+            "{\"id\":1,\"eventId\":1,\"userId\":1,\"bookedAt\":\"2020-12-31T16:01:01.000Z\"}"
         )
     }
 
     @Test
-    fun `deserialize bookingResponse with KST Datetime should return OffsetDateTime object`() {
+    fun `deserialize reservationResponse with KST Datetime should return OffsetDateTime object`() {
         val sampleOffsetDateTimeStr =
-            "{\"id\":1,\"performanceId\":1,\"userId\":1,\"bookedAt\":\"2021-01-01T01:01:01.000+09:00\"}"
+            "{\"id\":1,\"eventId\":1,\"userId\":1,\"bookedAt\":\"2021-01-01T01:01:01.000+09:00\"}"
 
-        val sampleOffsetDateTimeObj: BookingResponse =
-            gson.fromJson(sampleOffsetDateTimeStr, BookingResponse::class.java)
+        val sampleOffsetDateTimeObj: ReservationResponse =
+            gson.fromJson(sampleOffsetDateTimeStr, ReservationResponse::class.java)
 
         assertEquals(
             sampleOffsetDateTimeObj.bookedAt,
@@ -104,12 +104,12 @@ class DateTimeConverterTest {
     }
 
     @Test
-    fun `deserialize bookingResponse without ZoneOffset should return Exception`() {
+    fun `deserialize reservationResponse without ZoneOffset should return Exception`() {
         val sampleOffsetDateTimeStr =
-            "{\"id\":1,\"performanceId\":1,\"userId\":1,\"bookedAt\":\"2021-01-01T01:01:01.000\"}"
+            "{\"id\":1,\"eventId\":1,\"userId\":1,\"bookedAt\":\"2021-01-01T01:01:01.000\"}"
 
         assertThrows<DateTimeParseException> {
-            gson.fromJson(sampleOffsetDateTimeStr, BookingResponse::class.java)
+            gson.fromJson(sampleOffsetDateTimeStr, ReservationResponse::class.java)
         }
     }
 }

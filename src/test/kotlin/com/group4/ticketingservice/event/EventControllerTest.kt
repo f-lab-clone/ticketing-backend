@@ -1,15 +1,15 @@
-package com.group4.ticketingservice.performance
+package com.group4.ticketingservice.event
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.group4.ticketingservice.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.config.ClockConfig
 import com.group4.ticketingservice.config.SecurityConfig
-import com.group4.ticketingservice.controller.PerformanceController
-import com.group4.ticketingservice.dto.PerformanceCreateRequest
-import com.group4.ticketingservice.dto.PerformanceDeleteRequest
-import com.group4.ticketingservice.entity.Performance
-import com.group4.ticketingservice.service.PerformanceService
+import com.group4.ticketingservice.controller.EventController
+import com.group4.ticketingservice.dto.EventCreateRequest
+import com.group4.ticketingservice.dto.EventDeleteRequest
+import com.group4.ticketingservice.entity.Event
+import com.group4.ticketingservice.service.EventService
 import com.group4.ticketingservice.util.DateTimeConverter
 import com.group4.ticketingservice.utils.TokenProvider
 import com.ninjasquad.springmockk.MockkBean
@@ -38,93 +38,93 @@ import java.time.OffsetDateTime
 @ExtendWith(MockKExtension::class)
 @Import(ClockConfig::class)
 @WebMvcTest(
-    PerformanceController::class,
+    EventController::class,
     includeFilters = arrayOf(
         ComponentScan.Filter(value = [(SecurityConfig::class), (TokenProvider::class), (JwtAuthorizationEntryPoint::class)], type = FilterType.ASSIGNABLE_TYPE)
     )
 )
-class PerformanceControllerTest(
+class EventControllerTest(
     @Autowired val mockMvc: MockMvc,
     @Autowired val clock: Clock
 ) {
     @MockkBean
-    private lateinit var performanceService: PerformanceService
+    private lateinit var eventService: EventService
 
-    private val samplePerformance: Performance = Performance(
+    private val sampleEvent: Event = Event(
         id = 1,
         title = "test title",
         date = OffsetDateTime.now(clock),
-        bookingEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
-        bookingStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
+        reservationEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
+        reservationStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
         maxAttendees = 10
     )
-    private val samplePerformanceCreateRequest: PerformanceCreateRequest = PerformanceCreateRequest(
+    private val sampleEventCreateRequest: EventCreateRequest = EventCreateRequest(
         title = "test title",
         date = OffsetDateTime.now(clock),
-        bookingEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
-        bookingStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
+        reservationEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
+        reservationStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
         maxAttendees = 10
     )
-    private val samplePerformanceDeleteRequest: PerformanceDeleteRequest = PerformanceDeleteRequest(
+    private val sampleEventDeleteRequest: EventDeleteRequest = EventDeleteRequest(
         id = 1
     )
     private val gson: Gson = GsonBuilder().registerTypeAdapter(OffsetDateTime::class.java, DateTimeConverter()).create()
 
     @Test
-    fun `POST performances should return created performance`() {
-        every { performanceService.createPerformance(any(), any(), any(), any(), any()) } returns samplePerformance
+    fun `POST events should return created event`() {
+        every { eventService.createEvent(any(), any(), any(), any(), any()) } returns sampleEvent
 
         mockMvc.perform(
-            post("/performances")
+            post("/events")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(samplePerformanceCreateRequest))
+                .content(gson.toJson(sampleEventCreateRequest))
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(samplePerformance.id))
-            .andExpect(jsonPath("$.title").value(samplePerformance.title))
-            .andExpect(jsonPath("$.maxAttendees").value(samplePerformance.maxAttendees))
+            .andExpect(jsonPath("$.id").value(sampleEvent.id))
+            .andExpect(jsonPath("$.title").value(sampleEvent.title))
+            .andExpect(jsonPath("$.maxAttendees").value(sampleEvent.maxAttendees))
     }
 
     @Test
-    fun `GET performances should return performance`() {
-        every { performanceService.getPerformance(any()) } returns samplePerformance
+    fun `GET events should return event`() {
+        every { eventService.getEvent(any()) } returns sampleEvent
         mockMvc.perform(
-            get("/performances/${samplePerformance.id}")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-            .andExpect(status().isOk)
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(samplePerformance.id))
-    }
-
-    @Test
-    fun `GET performances should return not found`() {
-        every { performanceService.getPerformance(any()) } returns null
-        mockMvc.perform(
-            get("/performances/${samplePerformance.id}")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-            .andExpect(status().isOk)
-    }
-
-    @Test
-    fun `GET List of performances should return list of performances`() {
-        every { performanceService.getPerformances() } returns listOf(samplePerformance)
-        mockMvc.perform(
-            get("/performances/")
+            get("/events/${sampleEvent.id}")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$[0].id").value(samplePerformance.id))
+            .andExpect(jsonPath("$.id").value(sampleEvent.id))
     }
 
     @Test
-    fun `GET List of performances should return empty list`() {
-        every { performanceService.getPerformances() } returns listOf()
+    fun `GET events should return not found`() {
+        every { eventService.getEvent(any()) } returns null
         mockMvc.perform(
-            get("/performances/")
+            get("/events/${sampleEvent.id}")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isOk)
+    }
+
+    @Test
+    fun `GET List of events should return list of events`() {
+        every { eventService.getEvents() } returns listOf(sampleEvent)
+        mockMvc.perform(
+            get("/events/")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$[0].id").value(sampleEvent.id))
+    }
+
+    @Test
+    fun `GET List of events should return empty list`() {
+        every { eventService.getEvents() } returns listOf()
+        mockMvc.perform(
+            get("/events/")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isNoContent)
@@ -133,9 +133,9 @@ class PerformanceControllerTest(
     }
 
     @Test
-    fun `PUT performance should return updated performance`() {
+    fun `PUT event should return updated event`() {
         every {
-            performanceService.updatePerformance(
+            eventService.updateEvent(
                 any(),
                 any(),
                 any(),
@@ -143,24 +143,24 @@ class PerformanceControllerTest(
                 any(),
                 any()
             )
-        } returns samplePerformance
+        } returns sampleEvent
         mockMvc.perform(
-            put("/performances/${samplePerformance.id}")
+            put("/events/${sampleEvent.id}")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(samplePerformanceCreateRequest))
+                .content(gson.toJson(sampleEventCreateRequest))
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(samplePerformance.id))
-            .andExpect(jsonPath("$.title").value(samplePerformance.title))
-            .andExpect(jsonPath("$.maxAttendees").value(samplePerformance.maxAttendees))
+            .andExpect(jsonPath("$.id").value(sampleEvent.id))
+            .andExpect(jsonPath("$.title").value(sampleEvent.title))
+            .andExpect(jsonPath("$.maxAttendees").value(sampleEvent.maxAttendees))
     }
 
     @Test
-    fun `DELETE performance should return no content`() {
-        every { performanceService.deletePerformance(any()) } returns Unit
+    fun `DELETE event should return no content`() {
+        every { eventService.deleteEvent(any()) } returns Unit
         mockMvc.perform(
-            delete("/performances/${samplePerformanceDeleteRequest.id}")
+            delete("/events/${sampleEventDeleteRequest.id}")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isNoContent)

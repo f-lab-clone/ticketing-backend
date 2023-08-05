@@ -8,7 +8,7 @@ import jakarta.persistence.Id
 import java.time.OffsetDateTime
 
 @Entity
-class Performance(
+class Event(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -17,11 +17,11 @@ class Performance(
 
     var date: OffsetDateTime,
 
-    @Column(name = "booking_start_time")
-    var bookingStartTime: OffsetDateTime,
+    @Column(name = "reservation_start_time")
+    var reservationStartTime: OffsetDateTime,
 
-    @Column(name = "booking_end_time")
-    var bookingEndTime: OffsetDateTime,
+    @Column(name = "reservation_end_time")
+    var reservationEndTime: OffsetDateTime,
 
     @Column(name = "max_attendees")
     var maxAttendees: Int

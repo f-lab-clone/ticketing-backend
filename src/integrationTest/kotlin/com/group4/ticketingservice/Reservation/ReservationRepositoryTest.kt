@@ -1,12 +1,12 @@
-package com.group4.ticketingservice.booking
+package com.group4.ticketingservice.Reservation
 
 import com.group4.ticketingservice.AbstractIntegrationTest
 import com.group4.ticketingservice.config.ClockConfig
-import com.group4.ticketingservice.entity.Booking
-import com.group4.ticketingservice.entity.Performance
+import com.group4.ticketingservice.entity.Event
+import com.group4.ticketingservice.entity.Reservation
 import com.group4.ticketingservice.entity.User
-import com.group4.ticketingservice.repository.BookingRepository
-import com.group4.ticketingservice.repository.PerformanceRepository
+import com.group4.ticketingservice.repository.EventRepository
+import com.group4.ticketingservice.repository.ReservationRepository
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.utils.Authority
 import org.assertj.core.api.Assertions.assertThat
@@ -18,10 +18,10 @@ import java.time.Clock
 import java.time.OffsetDateTime
 
 @Import(ClockConfig::class)
-class BookingRepositoryTest @Autowired constructor(
+class ReservationRepositoryTest @Autowired constructor(
     val userRepository: UserRepository,
-    val performanceRepository: PerformanceRepository,
-    val bookingRepository: BookingRepository,
+    val eventRepository: EventRepository,
+    val reservationRepository: ReservationRepository,
     clock: Clock
 ) : AbstractIntegrationTest() {
 
@@ -36,54 +36,54 @@ class BookingRepositoryTest @Autowired constructor(
         password = BCryptPasswordEncoder().encode(testFields.password),
         authority = Authority.USER
     )
-    private val samplePerformance = Performance(
+    private val sampleEvent = Event(
         title = "test title",
         date = OffsetDateTime.now(clock),
-        bookingEndTime = OffsetDateTime.now(clock),
-        bookingStartTime = OffsetDateTime.now(clock),
+        reservationEndTime = OffsetDateTime.now(clock),
+        reservationStartTime = OffsetDateTime.now(clock),
         maxAttendees = 10
     )
-    private val sampleBooking = Booking(
+    private val sampleReservation = Reservation(
         user = sampleUser,
-        performance = samplePerformance,
+        event = sampleEvent,
         bookedAt = OffsetDateTime.now(clock)
     )
 
     @Test
-    fun `BookingRepository_save without mocked clock and OffsetDateTime should return savedBooking`() {
+    fun `ReservationRepository_save without mocked clock and OffsetDateTime should return savedReservation`() {
         // given
-        val samplePerformance = Performance(
+        val sampleEvent = Event(
             title = "test title 2",
             date = OffsetDateTime.now(),
-            bookingEndTime = OffsetDateTime.now(),
-            bookingStartTime = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now(),
+            reservationStartTime = OffsetDateTime.now(),
             maxAttendees = 10
         )
-        val sampleBooking = Booking(
+        val sampleReservation = Reservation(
             user = sampleUser,
-            performance = samplePerformance,
+            event = sampleEvent,
             bookedAt = OffsetDateTime.now()
         )
         userRepository.save(sampleUser)
-        performanceRepository.save(samplePerformance)
+        eventRepository.save(sampleEvent)
 
         // when
-        val savedBooking = bookingRepository.save(sampleBooking)
+        val savedReservation = reservationRepository.save(sampleReservation)
 
         // then
-        assertThat(savedBooking).isEqualTo(sampleBooking)
+        assertThat(savedReservation).isEqualTo(sampleReservation)
     }
 
     @Test
-    fun `BookingRepository_save with mocked UTC clock and OffsetDateTime should return savedBooking`() {
+    fun `ReservationRepository_save with mocked UTC clock and OffsetDateTime should return savedReservation`() {
         // given
         userRepository.save(sampleUser)
-        performanceRepository.save(samplePerformance)
+        eventRepository.save(sampleEvent)
 
         // when
-        val savedBooking = bookingRepository.save(sampleBooking)
+        val savedReservation = reservationRepository.save(sampleReservation)
 
         // then
-        assertThat(savedBooking).isEqualTo(sampleBooking)
+        assertThat(savedReservation).isEqualTo(sampleReservation)
     }
 }
