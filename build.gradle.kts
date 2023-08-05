@@ -6,8 +6,6 @@ plugins {
     kotlin("jvm") version "1.8.21"
     kotlin("plugin.spring") version "1.8.21"
     kotlin("plugin.jpa") version "1.8.21"
-    kotlin("plugin.allopen") version "1.6.21"
-    kotlin("plugin.noarg") version "1.6.21"
     id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
     id("jacoco")
 }
@@ -69,6 +67,8 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
 }
 
 tasks.withType<KotlinCompile> {
