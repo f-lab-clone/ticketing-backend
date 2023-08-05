@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
 import java.time.Clock
-import java.time.Duration.ofHours
 import java.time.OffsetDateTime
 
 @Import(ClockConfig::class)
@@ -31,8 +30,8 @@ class BookingRepositoryTest @Autowired constructor(
     private val samplePerformance = Performance(
         title = "test title",
         date = OffsetDateTime.now(clock),
-        bookingEndTime = OffsetDateTime.now(clock) + ofHours(2),
-        bookingStartTime = OffsetDateTime.now(clock) + ofHours(1),
+        bookingEndTime = OffsetDateTime.now(clock),
+        bookingStartTime = OffsetDateTime.now(clock),
         maxAttendees = 10
     )
     private val sampleBooking = Booking(
@@ -42,7 +41,7 @@ class BookingRepositoryTest @Autowired constructor(
     )
 
     @Test
-    fun `BookingRepository_save without OffsetDateTime should return savedBooking`() {
+    fun `BookingRepository_save without mocked clock and OffsetDateTime should return savedBooking`() {
         // given
         val sampleUser = User(
             name = "James",
@@ -51,8 +50,8 @@ class BookingRepositoryTest @Autowired constructor(
         val samplePerformance = Performance(
             title = "test title 2",
             date = OffsetDateTime.now(),
-            bookingEndTime = OffsetDateTime.now() + ofHours(2),
-            bookingStartTime = OffsetDateTime.now() + ofHours(1),
+            bookingEndTime = OffsetDateTime.now(),
+            bookingStartTime = OffsetDateTime.now(),
             maxAttendees = 10
         )
         val sampleBooking = Booking(
@@ -71,7 +70,7 @@ class BookingRepositoryTest @Autowired constructor(
     }
 
     @Test
-    fun `BookingRepository_save with OffsetDateTime should return savedBooking`() {
+    fun `BookingRepository_save with mocked UTC clock and OffsetDateTime should return savedBooking`() {
         // given
         userRepository.save(sampleUser)
         performanceRepository.save(samplePerformance)
