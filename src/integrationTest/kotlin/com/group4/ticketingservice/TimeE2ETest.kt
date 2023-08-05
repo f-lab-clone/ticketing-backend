@@ -21,7 +21,7 @@ class TimeE2ETest @Autowired constructor(
 ) : AbstractIntegrationTest() {
 
     @Test
-    fun `POST performances with json plain text should return performance`() {
+    fun `All API only returns OffsetDateTime in UTC without any offset info`() {
         val performanceCreateRequest = "{\"title\":\"test title\"," +
             "\"date\":\"2022-09-01T21:00:00.001+09:00\"," +
             "\"bookingStartTime\":\"2022-09-01T22:00:00.001+09:00\"," +
