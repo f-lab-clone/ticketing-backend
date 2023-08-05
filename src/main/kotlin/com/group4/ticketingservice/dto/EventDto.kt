@@ -2,23 +2,23 @@ package com.group4.ticketingservice.dto
 
 import java.time.OffsetDateTime
 
-data class PerformanceCreateRequest(
+data class EventCreateRequest(
     val title: String,
     val date: OffsetDateTime,
-    val bookingStartTime: OffsetDateTime,
-    val bookingEndTime: OffsetDateTime,
+    val reservationStartTime: OffsetDateTime,
+    val reservationEndTime: OffsetDateTime,
     val maxAttendees: Int
 )
 
-data class PerformanceDeleteRequest(
+data class EventDeleteRequest(
     val id: Long
 )
 
-data class PerformanceResponse(
+data class EventResponse(
     val id: Long,
     val title: String,
     val date: OffsetDateTime,
-    val bookingStartTime: OffsetDateTime,
-    val bookingEndTime: OffsetDateTime,
+    val reservationStartTime: OffsetDateTime,
+    val reservationEndTime: OffsetDateTime,
     val maxAttendees: Int
 )

@@ -21,7 +21,7 @@ class UserService(
 
         val newUser = User(
             name = request.name!!,
-            email = request.email!!,
+            email = request.email,
             password = encoder.encode(request.password),
             authority = Authority.USER
         )

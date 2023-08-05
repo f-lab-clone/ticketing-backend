@@ -1,19 +1,19 @@
-package com.group4.ticketingservice.booking
+package com.group4.ticketingservice.reservation
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.group4.ticketingservice.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.config.ClockConfig
 import com.group4.ticketingservice.config.SecurityConfig
-import com.group4.ticketingservice.controller.BookingController
-import com.group4.ticketingservice.dto.BookingCreateRequest
-import com.group4.ticketingservice.dto.BookingDeleteRequest
-import com.group4.ticketingservice.dto.BookingResponse
-import com.group4.ticketingservice.dto.BookingUpdateRequest
-import com.group4.ticketingservice.entity.Booking
-import com.group4.ticketingservice.entity.Performance
+import com.group4.ticketingservice.controller.ReservationController
+import com.group4.ticketingservice.dto.ReservationCreateRequest
+import com.group4.ticketingservice.dto.ReservationDeleteRequest
+import com.group4.ticketingservice.dto.ReservationResponse
+import com.group4.ticketingservice.dto.ReservationUpdateRequest
+import com.group4.ticketingservice.entity.Event
+import com.group4.ticketingservice.entity.Reservation
 import com.group4.ticketingservice.entity.User
-import com.group4.ticketingservice.service.BookingService
+import com.group4.ticketingservice.service.ReservationService
 import com.group4.ticketingservice.util.DateTimeConverter
 import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.TokenProvider
@@ -44,17 +44,17 @@ import java.time.OffsetDateTime
 @ExtendWith(MockKExtension::class)
 @Import(ClockConfig::class)
 @WebMvcTest(
-    BookingController::class,
+    ReservationController::class,
     includeFilters = arrayOf(
         ComponentScan.Filter(value = [ (SecurityConfig::class), (TokenProvider::class), (JwtAuthorizationEntryPoint::class)], type = FilterType.ASSIGNABLE_TYPE)
     )
 )
-class BookingControllerTest(
+class ReservationControllerTest(
     @Autowired val mockMvc: MockMvc,
     @Autowired val clock: Clock
 ) {
     @MockkBean
-    private lateinit var bookingService: BookingService
+    private lateinit var reservationService: ReservationService
     object testFields {
         const val testName = "minjun"
         const val testUserName = "minjun3021@qwer.com"
@@ -69,112 +69,112 @@ class BookingControllerTest(
         authority = Authority.USER
     )
 
-    private val sampleBookingCreateRequest = BookingCreateRequest(
-        performanceId = 1,
+    private val sampleReservationCreateRequest = ReservationCreateRequest(
+        eventId = 1,
         userId = 1
     )
-    private val sampleBookingDeleteRequest = BookingDeleteRequest(
+    private val sampleReservationDeleteRequest = ReservationDeleteRequest(
         id = 1
     )
 
-    private val samplePerformance: Performance = Performance(
+    private val sampleEvent: Event = Event(
         id = 1,
         title = "test title",
         date = OffsetDateTime.now(clock),
-        bookingEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
-        bookingStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
+        reservationEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
+        reservationStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
         maxAttendees = 10
     )
-    private val sampleBooking: Booking = Booking(
+    private val sampleReservation: Reservation = Reservation(
         id = 1,
         user = sampleUser.apply { id = 1 },
-        performance = samplePerformance,
+        event = sampleEvent,
         bookedAt = OffsetDateTime.now(clock)
     )
 
     private val gson: Gson = GsonBuilder().registerTypeAdapter(OffsetDateTime::class.java, DateTimeConverter()).create()
 
     @Test
-    fun `POST bookings should return created booking`() {
-        every { bookingService.createBooking(1, 1) } returns sampleBooking
-        val sampleBookingResponse = BookingResponse(
+    fun `POST reservations should return created reservation`() {
+        every { reservationService.createReservation(1, 1) } returns sampleReservation
+        val sampleReservationResponse = ReservationResponse(
             id = 1,
             userId = 1,
-            performanceId = 1,
+            eventId = 1,
             bookedAt = OffsetDateTime.now(clock)
         )
 
         mockMvc.perform(
-            post("/bookings")
+            post("/reservations")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Gson().toJson(sampleBookingCreateRequest))
+                .content(Gson().toJson(sampleReservationCreateRequest))
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(sampleBooking.id))
-            .andExpect(jsonPath("$.userId").value(sampleBooking.user.id))
-            .andExpect(jsonPath("$.performanceId").value(sampleBooking.performance.id))
+            .andExpect(jsonPath("$.id").value(sampleReservation.id))
+            .andExpect(jsonPath("$.userId").value(sampleReservation.user.id))
+            .andExpect(jsonPath("$.eventId").value(sampleReservation.event.id))
             .andDo {
                 assertEquals(
-                    gson.fromJson(it.response.contentAsString, BookingResponse::class.java),
-                    sampleBookingResponse
+                    gson.fromJson(it.response.contentAsString, ReservationResponse::class.java),
+                    sampleReservationResponse
                 )
             }
     }
 
     @Test
-    fun `GET bookings should return booking`() {
-        every { bookingService.getBooking(1) } returns sampleBooking
+    fun `GET reservations should return reservation`() {
+        every { reservationService.getReservation(1) } returns sampleReservation
 
         mockMvc.perform(
-            get("/bookings/1")
+            get("/reservations/1")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(sampleBooking.id))
-            .andExpect(jsonPath("$.userId").value(sampleBooking.user.id))
-            .andExpect(jsonPath("$.performanceId").value(sampleBooking.performance.id))
+            .andExpect(jsonPath("$.id").value(sampleReservation.id))
+            .andExpect(jsonPath("$.userId").value(sampleReservation.user.id))
+            .andExpect(jsonPath("$.eventId").value(sampleReservation.event.id))
     }
 
     @Test
-    fun `PUT bookings should return updated booking`() {
-        val bookingUpdateRequest = BookingUpdateRequest(
-            performanceId = 2
+    fun `PUT reservations should return updated reservation`() {
+        val reservationUpdateRequest = ReservationUpdateRequest(
+            eventId = 2
         )
-        val updatedBooking = Booking(
+        val updatedReservation = Reservation(
             id = 1,
             user = sampleUser,
-            performance = Performance(
+            event = Event(
                 id = 2,
                 title = "test title 2",
                 date = OffsetDateTime.now(clock),
-                bookingEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
-                bookingStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
+                reservationEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
+                reservationStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
                 maxAttendees = 10
             ),
             bookedAt = OffsetDateTime.now(clock)
         )
-        every { bookingService.updateBooking(1, 2) } returns updatedBooking
+        every { reservationService.updateReservation(1, 2) } returns updatedReservation
 
         mockMvc.perform(
-            put("/bookings/1")
+            put("/reservations/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Gson().toJson(bookingUpdateRequest))
+                .content(Gson().toJson(reservationUpdateRequest))
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(updatedBooking.id))
-            .andExpect(jsonPath("$.userId").value(updatedBooking.user.id))
-            .andExpect(jsonPath("$.performanceId").value(updatedBooking.performance.id))
+            .andExpect(jsonPath("$.id").value(updatedReservation.id))
+            .andExpect(jsonPath("$.userId").value(updatedReservation.user.id))
+            .andExpect(jsonPath("$.eventId").value(updatedReservation.event.id))
     }
 
     @Test
-    fun `DELETE bookings should return no content`() {
-        every { bookingService.deleteBooking(1) } returns Unit
+    fun `DELETE reservations should return no content`() {
+        every { reservationService.deleteReservation(1) } returns Unit
 
         mockMvc.perform(
-            delete("/bookings/${sampleBookingDeleteRequest.id}")
+            delete("/reservations/${sampleReservationDeleteRequest.id}")
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isNoContent)

@@ -6,6 +6,8 @@ plugins {
     kotlin("jvm") version "1.8.21"
     kotlin("plugin.spring") version "1.8.21"
     kotlin("plugin.jpa") version "1.8.21"
+    kotlin("plugin.allopen") version "1.6.21"
+    kotlin("plugin.noarg") version "1.6.21"
     id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
     id("jacoco")
 }

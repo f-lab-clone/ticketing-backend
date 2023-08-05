@@ -9,7 +9,9 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.test.context.TestPropertySource
 
+@TestPropertySource(properties = ["spring.jpa.hibernate.ddl-auto=create"])
 class UserRepositoryTest(
     @Autowired val userRepository: UserRepository
 ) : AbstractIntegrationTest() {

@@ -22,21 +22,21 @@ class TimeE2ETest @Autowired constructor(
 
     @Test
     fun `All API only returns OffsetDateTime in UTC without any offset info`() {
-        val performanceCreateRequest = "{\"title\":\"test title\"," +
+        val eventCreateRequest = "{\"title\":\"test title\"," +
             "\"date\":\"2022-09-01T21:00:00.001+09:00\"," +
-            "\"bookingStartTime\":\"2022-09-01T22:00:00.001+09:00\"," +
-            "\"bookingEndTime\":\"2022-09-01T23:00:00.001+09:00\"," +
+            "\"reservationStartTime\":\"2022-09-01T22:00:00.001+09:00\"," +
+            "\"reservationEndTime\":\"2022-09-01T23:00:00.001+09:00\"," +
             "\"maxAttendees\":10}"
 
         mockMvc.perform(
-            post("/performances")
+            post("/events")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(performanceCreateRequest)
+                .content(eventCreateRequest)
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.date").value("2022-09-01T12:00:00.001Z"))
-            .andExpect(jsonPath("$.bookingStartTime").value("2022-09-01T13:00:00.001Z"))
-            .andExpect(jsonPath("$.bookingEndTime").value("2022-09-01T14:00:00.001Z"))
+            .andExpect(jsonPath("$.reservationStartTime").value("2022-09-01T13:00:00.001Z"))
+            .andExpect(jsonPath("$.reservationEndTime").value("2022-09-01T14:00:00.001Z"))
     }
 }
