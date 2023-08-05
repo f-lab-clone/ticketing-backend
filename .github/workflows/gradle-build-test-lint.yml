@@ -85,7 +85,7 @@ jobs:
         uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629
         if: always()
         with:
-          arguments: jacocoTestReport -x test -x jacocoTestCoverageVerification
+          arguments: jacocoTestReport -x jacocoTestCoverageVerification
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
