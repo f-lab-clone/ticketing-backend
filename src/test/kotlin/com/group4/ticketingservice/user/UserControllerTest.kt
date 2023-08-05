@@ -15,6 +15,7 @@ import com.group4.ticketingservice.utils.TokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.verify
+import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -44,7 +45,7 @@ class UserControllerTest(
         const val testName = "minjun"
         const val testUserName = "minjun3021@qwer.com"
         const val testUserRole = "USER"
-        const val password = "1234"
+        const val password = "123456789"
     }
 
     val sampleSignUpRequest = SignUpRequest(
@@ -56,6 +57,12 @@ class UserControllerTest(
         name = testName,
         email = testUserName,
         createdAt = LocalDateTime.now()
+    )
+
+    val invalidSignUpRequest = SignUpRequest(
+        email = "a",
+        name = "a",
+        password = "1234"
     )
 
     /**
@@ -124,5 +131,40 @@ class UserControllerTest(
 
         // then
         resultActions.andExpect(MockMvcResultMatchers.status().isConflict)
+    }
+
+    @Test
+    fun `POST_api_users should return 400 HttpStatus Code for invalid request`() {
+        // when
+        val resultActions: ResultActions =
+            mockMvc.perform(
+                MockMvcRequestBuilders.post("/users/signup")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(GsonBuilder().create().toJson(invalidSignUpRequest).toString())
+            )
+        // then
+        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest)
+    }
+
+    @Test
+    fun `POST_api_users should return errors array for invalid request`() {
+        val resultActions: ResultActions =
+            mockMvc.perform(
+                MockMvcRequestBuilders.post("/users/signup")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(GsonBuilder().create().toJson(invalidSignUpRequest).toString())
+            )
+        // then
+        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.errors").exists())
+
+        resultActions.andExpect(
+            MockMvcResultMatchers.jsonPath("$.errors[*]").value(
+                Matchers.containsInAnyOrder(
+                    Matchers.containsString("name"),
+                    Matchers.containsString("email"),
+                    Matchers.containsString("password")
+                )
+            )
+        )
     }
 }

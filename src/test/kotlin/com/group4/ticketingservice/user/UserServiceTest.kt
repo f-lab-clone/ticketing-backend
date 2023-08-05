@@ -72,7 +72,7 @@ class UserServiceTest {
     @Test
     fun `userService_create_user() return UserDto when request_email  not existed at repository`() {
         // given
-        every { repository.existsByEmail(sampleSignUpRequest.email) } returns false
+        every { repository.existsByEmail(sampleSignUpRequest.email!!) } returns false
         every { repository.save(any()) } returns sampleUser
 
         // when
@@ -85,7 +85,7 @@ class UserServiceTest {
     @Test
     fun `userService_create_user() throw Exception when request_email existed at repository`() {
         // given
-        every { repository.existsByEmail(sampleSignUpRequest.email) } returns true
+        every { repository.existsByEmail(sampleSignUpRequest.email!!) } returns true
 
         // when
         // exception을 던져서 주석처리
