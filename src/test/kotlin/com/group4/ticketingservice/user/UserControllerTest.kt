@@ -15,6 +15,7 @@ import com.group4.ticketingservice.utils.TokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.verify
+import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -58,16 +59,12 @@ class UserControllerTest(
         createdAt = LocalDateTime.now()
     )
 
-    val invalidEmailSignUpRequest = SignUpRequest(
-            email = "qwer@a",
-            name = testName,
-            password = password
-    )
-    val invalidPasswordSignUpRequest = SignUpRequest(
-            email = testUserName,
-            name = testName,
+    val invalidSignUpRequest = SignUpRequest(
+            email = "a",
+            name = "a",
             password = "1234"
     )
+
 
     /**
      * Spring SecurityContext에 Authentication 객체를 넣어주는 커스텀 어노테이션을 만들어서
@@ -138,32 +135,21 @@ class UserControllerTest(
     }
 
     @Test
-    fun `POST_api_users should return 400 HttpStatus Code for invalid email`() {
+    fun `POST_api_users should return 400 HttpStatus Code, and message for invalid request`() {
 
         // when
         val resultActions: ResultActions =
                 mockMvc.perform(
                         MockMvcRequestBuilders.post("/users/signup")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(GsonBuilder().create().toJson(invalidEmailSignUpRequest).toString())
+                                .content(GsonBuilder().create().toJson(invalidSignUpRequest).toString())
                 )
         // then
+        resultActions.andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("name")))
+        resultActions.andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("email")))
+        resultActions.andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("password")))
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
 
-    @Test
-    fun `POST_api_users should return 400 HttpStatus Code for invalid password`() {
 
-
-        // when
-        val resultActions: ResultActions =
-                mockMvc.perform(
-                        MockMvcRequestBuilders.post("/users/signup")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(GsonBuilder().create().toJson(invalidPasswordSignUpRequest).toString())
-
-                )
-        // then
-        resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest)
-    }
 }

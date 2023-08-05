@@ -1,5 +1,6 @@
 package com.group4.ticketingservice.dto
 
+import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
@@ -14,13 +15,13 @@ import jakarta.validation.constraints.Size
 
 data class SignUpRequest(
         @field:NotNull
-        @field:Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,6}$", message = "이메일 형식에 맞지 않습니다.")
+        @field:Email
         val email: String?,
         @field:NotNull
-        @field:Size(min = 2, message = "이름을 2글자 이상이여야 합니다.")
+        @field:Size(min = 2, max = 30)
         val name: String?,
         @field:NotNull
-        @field:Size(min = 9, message = "비밀번호는 최소 9자 이상이어야 합니다.")
+        @field:Size(min = 9,max=128)
         val password: String?
 )
 

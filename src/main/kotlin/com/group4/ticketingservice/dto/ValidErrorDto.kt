@@ -1,6 +1,6 @@
 package com.group4.ticketingservice.dto
 
-data class ErrorResponseDto(
+data class ValidErrorDto(
         val errorCode: String,
-        val message: String?
+        val errors : MutableList<String>
 )
