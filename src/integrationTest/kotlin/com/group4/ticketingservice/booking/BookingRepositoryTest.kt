@@ -8,10 +8,12 @@ import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.BookingRepository
 import com.group4.ticketingservice.repository.PerformanceRepository
 import com.group4.ticketingservice.repository.UserRepository
+import com.group4.ticketingservice.utils.Authority
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.time.Clock
 import java.time.OffsetDateTime
 
@@ -23,9 +25,16 @@ class BookingRepositoryTest @Autowired constructor(
     clock: Clock
 ) : AbstractIntegrationTest() {
 
+    object testFields {
+        const val testName = "minjun"
+        const val testUserName = "minjun3021@qwer.com"
+        const val password = "1234"
+    }
     private val sampleUser = User(
-        name = "John Doe",
-        email = "john@email.test"
+        name = testFields.testName,
+        email = testFields.testUserName,
+        password = BCryptPasswordEncoder().encode(testFields.password),
+        authority = Authority.USER
     )
     private val samplePerformance = Performance(
         title = "test title",
@@ -43,10 +52,6 @@ class BookingRepositoryTest @Autowired constructor(
     @Test
     fun `BookingRepository_save without mocked clock and OffsetDateTime should return savedBooking`() {
         // given
-        val sampleUser = User(
-            name = "James",
-            email = "james@email.test"
-        )
         val samplePerformance = Performance(
             title = "test title 2",
             date = OffsetDateTime.now(),
