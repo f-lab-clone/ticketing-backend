@@ -2,13 +2,16 @@ package com.group4.ticketingservice.performance
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.group4.ticketingservice.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.config.ClockConfig
+import com.group4.ticketingservice.config.SecurityConfig
 import com.group4.ticketingservice.controller.PerformanceController
 import com.group4.ticketingservice.dto.PerformanceCreateRequest
 import com.group4.ticketingservice.dto.PerformanceDeleteRequest
 import com.group4.ticketingservice.entity.Performance
 import com.group4.ticketingservice.service.PerformanceService
 import com.group4.ticketingservice.util.DateTimeConverter
+import com.group4.ticketingservice.utils.TokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
@@ -16,6 +19,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.FilterType
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
@@ -32,7 +37,12 @@ import java.time.OffsetDateTime
 
 @ExtendWith(MockKExtension::class)
 @Import(ClockConfig::class)
-@WebMvcTest(PerformanceController::class)
+@WebMvcTest(
+    PerformanceController::class,
+    includeFilters = arrayOf(
+        ComponentScan.Filter(value = [(SecurityConfig::class), (TokenProvider::class), (JwtAuthorizationEntryPoint::class)], type = FilterType.ASSIGNABLE_TYPE)
+    )
+)
 class PerformanceControllerTest(
     @Autowired val mockMvc: MockMvc,
     @Autowired val clock: Clock

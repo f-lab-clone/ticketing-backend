@@ -2,7 +2,9 @@ package com.group4.ticketingservice.booking
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.group4.ticketingservice.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.config.ClockConfig
+import com.group4.ticketingservice.config.SecurityConfig
 import com.group4.ticketingservice.controller.BookingController
 import com.group4.ticketingservice.dto.BookingCreateRequest
 import com.group4.ticketingservice.dto.BookingDeleteRequest
@@ -13,6 +15,8 @@ import com.group4.ticketingservice.entity.Performance
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.service.BookingService
 import com.group4.ticketingservice.util.DateTimeConverter
+import com.group4.ticketingservice.utils.Authority
+import com.group4.ticketingservice.utils.TokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
@@ -21,6 +25,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.FilterType
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
@@ -37,13 +43,31 @@ import java.time.OffsetDateTime
 
 @ExtendWith(MockKExtension::class)
 @Import(ClockConfig::class)
-@WebMvcTest(BookingController::class)
+@WebMvcTest(
+    BookingController::class,
+    includeFilters = arrayOf(
+        ComponentScan.Filter(value = [ (SecurityConfig::class), (TokenProvider::class), (JwtAuthorizationEntryPoint::class)], type = FilterType.ASSIGNABLE_TYPE)
+    )
+)
 class BookingControllerTest(
     @Autowired val mockMvc: MockMvc,
     @Autowired val clock: Clock
 ) {
     @MockkBean
     private lateinit var bookingService: BookingService
+    object testFields {
+        const val testName = "minjun"
+        const val testUserName = "minjun3021@qwer.com"
+        const val testUserRole = "USER"
+        const val password = "1234"
+    }
+
+    val sampleUser = User(
+        name = testFields.testName,
+        email = testFields.testUserName,
+        password = testFields.password,
+        authority = Authority.USER
+    )
 
     private val sampleBookingCreateRequest = BookingCreateRequest(
         performanceId = 1,
@@ -52,7 +76,7 @@ class BookingControllerTest(
     private val sampleBookingDeleteRequest = BookingDeleteRequest(
         id = 1
     )
-    private val sampleUser: User = User(id = 1, name = "John Doe", email = "john@email.com")
+
     private val samplePerformance: Performance = Performance(
         id = 1,
         title = "test title",
@@ -63,7 +87,7 @@ class BookingControllerTest(
     )
     private val sampleBooking: Booking = Booking(
         id = 1,
-        user = sampleUser,
+        user = sampleUser.apply { id = 1 },
         performance = samplePerformance,
         bookedAt = OffsetDateTime.now(clock)
     )

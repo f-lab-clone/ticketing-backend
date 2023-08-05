@@ -1,50 +1,128 @@
 package com.group4.ticketingservice.user
 
-import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.group4.ticketingservice.JwtAuthorizationEntryPoint
+import com.group4.ticketingservice.config.SecurityConfig
 import com.group4.ticketingservice.controller.UserController
-import com.group4.ticketingservice.entity.User
+import com.group4.ticketingservice.dto.SignUpRequest
+import com.group4.ticketingservice.dto.UserDto
 import com.group4.ticketingservice.service.UserService
+import com.group4.ticketingservice.user.UserControllerTest.testFields.password
+import com.group4.ticketingservice.user.UserControllerTest.testFields.testName
+import com.group4.ticketingservice.user.UserControllerTest.testFields.testUserName
+import com.group4.ticketingservice.user.UserControllerTest.testFields.testUserRole
+import com.group4.ticketingservice.utils.TokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import io.mockk.junit5.MockKExtension
+import io.mockk.verify
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.FilterType
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.ResultActions
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import java.time.LocalDateTime
 
-@ExtendWith(MockKExtension::class)
-@WebMvcTest(UserController::class)
+@WebMvcTest(
+    controllers = [UserController::class],
+    includeFilters = arrayOf(ComponentScan.Filter(value = [(TokenProvider::class), (SecurityConfig::class), (JwtAuthorizationEntryPoint::class)], type = FilterType.ASSIGNABLE_TYPE))
+
+)
 class UserControllerTest(
-    @Autowired val mockMvc: MockMvc
+    @Autowired
+    private val mockMvc: MockMvc
 ) {
-    @MockkBean
-    private lateinit var userService: UserService
 
-    private var sampleUser: User = User(
-        id = 1,
-        name = "test name",
-        email = "test email"
+    @MockkBean
+    private lateinit var service: UserService
+
+    object testFields {
+        const val testName = "minjun"
+        const val testUserName = "minjun3021@qwer.com"
+        const val testUserRole = "USER"
+        const val password = "1234"
+    }
+
+    val sampleSignUpRequest = SignUpRequest(
+        email = testUserName,
+        name = testName,
+        password = password
+    )
+    val sampleUserDTO = UserDto(
+        name = testName,
+        email = testUserName,
+        createdAt = LocalDateTime.now()
     )
 
+    /**
+     * Spring SecurityContext에 Authentication 객체를 넣어주는 커스텀 어노테이션을 만들어서
+     * Controller가 Spring SecurityContext에 들어있는 유저 인증정보를 주입받는지를 확인할수있음
+     */
     @Test
-    fun `POST users should return created user`() {
-        every { userService.createUser(any(), any()) } returns sampleUser
+    @WithAuthUser(email = testUserName, role = testUserRole)
+    fun `GET_api_users_access_token_info should return username injected by Spring Security with HTTP 200 OK`() {
+        // when
+        val resultActions: ResultActions =
+            mockMvc.perform(MockMvcRequestBuilders.get("/users/access_token_info"))
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(testUserName))
+    }
 
+    @Test
+    fun `POST_api_user should invoke service_create_user`() {
+        // given
+        every { service.createUser(sampleSignUpRequest) } returns sampleUserDTO
+
+        // when
         mockMvc.perform(
-            post("/users")
+            MockMvcRequestBuilders.post("/users/signup")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(Gson().toJson(sampleUser))
+                .content(GsonBuilder().create().toJson(sampleSignUpRequest).toString())
+
         )
-            .andExpect(status().isOk)
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(sampleUser.id))
-            .andExpect(jsonPath("$.name").value(sampleUser.name))
-            .andExpect(jsonPath("$.email").value(sampleUser.email))
+
+        // then
+        verify(exactly = 1) { service.createUser(sampleSignUpRequest) }
+    }
+
+    @Test
+    fun `POST_api_users should return 201 HttpStatus Code for unique user`() {
+        // given
+        every { service.createUser(any()) } returns sampleUserDTO
+
+        // when
+        val resultActions: ResultActions =
+            mockMvc.perform(
+                MockMvcRequestBuilders.post("/users/signup")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(GsonBuilder().create().toJson(sampleSignUpRequest).toString())
+
+            )
+
+        // then
+        resultActions.andExpect(MockMvcResultMatchers.status().isCreated)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(testUserName))
+    }
+
+    @Test
+    fun `POST_api_users should return 409 HttpStatus Code for Duplicate user`() {
+        // given
+        every { service.createUser(any()) } throws IllegalArgumentException()
+
+        // when
+        val resultActions: ResultActions =
+            mockMvc.perform(
+                MockMvcRequestBuilders.post("/users/signup")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(GsonBuilder().create().toJson(sampleSignUpRequest).toString())
+
+            )
+
+        // then
+        resultActions.andExpect(MockMvcResultMatchers.status().isConflict)
     }
 }
