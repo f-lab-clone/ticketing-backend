@@ -3,7 +3,7 @@ package com.group4.ticketingservice.service
 import com.group4.ticketingservice.entity.Performance
 import com.group4.ticketingservice.repository.PerformanceRepository
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 @Service
 class PerformanceService(
@@ -11,9 +11,9 @@ class PerformanceService(
 ) {
     fun createPerformance(
         title: String,
-        date: LocalDateTime,
-        bookingStartTime: LocalDateTime,
-        bookingEndTime: LocalDateTime,
+        date: OffsetDateTime,
+        bookingStartTime: OffsetDateTime,
+        bookingEndTime: OffsetDateTime,
         maxAttendees: Int
     ): Performance {
         val performance = Performance(
@@ -37,9 +37,9 @@ class PerformanceService(
     fun updatePerformance(
         id: Long,
         title: String,
-        date: LocalDateTime,
-        bookingStartTime: LocalDateTime,
-        bookingEndTime: LocalDateTime,
+        date: OffsetDateTime,
+        bookingStartTime: OffsetDateTime,
+        bookingEndTime: OffsetDateTime,
         maxAttendees: Int
     ): Performance {
         val performance = performanceRepository.findById(id).orElseThrow {

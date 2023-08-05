@@ -5,7 +5,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 @Entity
 class Performance(
@@ -15,13 +15,13 @@ class Performance(
 
     var title: String,
 
-    var date: LocalDateTime,
+    var date: OffsetDateTime,
 
     @Column(name = "booking_start_time")
-    var bookingStartTime: LocalDateTime,
+    var bookingStartTime: OffsetDateTime,
 
     @Column(name = "booking_end_time")
-    var bookingEndTime: LocalDateTime,
+    var bookingEndTime: OffsetDateTime,
 
     @Column(name = "max_attendees")
     var maxAttendees: Int

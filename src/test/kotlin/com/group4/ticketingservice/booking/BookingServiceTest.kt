@@ -1,5 +1,6 @@
 package com.group4.ticketingservice.booking
 
+import com.group4.ticketingservice.config.ClockConfig
 import com.group4.ticketingservice.entity.Booking
 import com.group4.ticketingservice.entity.Performance
 import com.group4.ticketingservice.entity.User
@@ -13,18 +14,31 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.support.AnnotationConfigContextLoader
+import java.time.Clock
 import java.time.Duration.ofHours
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.util.*
 
-class BookingServiceTest {
+@ContextConfiguration(
+    classes = [ClockConfig::class],
+    loader = AnnotationConfigContextLoader::class
+)
+@SpringBootTest
+class BookingServiceTest(
+    @Autowired private val clock: Clock
+) {
     private val userRepository: UserRepository = mockk()
     private val performanceRepository: PerformanceRepository = mockk()
     private val bookingRepository: BookingRepository = mockk()
     private val bookingService: BookingService = BookingService(
         userRepository = userRepository,
         performanceRepository = performanceRepository,
-        bookingRepository = bookingRepository
+        bookingRepository = bookingRepository,
+        clock = clock
     )
     val sampleUser = User(
         name = "minjun3021@qwer.com",
@@ -35,13 +49,17 @@ class BookingServiceTest {
     private val samplePerformance: Performance = Performance(
         id = 1,
         title = "test title",
-        date = LocalDateTime.now(),
-        bookingEndTime = LocalDateTime.now() + ofHours(2),
-        bookingStartTime = LocalDateTime.now() + ofHours(1),
+        date = OffsetDateTime.now(clock),
+        bookingEndTime = OffsetDateTime.now(clock) + ofHours(2),
+        bookingStartTime = OffsetDateTime.now(clock) + ofHours(1),
         maxAttendees = 10
     )
 
-    private val sampleBooking: Booking = Booking(user = sampleUser, performance = samplePerformance)
+    private val sampleBooking: Booking = Booking(
+        user = sampleUser,
+        performance = samplePerformance,
+        bookedAt = OffsetDateTime.now(clock)
+    )
 
     @Test
     fun `BookingService_createBooking invoke BookingRepository_save`() {

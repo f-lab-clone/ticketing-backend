@@ -54,25 +54,20 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.ninja-squad:springmockk:4.0.2")
     implementation("com.google.code.gson:gson:2.10.1")
-    implementation("com.ninja-squad:springmockk:4.0.2")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    implementation("org.modelmapper:modelmapper:2.4.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.1.0")
     implementation("org.modelmapper:modelmapper:2.4.2")
     integrationTestImplementation("org.springframework.boot:spring-boot-testcontainers")
     integrationTestImplementation("org.testcontainers:junit-jupiter")
     integrationTestImplementation("org.testcontainers:mysql")
     testImplementation("org.springframework.security:spring-security-test")
-    implementation("com.ninja-squad:springmockk:4.0.2")
-
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
-
     implementation("com.google.code.gson:gson:2.10.1")
-
     implementation("org.springframework.boot:spring-boot-starter-validation")
 }
 

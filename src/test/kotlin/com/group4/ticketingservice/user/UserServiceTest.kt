@@ -16,7 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.time.LocalDateTime
 
-class UserServiceTest() {
+class UserServiceTest {
 
     private val repository: UserRepository = mockk()
     private val passwordEncoder: PasswordEncoder = BCryptPasswordEncoder()
