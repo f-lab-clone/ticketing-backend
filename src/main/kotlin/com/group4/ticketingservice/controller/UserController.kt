@@ -4,6 +4,7 @@ import com.group4.ticketingservice.dto.SignUpRequest
 import com.group4.ticketingservice.dto.UserDto
 import com.group4.ticketingservice.service.UserService
 import com.group4.ticketingservice.utils.TokenProvider
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -22,7 +23,10 @@ class UserController(
 ) {
 
     @PostMapping("/signup")
-    fun signup(@RequestBody request: SignUpRequest): ResponseEntity<UserDto> {
+    fun signup(
+        @RequestBody @Valid
+        request: SignUpRequest
+    ): ResponseEntity<UserDto> {
         try {
             val user = userService.createUser(request)
             return ResponseEntity.status(HttpStatus.CREATED).body(user)
