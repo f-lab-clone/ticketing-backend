@@ -7,15 +7,13 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
-
 @RestControllerAdvice
 class GlobalExceptionHandler {
 
-
     @ExceptionHandler(value = [MethodArgumentNotValidException::class])
-    fun handlingValidException(exception: MethodArgumentNotValidException) :ResponseEntity<ValidErrorDto>{
+    fun handlingValidException(exception: MethodArgumentNotValidException): ResponseEntity<ValidErrorDto> {
         val builder = StringBuilder()
-        val array= mutableListOf<String>()
+        val array = mutableListOf<String>()
 
         for (fieldError in exception.fieldErrors) {
             builder.append("[")

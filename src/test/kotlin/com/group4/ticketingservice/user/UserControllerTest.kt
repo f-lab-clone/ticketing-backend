@@ -60,11 +60,10 @@ class UserControllerTest(
     )
 
     val invalidSignUpRequest = SignUpRequest(
-            email = "a",
-            name = "a",
-            password = "1234"
+        email = "a",
+        name = "a",
+        password = "1234"
     )
-
 
     /**
      * Spring SecurityContext에 Authentication 객체를 넣어주는 커스텀 어노테이션을 만들어서
@@ -136,35 +135,36 @@ class UserControllerTest(
 
     @Test
     fun `POST_api_users should return 400 HttpStatus Code for invalid request`() {
-
         // when
         val resultActions: ResultActions =
-                mockMvc.perform(
-                        MockMvcRequestBuilders.post("/users/signup")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(GsonBuilder().create().toJson(invalidSignUpRequest).toString())
-                )
+            mockMvc.perform(
+                MockMvcRequestBuilders.post("/users/signup")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(GsonBuilder().create().toJson(invalidSignUpRequest).toString())
+            )
         // then
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
+
     @Test
     fun `POST_api_users should return errors array for invalid request`() {
-
         val resultActions: ResultActions =
-                mockMvc.perform(
-                        MockMvcRequestBuilders.post("/users/signup")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(GsonBuilder().create().toJson(invalidSignUpRequest).toString())
-                )
+            mockMvc.perform(
+                MockMvcRequestBuilders.post("/users/signup")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(GsonBuilder().create().toJson(invalidSignUpRequest).toString())
+            )
         // then
         resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.errors").exists())
 
-        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.errors[*]").value(Matchers.containsInAnyOrder(
-                Matchers.containsString("name"),
-                Matchers.containsString("email"),
-                Matchers.containsString("password")
-        )))
+        resultActions.andExpect(
+            MockMvcResultMatchers.jsonPath("$.errors[*]").value(
+                Matchers.containsInAnyOrder(
+                    Matchers.containsString("name"),
+                    Matchers.containsString("email"),
+                    Matchers.containsString("password")
+                )
+            )
+        )
     }
-
-
 }

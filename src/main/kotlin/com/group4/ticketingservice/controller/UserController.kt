@@ -24,7 +24,10 @@ class UserController(
 ) {
 
     @PostMapping("/signup")
-    fun signup(@RequestBody @Valid request: SignUpRequest): ResponseEntity<UserDto> {
+    fun signup(
+        @RequestBody @Valid
+        request: SignUpRequest
+    ): ResponseEntity<UserDto> {
         try {
             val user = userService.createUser(request)
             return ResponseEntity.status(HttpStatus.CREATED).body(user)
