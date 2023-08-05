@@ -1,6 +1,6 @@
 package com.group4.ticketingservice.dto
 
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 data class BookingCreateRequest(
     val performanceId: Long,
@@ -19,5 +19,5 @@ data class BookingResponse(
     val id: Long,
     val performanceId: Long,
     val userId: Long,
-    val bookedAt: LocalDateTime
+    val bookedAt: OffsetDateTime
 )

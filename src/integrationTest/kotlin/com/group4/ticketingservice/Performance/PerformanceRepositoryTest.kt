@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import java.time.Duration.ofHours
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 class PerformanceRepositoryTest(
@@ -18,7 +18,7 @@ class PerformanceRepositoryTest(
     @Test
     fun `PerformanceRepository_save should return savedPerformance`() {
         // given
-        val now = LocalDateTime.now(ZoneOffset.UTC)
+        val now = OffsetDateTime.now(ZoneOffset.UTC)
         val samplePerformance = Performance(
             title = "test title",
             date = now,
@@ -37,7 +37,7 @@ class PerformanceRepositoryTest(
     @Test
     fun `PerformanceRepository_findByIdOrNull should return performance`() {
         // given
-        val now = LocalDateTime.now(ZoneOffset.UTC)
+        val now = OffsetDateTime.now(ZoneOffset.UTC)
         val samplePerformance = Performance(
             title = "test title",
             date = now,
@@ -59,7 +59,7 @@ class PerformanceRepositoryTest(
     @Test
     fun `PerformanceRepository_findAll should return list of performances`() {
         // given
-        val now = LocalDateTime.now(ZoneOffset.UTC)
+        val now = OffsetDateTime.now(ZoneOffset.UTC)
         val samplePerformance = Performance(
             title = "test title",
             date = now,
@@ -80,7 +80,7 @@ class PerformanceRepositoryTest(
     @Test
     fun `PerformanceRepository_delete should delete performance`() {
         // given
-        val now = LocalDateTime.now(ZoneOffset.UTC)
+        val now = OffsetDateTime.now(ZoneOffset.UTC)
         val samplePerformance = Performance(
             title = "test title",
             date = now,

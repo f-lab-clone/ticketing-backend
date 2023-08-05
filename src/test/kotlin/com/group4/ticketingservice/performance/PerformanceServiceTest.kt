@@ -8,7 +8,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import java.time.Duration
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.util.*
 
 class PerformanceServiceTest {
@@ -19,9 +19,9 @@ class PerformanceServiceTest {
     private val samplePerformance: Performance = Performance(
         id = 1,
         title = "test title",
-        date = LocalDateTime.now(),
-        bookingEndTime = LocalDateTime.now() + Duration.ofHours(2),
-        bookingStartTime = LocalDateTime.now() + Duration.ofHours(1),
+        date = OffsetDateTime.now(),
+        bookingEndTime = OffsetDateTime.now() + Duration.ofHours(2),
+        bookingStartTime = OffsetDateTime.now() + Duration.ofHours(1),
         maxAttendees = 10
     )
 

@@ -4,13 +4,17 @@ import com.group4.ticketingservice.entity.Booking
 import com.group4.ticketingservice.repository.BookingRepository
 import com.group4.ticketingservice.repository.PerformanceRepository
 import com.group4.ticketingservice.repository.UserRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.time.Clock
+import java.time.OffsetDateTime
 
 @Service
-class BookingService(
+class BookingService @Autowired constructor(
     private val userRepository: UserRepository,
     private val performanceRepository: PerformanceRepository,
-    private val bookingRepository: BookingRepository
+    private val bookingRepository: BookingRepository,
+    private val clock: Clock
 ) {
     fun createBooking(userId: Long, performanceId: Long): Booking {
         val user = userRepository.findById(userId).orElseThrow {
@@ -19,7 +23,7 @@ class BookingService(
         val performance = performanceRepository.findById(performanceId).orElseThrow {
             IllegalArgumentException("Performance not found")
         }
-        val booking = Booking(user = user, performance = performance)
+        val booking = Booking(user = user, performance = performance, bookedAt = OffsetDateTime.now(clock))
 
         return bookingRepository.save(booking)
     }
