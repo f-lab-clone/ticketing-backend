@@ -31,7 +31,7 @@ class JwtAuthenticationFilter(
         try {
             val signInRequest = om.readValue(request?.inputStream, SignInRequest::class.java)
             val authenticationToken = UsernamePasswordAuthenticationToken(signInRequest.email, signInRequest.password)
-            val authentication = getAuthenticationManager().authenticate(authenticationToken)
+            val authentication = authenticationManager?.authenticate(authenticationToken)
             return authentication
         } catch (e: IOException) {
             e.printStackTrace()
