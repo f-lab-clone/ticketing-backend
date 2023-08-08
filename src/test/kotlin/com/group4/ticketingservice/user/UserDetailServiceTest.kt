@@ -9,19 +9,19 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 
 class UserDetailServiceTest {
     private val repository: UserRepository = mockk()
-    private val userDetailService=UserDetailService(repository)
+    private val userDetailService = UserDetailService(repository)
 
     val sampleUser = User(
-            name = "minjun3021@qwer.com",
-            email = "minjun",
-            password = "1234",
-            authority = Authority.USER
+        name = "minjun3021@qwer.com",
+        email = "minjun",
+        password = "1234",
+        authority = Authority.USER
     )
+
     @Test
     fun `UserDetailService_loadUserByUsername invoke repository_findByEmail`() {
         every { repository.findByEmail(any()) } returns sampleUser
@@ -38,10 +38,10 @@ class UserDetailServiceTest {
         every { repository.findByEmail(any()) } returns sampleUser
 
         // when
-        val result=userDetailService.loadUserByUsername(sampleUser.username)
+        val result = userDetailService.loadUserByUsername(sampleUser.username)
 
         // then
-        Assertions.assertEquals(sampleUser.email,result.username )
+        Assertions.assertEquals(sampleUser.email, result.username)
     }
 
     fun `UserDetailService_loadUserByUsername should throw exception when user does not exist`() {

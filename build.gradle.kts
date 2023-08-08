@@ -128,7 +128,6 @@ tasks.jacocoTestReport {
         html.outputLocation.set(layout.buildDirectory.dir("${rootProject.rootDir}/jacocoReport"))
     }
 
-
     finalizedBy(tasks.jacocoTestCoverageVerification)
 }
 
@@ -143,7 +142,7 @@ tasks.jacocoTestCoverageVerification {
     violationRules {
 
         rule {
-            element="BUNDLE"
+            element = "BUNDLE"
 
             limit {
                 counter = "INSTRUCTION"

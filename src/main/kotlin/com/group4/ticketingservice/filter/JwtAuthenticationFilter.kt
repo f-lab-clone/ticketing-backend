@@ -3,7 +3,6 @@ package com.group4.ticketingservice.filter
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonParseException
 import com.group4.ticketingservice.dto.SignInRequest
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.utils.TokenProvider
@@ -29,15 +28,13 @@ class JwtAuthenticationFilter(
     override fun attemptAuthentication(request: HttpServletRequest?, response: HttpServletResponse?): Authentication? {
         super.setAuthenticationManager(authenticationManager)
 
-        lateinit var signInRequest :SignInRequest
+        lateinit var signInRequest: SignInRequest
         val om = ObjectMapper()
         try {
-            signInRequest= om.readValue(request?.inputStream, SignInRequest::class.java)
-
-        }
-        catch (e : JsonProcessingException){
+            signInRequest = om.readValue(request?.inputStream, SignInRequest::class.java)
+        } catch (e: JsonProcessingException) {
             val body = GsonBuilder().create().toJson(mapOf("message" to e.message))
-            if(response!=null){
+            if (response != null) {
                 response.contentType = "application/json"
                 response.status = HttpServletResponse.SC_BAD_REQUEST
                 val writer: PrintWriter? = response.writer
@@ -45,7 +42,6 @@ class JwtAuthenticationFilter(
             }
 
             return null
-
         }
         val authenticationToken = UsernamePasswordAuthenticationToken(signInRequest.email, signInRequest.password)
         val authentication = getAuthenticationManager().authenticate(authenticationToken)

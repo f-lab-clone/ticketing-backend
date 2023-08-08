@@ -18,12 +18,11 @@ class JwtAuthorizationEntryPoint : AuthenticationEntryPoint {
     ) {
         val gson = GsonBuilder().create()
         val body = gson.toJson(mapOf("message" to "JWT Autorization failed."))
-        if(response!=null){
+        if (response != null) {
             response.contentType = "application/json"
             val writer: PrintWriter? = response.writer
             writer?.println(body)
             response.status = HttpServletResponse.SC_UNAUTHORIZED
         }
-
     }
 }
