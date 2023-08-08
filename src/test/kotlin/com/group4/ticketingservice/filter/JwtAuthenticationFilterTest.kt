@@ -1,15 +1,18 @@
 package com.group4.ticketingservice.filter
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.group4.ticketingservice.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.dto.SignInRequest
+import com.group4.ticketingservice.entity.User
+import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.TokenProvider
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.authentication.AuthenticationManager
@@ -22,12 +25,17 @@ class JwtAuthenticationFilterTest {
     private val tokenProvider: TokenProvider = mockk()
     private val authenticationManager: AuthenticationManager = mockk()
     private val filter: JwtAuthenticationFilter = JwtAuthenticationFilter(authenticationManager, tokenProvider)
-    private val entryPoint = JwtAuthorizationEntryPoint()
 
     val sampleSignInRequest = SignInRequest().apply {
         email = "minjun3021@naver.com"
         password = "123456789"
     }
+    val sampleUser = User(
+        name = "minjun3021@qwer.com",
+        email = "minjun",
+        password = "1234",
+        authority = Authority.USER
+    )
 
     @Test
     fun `JwtAuthenticationFilter_attemptAuthentication() should return Authentication when credential is good `() {
@@ -48,6 +56,51 @@ class JwtAuthenticationFilterTest {
         // then
         assertThat(result != null).isTrue()
         Assertions.assertEquals(sampleSignInRequest.email, result?.principal)
+    }
+
+    @Test
+    fun `JwtAuthenticationFilter_dofilter() should call tokenProvider_createToken() at JwtAuthenticationFilter_successfulAuthentication when credential is good `() {
+        // given
+        every { tokenProvider.createToken(any()) } returns "Bearer ~~~"
+        every { authenticationManager.authenticate(any()) } returns UsernamePasswordAuthenticationToken(
+            sampleUser,
+            null,
+            listOf(SimpleGrantedAuthority("USER"))
+        )
+        // when
+        val req = MockHttpServletRequest("POST", "/login")
+        req.servletPath = "/login"
+        val res = MockHttpServletResponse()
+        val chain = MockFilterChain()
+
+        val requestJson = ObjectMapper().writeValueAsString(sampleSignInRequest)
+        req.setContent(requestJson.toByteArray())
+
+        filter.doFilter(req, res, chain)
+
+        // then
+        verify(exactly = 1) { tokenProvider.createToken(any()) }
+    }
+
+    @Test
+    fun `JwtAuthenticationFilter_dofilter() should call JwtAuthenticationFilter_unsuccessfulAuthentication when credential is bad `() {
+        // given
+
+        every { authenticationManager.authenticate(any()) } throws BadCredentialsException("")
+
+        // when
+        val req = MockHttpServletRequest("POST", "/login")
+        req.servletPath = "/login"
+        val res = MockHttpServletResponse()
+        val chain = MockFilterChain()
+
+        val requestJson = ObjectMapper().writeValueAsString(sampleSignInRequest)
+        req.setContent(requestJson.toByteArray())
+
+        filter.doFilter(req, res, chain)
+
+        // then
+        Assertions.assertEquals("{\"message\":\"Authentication failed.\"}\r\n", String(res.contentAsByteArray))
     }
 
     @Test
