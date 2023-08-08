@@ -34,12 +34,11 @@ class JwtAuthenticationFilter(
             signInRequest = om.readValue(request?.inputStream, SignInRequest::class.java)
         } catch (e: JsonProcessingException) {
             val body = GsonBuilder().create().toJson(mapOf("message" to e.message))
-            if (response != null) {
-                response.contentType = "application/json"
-                response.status = HttpServletResponse.SC_BAD_REQUEST
-                val writer: PrintWriter? = response.writer
-                writer?.println(body)
-            }
+
+            response?.contentType = "application/json"
+            response?.status = HttpServletResponse.SC_BAD_REQUEST
+            val writer: PrintWriter? = response?.writer
+            writer?.println(body)
 
             return null
         }

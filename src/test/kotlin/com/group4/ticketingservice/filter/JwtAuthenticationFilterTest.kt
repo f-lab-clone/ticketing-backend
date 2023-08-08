@@ -6,7 +6,6 @@ import com.group4.ticketingservice.dto.SignInRequest
 import com.group4.ticketingservice.utils.TokenProvider
 import io.mockk.every
 import io.mockk.mockk
-import jakarta.servlet.http.HttpServletResponse
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -19,7 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 
-class FilterTest {
+class JwtAuthenticationFilterTest {
     private val tokenProvider: TokenProvider = mockk()
     private val authenticationManager: AuthenticationManager = mockk()
     private val filter: JwtAuthenticationFilter = JwtAuthenticationFilter(authenticationManager, tokenProvider)
@@ -80,23 +79,5 @@ class FilterTest {
         val result = filter.attemptAuthentication(req, res)
 
         assertThat(result == null).isTrue()
-    }
-
-    @Test
-    fun `JwtAuthenticationFilter_successfulAuthentication() should write content at response `() {
-        // given
-        every { authenticationManager.authenticate(any()) } returns UsernamePasswordAuthenticationToken(
-            sampleSignInRequest.email,
-            null,
-            listOf(SimpleGrantedAuthority("USER"))
-        )
-        // when
-        val req = MockHttpServletRequest()
-        val res = MockHttpServletResponse()
-        val requestJson = ObjectMapper().writeValueAsString(sampleSignInRequest)
-        req.setContent(requestJson.toByteArray())
-
-        entryPoint.commence(req, res, mockk())
-        assertThat(res.status == HttpServletResponse.SC_UNAUTHORIZED).isTrue()
     }
 }
