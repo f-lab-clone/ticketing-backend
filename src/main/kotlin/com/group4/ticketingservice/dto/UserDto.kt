@@ -7,7 +7,4 @@ class UserDto(
     val name: String,
     val email: String,
     val createdAt: LocalDateTime?
-) {
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    var token: String? = null
-}
+)
