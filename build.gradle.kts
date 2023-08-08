@@ -149,6 +149,11 @@ tasks.jacocoTestCoverageVerification {
                 value = "COVEREDRATIO"
                 minimum = "0.8".toBigDecimal()
             }
+            limit {
+                counter = "BRANCH"
+                value = "COVEREDRATIO"
+                minimum = "0.6".toBigDecimal()
+            }
 
             excludes = Qdomains
         }

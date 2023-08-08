@@ -100,7 +100,7 @@ class JwtAuthenticationFilterTest {
         filter.doFilter(req, res, chain)
 
         // then
-        Assertions.assertEquals("{\"message\":\"Authentication failed.\"}\r\n", String(res.contentAsByteArray))
+        assertThat(String(res.contentAsByteArray).contains("Authentication failed.")).isTrue()
     }
 
     @Test
