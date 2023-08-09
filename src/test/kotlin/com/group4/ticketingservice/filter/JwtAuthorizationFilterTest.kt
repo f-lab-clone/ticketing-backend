@@ -4,7 +4,9 @@ import com.group4.ticketingservice.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.utils.TokenProvider
 import io.mockk.every
 import io.mockk.mockk
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.spy
@@ -24,6 +26,11 @@ class JwtAuthorizationFilterTest {
     val testUserName = "minjun3021@qwer.com"
     val testUserRole = "USER"
 
+    @BeforeEach fun resetAuthentication() {
+        val strategy: SecurityContextHolderStrategy = spy(SecurityContextHolder.getContextHolderStrategy())
+        strategy.context.authentication = null
+    }
+
     @Test
     fun `JwtAuthorizationFilterTest_doFilterInternal() should set Authentication when jwt is valid `() {
         // given
@@ -42,7 +49,7 @@ class JwtAuthorizationFilterTest {
 
         val authenticationPrincipal = strategy.context.authentication.principal
         // then
-        Assertions.assertThat(authenticationPrincipal == testUserName).isTrue()
+        assertEquals(testUserName, authenticationPrincipal)
     }
 
     @Test
@@ -58,11 +65,10 @@ class JwtAuthorizationFilterTest {
         val chain = MockFilterChain()
         req.addHeader("Authorization", "Bearer ~~~~")
         val strategy: SecurityContextHolderStrategy = spy(SecurityContextHolder.getContextHolderStrategy())
-        strategy.context.authentication = null // 다른 테스트에 영향을 받아서 추가
-        jwtAuthorizationFilter.setSecurityContextHolderStrategy(strategy)
+        // jwtAuthorizationFilter.setSecurityContextHolderStrategy(strategy)
         jwtAuthorizationFilter.doFilter(req, res, chain)
 
         // then
-        Assertions.assertThat(strategy.context.authentication == null).isTrue()
+        assertThat(strategy.context.authentication).isNull()
     }
 }

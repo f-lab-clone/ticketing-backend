@@ -6,7 +6,7 @@ import com.group4.ticketingservice.dto.SignInRequest
 import io.mockk.every
 import io.mockk.mockk
 import jakarta.servlet.http.HttpServletResponse
-import org.assertj.core.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
@@ -38,6 +38,6 @@ class JwtAuthorizationEntryPonitTest {
         req.setContent(requestJson.toByteArray())
 
         entryPoint.commence(req, res, mockk())
-        Assertions.assertThat(res.status == HttpServletResponse.SC_UNAUTHORIZED).isTrue()
+        assertEquals(HttpServletResponse.SC_UNAUTHORIZED, res.status)
     }
 }

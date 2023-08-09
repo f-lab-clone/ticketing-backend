@@ -52,9 +52,9 @@ class JwtAuthenticationFilter(
         request: HttpServletRequest?,
         response: HttpServletResponse?,
         chain: FilterChain?,
-        authResult: Authentication?
+        authResult: Authentication
     ) {
-        val user = authResult?.principal as User
+        val user = authResult.principal as User
         val jwt = tokenProvider.createToken("${user.username}:${user.role}")
         val gson = GsonBuilder().create()
         val body = gson.toJson(mapOf("Authorization" to "Bearer $jwt"))
