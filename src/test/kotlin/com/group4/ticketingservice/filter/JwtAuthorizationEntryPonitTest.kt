@@ -39,7 +39,7 @@ class JwtAuthorizationEntryPonitTest {
 
         entryPoint.commence(req, res, mockk())
 
-        //then
+        // then
         assertEquals(HttpServletResponse.SC_UNAUTHORIZED, res.status)
     }
 }

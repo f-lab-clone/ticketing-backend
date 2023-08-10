@@ -113,7 +113,7 @@ class JwtAuthenticationFilterTest {
         val requestJson = ObjectMapper().writeValueAsString(sampleSignInRequest)
         req.setContent(requestJson.toByteArray())
 
-        //then
+        // then
         assertThrows(BadCredentialsException::class.java) {
             filter.attemptAuthentication(req, res)
         }
@@ -132,7 +132,7 @@ class JwtAuthenticationFilterTest {
 
         val result = filter.attemptAuthentication(req, res)
 
-        //then
+        // then
         assertThat(result).isNull()
     }
 }
