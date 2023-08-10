@@ -83,7 +83,7 @@ class JwtAuthenticationFilterTest {
     }
 
     @Test
-    fun `JwtAuthenticationFilter_dofilter() should call JwtAuthenticationFilter_unsuccessfulAuthentication when credential is bad `() {
+    fun `JwtAuthenticationFilter_dofilter() should write meassage at JwtAuthenticationFilter_unsuccessfulAuthentication when credential is bad`() {
         // given
 
         every { authenticationManager.authenticate(any()) } throws BadCredentialsException("")
@@ -113,6 +113,7 @@ class JwtAuthenticationFilterTest {
         val requestJson = ObjectMapper().writeValueAsString(sampleSignInRequest)
         req.setContent(requestJson.toByteArray())
 
+        //then
         assertThrows(BadCredentialsException::class.java) {
             filter.attemptAuthentication(req, res)
         }
@@ -131,6 +132,7 @@ class JwtAuthenticationFilterTest {
 
         val result = filter.attemptAuthentication(req, res)
 
+        //then
         assertThat(result).isNull()
     }
 }

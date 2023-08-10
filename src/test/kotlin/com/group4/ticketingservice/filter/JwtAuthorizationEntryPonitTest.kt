@@ -38,6 +38,8 @@ class JwtAuthorizationEntryPonitTest {
         req.setContent(requestJson.toByteArray())
 
         entryPoint.commence(req, res, mockk())
+
+        //then
         assertEquals(HttpServletResponse.SC_UNAUTHORIZED, res.status)
     }
 }
