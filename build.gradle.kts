@@ -71,6 +71,7 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
 }
 
 tasks.withType<KotlinCompile> {

@@ -1,0 +1,45 @@
+name: Generate OpenAPI Document
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  generate-open-api-document:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Start containers
+        run: docker-compose -f "docker-compose.yml" up -d --build
+
+      - name: Check the deployed service URL
+        uses: jtalk/url-health-check-action@v3
+        with:
+          url: http://localhost:8080/api-docs
+          max-attempts: 10
+          retry-delay: 5s
+          retry-all: true
+
+      - name: Create json file
+        run: |
+          curl -o docs/temp-open-api.json http://localhost:8080/api-docs
+
+      - name: Commit changes
+        run: |
+          if [ "docs/temp-open-api.json" -nt "docs/open-api.json" ] ; then
+          \mv -f docs/temp-open-api.json docs/open-api.json
+          git config --global user.name 'Git Actions'
+          git config --global user.email 'no-reply@github.com'
+          git add docs/open-api.json
+          git status
+          git commit -m "docs: update open-api.json"
+          git push
+          fi
+
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f "docker-compose.yml" down
