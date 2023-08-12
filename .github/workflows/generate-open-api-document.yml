@@ -1,9 +1,7 @@
 name: Generate OpenAPI Document
 
 on:
-  push:
-    branches:
-      - main
+  push
 
 jobs:
   generate-open-api-document:
@@ -12,6 +10,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Commit checkout
+        run: |
+          git checkout feat/37-api-doc 
 
       - name: Start containers
         run: docker-compose -f "docker-compose.yml" up -d --build
