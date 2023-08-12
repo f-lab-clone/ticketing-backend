@@ -26,16 +26,19 @@ jobs:
 
       - name: Create json file
         run: |
-          curl -o docs/open-api.json http://localhost:8080/api-docs
+          curl -o docs/temp-open-api.json http://localhost:8080/api-docs
 
       - name: Commit changes
         run: |
+          if [ "docs/temp-open-api.json" -nt "docs/open-api.json" ] ; then
+          \mv -f docs/temp-open-api.json docs/open-api.json
           git config --global user.name 'Git Actions'
           git config --global user.email 'no-reply@github.com'
           git add docs/open-api.json
           git status
           git commit -m "docs: update open-api.json"
           git push
+          fi
 
       - name: Stop containers
         if: always()
