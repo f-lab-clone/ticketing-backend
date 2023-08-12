@@ -1,0 +1,37 @@
+name: Generate OpenAPI Document
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate-open-api-document:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Start containers
+        run: docker-compose -f "docker-compose.yml" up -d --build
+
+      - name: Sleep for 1 minutes
+        run: sleep 60s
+
+      - name: Create json file
+        run: |
+          curl -o open-api.json http://localhost:8080/v3/api-docs
+
+      - name: Commit changes
+        run: |
+          git config --global user.name 'Git Actions'
+          git config --global user.email 'no-reply@github.com'
+          git add open-api.json
+          git status
+          git commit -m "docs: update open-api.json"
+          git push
+
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f "docker-compose.yml" down
