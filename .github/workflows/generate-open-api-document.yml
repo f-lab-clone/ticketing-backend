@@ -21,13 +21,13 @@ jobs:
 
       - name: Create json file
         run: |
-          curl -o open-api.json http://localhost:8080/v3/api-docs
+          curl -o docs/open-api.json http://localhost:8080/v3/api-docs
 
       - name: Commit changes
         run: |
           git config --global user.name 'Git Actions'
           git config --global user.email 'no-reply@github.com'
-          git add open-api.json
+          git add docs/open-api.json
           git status
           git commit -m "docs: update open-api.json"
           git push
