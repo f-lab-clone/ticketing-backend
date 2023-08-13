@@ -141,26 +141,19 @@ tasks.jacocoTestCoverageVerification {
     }
 
     violationRules {
-        rule {
-            element = "CLASS"
 
+        rule {
+            element = "BUNDLE"
+
+            limit {
+                counter = "INSTRUCTION"
+                value = "COVEREDRATIO"
+                minimum = "0.8".toBigDecimal()
+            }
             limit {
                 counter = "BRANCH"
                 value = "COVEREDRATIO"
-                // minimum = "0.8".toBigDecimal()
-            }
-
-            limit {
-                counter = "LINE"
-                value = "COVEREDRATIO"
-                // maximum = "0.8".toBigDecimal()
-            }
-
-            // 빈 줄을 제외한 코드의 라인수를 최대 200라인으로 제한합니다.
-            limit {
-                counter = "LINE"
-                value = "TOTALCOUNT"
-                maximum = "200".toBigDecimal()
+                minimum = "0.6".toBigDecimal()
             }
 
             excludes = Qdomains
