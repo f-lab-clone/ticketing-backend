@@ -25,14 +25,12 @@ class ReservationService @Autowired constructor(
         }
         val event = eventRepository.findById(eventId).orElseThrow {
             IllegalArgumentException("Event not found")
-
         }
         val reservation = Reservation(user = user, event = event, bookedAt = OffsetDateTime.now(clock))
 
-        if(event.reservations!!.count()<event.maxAttendees){
+        if (event.reservations!!.count() < event.maxAttendees) {
             reservationRepository.save(reservation)
-        }
-        else{
+        } else {
             throw RuntimeException("")
         }
         return reservation

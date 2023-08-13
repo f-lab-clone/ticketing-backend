@@ -14,7 +14,6 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.BeforeAll
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -27,12 +26,12 @@ import java.util.concurrent.Executors
 @TestPropertySource(properties = ["spring.jpa.hibernate.ddl-auto=create"])
 @Import(ClockConfig::class)
 class ReservationTest @Autowired constructor(
-        val reservationService: ReservationService,
-        val userRepository: UserRepository,
-        val reservationRepository: ReservationRepository,
-        val eventRepository: EventRepository,
-        clock: Clock
-        ) : AbstractIntegrationTest() {
+    val reservationService: ReservationService,
+    val userRepository: UserRepository,
+    val reservationRepository: ReservationRepository,
+    val eventRepository: EventRepository,
+    clock: Clock
+) : AbstractIntegrationTest() {
 
     object testFields {
         const val testName = "minjun"
@@ -40,25 +39,26 @@ class ReservationTest @Autowired constructor(
         const val password = "1234"
     }
     val sampleUser = User(
-            name = testFields.testName,
-            email = testFields.testUserName,
-            password = BCryptPasswordEncoder().encode(testFields.password),
-            authority = Authority.USER
+        name = testFields.testName,
+        email = testFields.testUserName,
+        password = BCryptPasswordEncoder().encode(testFields.password),
+        authority = Authority.USER
     )
 
     private val sampleEvent = Event(
-            title = "test title",
-            date = OffsetDateTime.now(clock),
-            reservationEndTime = OffsetDateTime.now(clock),
-            reservationStartTime = OffsetDateTime.now(clock),
-            maxAttendees = 100
+        title = "test title",
+        date = OffsetDateTime.now(clock),
+        reservationEndTime = OffsetDateTime.now(clock),
+        reservationStartTime = OffsetDateTime.now(clock),
+        maxAttendees = 100
     )
 
-    @BeforeEach fun addUserAndEvent(){
+    @BeforeEach fun addUserAndEvent() {
         userRepository.save(sampleUser)
         eventRepository.save(sampleEvent)
     }
-    @AfterEach fun clear(){
+
+    @AfterEach fun clear() {
         reservationRepository.deleteAllInBatch()
     }
 
@@ -72,7 +72,7 @@ class ReservationTest @Autowired constructor(
         for (i in 0 until threadCount) {
             executorService.submit {
                 try {
-                    reservationService.createReservation(1,1)
+                    reservationService.createReservation(1, 1)
                 } finally {
                     countDownLatch.countDown()
                 }
@@ -85,5 +85,4 @@ class ReservationTest @Autowired constructor(
 
         assertThat(count).isEqualTo(100)
     }
-
 }
