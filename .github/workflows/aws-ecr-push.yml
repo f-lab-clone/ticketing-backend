@@ -2,6 +2,7 @@ name: push to ECR
 
 on: push
 
+
 env:
   AWS_REGION: ap-northeast-2
   ECR_REPOSITORY: ticketing-backend-ecr
