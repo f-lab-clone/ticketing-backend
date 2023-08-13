@@ -30,14 +30,18 @@ jobs:
 
       - name: Commit changes
         run: |
-          if [ "docs/temp-open-api.json" -nt "docs/open-api.json" ] ; then
-          \mv -f docs/temp-open-api.json docs/open-api.json
-          git config --global user.name 'Git Actions'
-          git config --global user.email 'no-reply@github.com'
-          git add docs/open-api.json
-          git status
-          git commit -m "docs: update open-api.json"
-          git push
+          diff docs/temp-open-api.json docs/open-api.json
+          if [ $? -ne 0 ]; then
+            echo "Committing changes"
+            \mv -f docs/temp-open-api.json docs/open-api.json
+            git config --global user.name 'Git Actions'
+            git config --global user.email 'no-reply@github.com'
+            git add docs/open-api.json
+            git status
+            git commit -m "docs: update open-api.json"
+            git push
+          else
+            echo "No changes"
           fi
 
       - name: Stop containers
