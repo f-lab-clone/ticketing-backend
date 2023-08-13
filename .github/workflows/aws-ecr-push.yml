@@ -1,0 +1,38 @@
+name: push to ECR
+
+on: push
+
+env:
+  AWS_REGION: ap-northeast-2
+  ECR_REPOSITORY: ticketing-ecr
+  IMAGE_NAME: ticketing-backend
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ECR_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_ECR_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY/$IMAGE_NAME:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY/$IMAGE_NAME:latest .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY/$IMAGE_NAME --all-tags
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY/$IMAGE_NAME:$IMAGE_TAG"
