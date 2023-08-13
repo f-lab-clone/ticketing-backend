@@ -1,10 +1,6 @@
 package com.group4.ticketingservice.entity
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 import java.time.OffsetDateTime
 
 @Entity
@@ -24,5 +20,9 @@ class Event(
     var reservationEndTime: OffsetDateTime,
 
     @Column(name = "max_attendees")
-    var maxAttendees: Int
-)
+    var maxAttendees: Int,
+
+){
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
+    val reservations : List<Reservation>?=null
+}

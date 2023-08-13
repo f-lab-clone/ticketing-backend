@@ -6,6 +6,8 @@ import com.group4.ticketingservice.repository.ReservationRepository
 import com.group4.ticketingservice.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import java.lang.RuntimeException
 import java.time.Clock
 import java.time.OffsetDateTime
 
@@ -16,16 +18,24 @@ class ReservationService @Autowired constructor(
     private val reservationRepository: ReservationRepository,
     private val clock: Clock
 ) {
+    @Transactional
     fun createReservation(userId: Long, eventId: Long): Reservation {
         val user = userRepository.findById(userId).orElseThrow {
             IllegalArgumentException("User not found")
         }
         val event = eventRepository.findById(eventId).orElseThrow {
             IllegalArgumentException("Event not found")
+
         }
         val reservation = Reservation(user = user, event = event, bookedAt = OffsetDateTime.now(clock))
 
-        return reservationRepository.save(reservation)
+        if(event.reservations!!.count()<event.maxAttendees){
+            reservationRepository.save(reservation)
+        }
+        else{
+            throw RuntimeException("")
+        }
+        return reservation
     }
 
     fun getReservation(reservationId: Long): Reservation {
