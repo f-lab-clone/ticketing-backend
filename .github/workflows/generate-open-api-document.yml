@@ -26,18 +26,16 @@ jobs:
 
       - name: Create json file
         run: |
-          curl -o docs/temp-open-api.json http://localhost:8080/api-docs
+          curl -o docs/open-api.json http://localhost:8080/api-docs
 
       - name: Commit changes
         run: |
-          diff docs/temp-open-api.json docs/open-api.json
-          if [ $? -ne 0 ]; then
+          git config --global user.name 'Git Actions'
+          git config --global user.email 'no-reply@github.com'
+          git add docs/open-api.json
+          
+          if git status | grep -ic "Changes to be committed:"; then
             echo "Committing changes"
-            \mv -f docs/temp-open-api.json docs/open-api.json
-            git config --global user.name 'Git Actions'
-            git config --global user.email 'no-reply@github.com'
-            git add docs/open-api.json
-            git status
             git commit -m "docs: update open-api.json"
             git push
           else
