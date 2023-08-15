@@ -24,13 +24,11 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 
 @TestPropertySource(properties = ["spring.jpa.hibernate.ddl-auto=create"])
-@Import(ClockConfig::class)
 class ReservationTest @Autowired constructor(
     val reservationService: ReservationService,
     val userRepository: UserRepository,
     val reservationRepository: ReservationRepository,
     val eventRepository: EventRepository,
-    clock: Clock
 ) : AbstractIntegrationTest() {
 
     object testFields {
@@ -47,9 +45,9 @@ class ReservationTest @Autowired constructor(
 
     private val sampleEvent = Event(
         title = "test title",
-        date = OffsetDateTime.now(clock),
-        reservationEndTime = OffsetDateTime.now(clock),
-        reservationStartTime = OffsetDateTime.now(clock),
+        date = OffsetDateTime.now(),
+        reservationEndTime = OffsetDateTime.now(),
+        reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 100
     )
 
