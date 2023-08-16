@@ -12,4 +12,8 @@ interface EventRepository : JpaRepository<Event, Long> {
     @Lock(value = LockModeType.PESSIMISTIC_WRITE)
     @Query("select e from Event e where e.id = :id")
     fun findByIdWithPesimisticLock(id: Long): Event?
+
+    @Lock(LockModeType.OPTIMISTIC)
+    @Query("select e from Event e where e.id = :id")
+    fun findByIdWithOptimisicLock(id: Long): Event?
 }

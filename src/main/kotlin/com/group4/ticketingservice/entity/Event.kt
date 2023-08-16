@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
+import jakarta.persistence.Version
 import java.time.OffsetDateTime
 
 @Entity
@@ -33,4 +34,7 @@ class Event(
 ) {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "event", targetEntity = Reservation::class)
     var reservations: List<Reservation>? = null
+
+    @Version
+    private val version: Long? = null
 }

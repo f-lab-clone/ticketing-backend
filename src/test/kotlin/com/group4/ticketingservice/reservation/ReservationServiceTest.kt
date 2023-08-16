@@ -65,6 +65,8 @@ class ReservationServiceTest(
     fun `ReservationService_createReservation invoke ReservationRepository_save`() {
         every { userRepository.findById(any()) } returns Optional.of(sampleUser)
         every { eventRepository.findByIdWithPesimisticLock(any()) } returns sampleEvent
+        every { eventRepository.findByIdWithOptimisicLock(any()) } returns sampleEvent
+
         every { eventRepository.saveAndFlush(any()) } returns sampleEvent
         every { reservationRepository.saveAndFlush(any()) } returns sampleReservation
         reservationService.createReservation(1, 1)
