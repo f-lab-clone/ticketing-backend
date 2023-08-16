@@ -1,7 +1,6 @@
 package com.group4.ticketingservice.Reservation
 
 import com.group4.ticketingservice.AbstractIntegrationTest
-import com.group4.ticketingservice.config.ClockConfig
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.EventRepository
@@ -15,10 +14,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Import
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.test.context.TestPropertySource
-import java.time.Clock
 import java.time.OffsetDateTime
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
@@ -28,7 +25,7 @@ class ReservationTest @Autowired constructor(
     val reservationService: ReservationService,
     val userRepository: UserRepository,
     val reservationRepository: ReservationRepository,
-    val eventRepository: EventRepository,
+    val eventRepository: EventRepository
 ) : AbstractIntegrationTest() {
 
     object testFields {
@@ -54,6 +51,11 @@ class ReservationTest @Autowired constructor(
     @BeforeEach fun addUserAndEvent() {
         userRepository.save(sampleUser)
         eventRepository.save(sampleEvent)
+
+        val event = eventRepository.findById(1).get()
+        event.availableAttendees = 100
+
+        eventRepository.save(event)
     }
 
     @AfterEach fun clear() {

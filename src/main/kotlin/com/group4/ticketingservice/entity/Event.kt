@@ -26,7 +26,10 @@ class Event(
     var reservationEndTime: OffsetDateTime,
 
     @Column(name = "max_attendees")
-    var maxAttendees: Int
+    var maxAttendees: Int,
+
+    @Column(name = "available_attendees")
+    var availableAttendees: Int = maxAttendees
 ) {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "event", targetEntity = Reservation::class)
     var reservations: List<Reservation>? = null
