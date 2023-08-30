@@ -2,61 +2,87 @@ package com.group4.ticketingservice.Bookmark
 
 import com.group4.ticketingservice.AbstractIntegrationTest
 import com.group4.ticketingservice.entity.Bookmark
+import com.group4.ticketingservice.entity.Event
+import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.BookmarkRepository
+import com.group4.ticketingservice.repository.EventRepository
+import com.group4.ticketingservice.repository.UserRepository
+import com.group4.ticketingservice.utils.Authority
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.transaction.annotation.Transactional
+import java.time.Clock
+import java.time.Duration
+import java.time.OffsetDateTime
 
 class BookmarkRepositoryTest(
-    @Autowired val bookmarkRepository: BookmarkRepository
+    @Autowired val bookmarkRepository: BookmarkRepository,
+    @Autowired val userRepository: UserRepository,
+    @Autowired val eventRepository: EventRepository,
+    @Autowired private val clock: Clock
 ) : AbstractIntegrationTest() {
+
+    val sampleUser = User(
+        name = "james",
+        email = "james@example.com",
+        password = "12345678",
+        authority = Authority.USER
+    )
+
+    private val sampleEvent: Event = Event(
+        title = "test title",
+        date = OffsetDateTime.now(clock),
+        reservationEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
+        reservationStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
+        maxAttendees = 10
+    )
+
+    private val sampleBookmark = Bookmark(
+        user = sampleUser,
+        event = sampleEvent
+    )
 
     @Test
     fun `bookmarkRepository_save should return savedBookmark`() {
         // given
-        val sampleBookmark = Bookmark(
-            user_id = 1,
-            show_id = 1
-        )
+        val savedUser = userRepository.save(sampleUser)
+        val savedEvent = eventRepository.save(sampleEvent)
+        val requestBookmark = Bookmark(user = savedUser, event = savedEvent)
 
         // when
-        val savedBookmark = bookmarkRepository.save(sampleBookmark)
+        val savedBookmark = bookmarkRepository.save(requestBookmark)
 
         // then
-        assertThat(savedBookmark).isEqualTo(sampleBookmark)
+        assertThat(savedBookmark).isEqualTo(requestBookmark)
     }
 
     @Test
-    fun `bookmarkRepository_findByIdOrNull should return foundBookmark`() {
+    fun `bookmarkRepository_findByIdAndUser should return foundBookmark`() {
         // given
-        val sampleBookmark = Bookmark(
-            user_id = 1,
-            show_id = 1
-        )
-
-        val savedBookmark = bookmarkRepository.save(sampleBookmark)
+        val savedUser = userRepository.save(sampleUser)
+        val savedEvent = eventRepository.save(sampleEvent)
+        val savedBookmark = bookmarkRepository.save(Bookmark(user = savedUser, event = savedEvent))
 
         // when
-        val foundBookmark = bookmarkRepository.findByIdOrNull(savedBookmark.id?.toLong())
+        val foundBookmark = bookmarkRepository.findByIdAndUser(savedBookmark.id!!, savedUser)
 
         // then
-        assert(savedBookmark.id == foundBookmark?.id)
+        assert(savedBookmark.id == foundBookmark.id)
     }
 
     @Test
-    fun `bookmarkRepository_deleteById should delete requestedBookmark`() {
+    @Transactional
+    fun `bookmarkRepository_deleteByIdAndUser should delete requestedBookmark`() {
         // given
-        val sampleBookmark = Bookmark(
-            user_id = 1,
-            show_id = 1
-        )
-
-        val savedBookmark = bookmarkRepository.save(sampleBookmark)
+        val savedUser = userRepository.save(sampleUser)
+        val savedEvent = eventRepository.save(sampleEvent)
+        val savedBookmark = bookmarkRepository.save(Bookmark(user = savedUser, event = savedEvent))
 
         // when
-        savedBookmark.id?.let { bookmarkRepository.deleteById(it.toLong()) }
+        bookmarkRepository.deleteByIdAndUser(savedBookmark.id!!, savedUser)
 
         // then
         val deletedBookmark = bookmarkRepository.findByIdOrNull(savedBookmark.id?.toLong())
@@ -65,17 +91,14 @@ class BookmarkRepositoryTest(
     }
 
     @Test
-    fun `bookmarkRepository_findAll should return list of Bookmarks`() {
+    fun `bookmarkRepository_findByUser should return list of Bookmarks`() {
         // given
-        val sampleBookmark = Bookmark(
-            user_id = 1,
-            show_id = 1
-        )
-
-        bookmarkRepository.save(sampleBookmark)
+        val savedUser = userRepository.save(sampleUser)
+        val savedEvent = eventRepository.save(sampleEvent)
+        bookmarkRepository.save(Bookmark(user = savedUser, event = savedEvent))
 
         // when
-        val listofBookmarks = bookmarkRepository.findAll()
+        val listofBookmarks = bookmarkRepository.findByUser(savedUser)
 
         // then
         assertInstanceOf(ArrayList::class.java, listofBookmarks)
