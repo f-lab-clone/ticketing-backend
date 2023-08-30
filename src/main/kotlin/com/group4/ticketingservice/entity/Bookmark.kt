@@ -4,12 +4,20 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 
 @Entity
 class Bookmark(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null,
-    var user_id: Int, // 사용자 식별자
-    var show_id: Int // 공연 식별자
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    var user: User,
+
+    @ManyToOne
+    @JoinColumn(name = "event_id", nullable = false)
+    var event: Event
 )
