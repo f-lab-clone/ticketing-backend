@@ -12,15 +12,15 @@ class EventService(
     fun createEvent(
         title: String,
         date: OffsetDateTime,
-        reservationStartTime: OffsetDateTime,
-        reservationEndTime: OffsetDateTime,
+        eventStartTime: OffsetDateTime,
+        eventEndTime: OffsetDateTime,
         maxAttendees: Int
     ): Event {
         val event = Event(
             title = title,
             date = date,
-            reservationStartTime = reservationStartTime,
-            reservationEndTime = reservationEndTime,
+            eventStartTime = eventStartTime,
+            eventEndTime = eventEndTime,
             maxAttendees = maxAttendees
         )
         return eventRepository.save(event)
@@ -38,8 +38,8 @@ class EventService(
         id: Long,
         title: String,
         date: OffsetDateTime,
-        reservationStartTime: OffsetDateTime,
-        reservationEndTime: OffsetDateTime,
+        eventStartTime: OffsetDateTime,
+        eventEndTime: OffsetDateTime,
         maxAttendees: Int
     ): Event {
         val event = eventRepository.findById(id).orElseThrow {
@@ -47,8 +47,8 @@ class EventService(
         }
         event.title = title
         event.date = date
-        event.reservationStartTime = reservationStartTime
-        event.reservationEndTime = reservationEndTime
+        event.eventStartTime = eventStartTime
+        event.eventEndTime = eventEndTime
         event.maxAttendees = maxAttendees
 
         return eventRepository.save(event)

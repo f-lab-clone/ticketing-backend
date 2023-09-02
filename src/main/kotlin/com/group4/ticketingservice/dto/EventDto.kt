@@ -5,8 +5,8 @@ import java.time.OffsetDateTime
 data class EventCreateRequest(
     val title: String,
     val date: OffsetDateTime,
-    val reservationStartTime: OffsetDateTime,
-    val reservationEndTime: OffsetDateTime,
+    val eventStartTime: OffsetDateTime,
+    val eventEndTime: OffsetDateTime,
     val maxAttendees: Int
 )
 
@@ -18,7 +18,7 @@ data class EventResponse(
     val id: Long,
     val title: String,
     val date: OffsetDateTime,
-    val reservationStartTime: OffsetDateTime,
-    val reservationEndTime: OffsetDateTime,
+    val eventStartTime: OffsetDateTime,
+    val eventEndTime: OffsetDateTime,
     val maxAttendees: Int
 )

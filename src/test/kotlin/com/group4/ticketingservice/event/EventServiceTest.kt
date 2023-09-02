@@ -20,8 +20,8 @@ class EventServiceTest {
         id = 1,
         title = "test title",
         date = OffsetDateTime.now(),
-        reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
-        reservationStartTime = OffsetDateTime.now() + Duration.ofHours(1),
+        eventEndTime = OffsetDateTime.now() + Duration.ofHours(2),
+        eventStartTime = OffsetDateTime.now() + Duration.ofHours(1),
         maxAttendees = 10
     )
 
@@ -31,8 +31,8 @@ class EventServiceTest {
         eventService.createEvent(
             title = sampleEvent.title,
             date = sampleEvent.date,
-            reservationStartTime = sampleEvent.reservationStartTime,
-            reservationEndTime = sampleEvent.reservationEndTime,
+            eventStartTime = sampleEvent.eventStartTime,
+            eventEndTime = sampleEvent.eventEndTime,
             maxAttendees = sampleEvent.maxAttendees
         )
         verify(exactly = 1) { eventRepository.save(any()) }
@@ -58,8 +58,8 @@ class EventServiceTest {
             id = sampleEvent.id!!,
             title = "updated title",
             date = sampleEvent.date,
-            reservationEndTime = sampleEvent.reservationEndTime,
-            reservationStartTime = sampleEvent.reservationStartTime,
+            eventEndTime = sampleEvent.eventEndTime,
+            eventStartTime = sampleEvent.eventStartTime,
             maxAttendees = sampleEvent.maxAttendees
         )
         every { eventRepository.findById(any()) } returns Optional.of(sampleEvent)
@@ -69,8 +69,8 @@ class EventServiceTest {
             id = sampleEvent.id!!,
             title = updatedEvent.title,
             date = updatedEvent.date,
-            reservationStartTime = updatedEvent.reservationStartTime,
-            reservationEndTime = updatedEvent.reservationEndTime,
+            eventStartTime = updatedEvent.eventStartTime,
+            eventEndTime = updatedEvent.eventEndTime,
             maxAttendees = updatedEvent.maxAttendees
         )
         assert(result == updatedEvent)

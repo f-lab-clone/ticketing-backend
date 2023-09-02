@@ -22,8 +22,8 @@ class EventRepositoryTest(
         val sampleEvent = Event(
             title = "test title",
             date = now,
-            reservationEndTime = now + ofHours(2),
-            reservationStartTime = now + ofHours(1),
+            eventEndTime = now + ofHours(2),
+            eventStartTime = now + ofHours(1),
             maxAttendees = 10
         )
 
@@ -41,8 +41,8 @@ class EventRepositoryTest(
         val sampleEvent = Event(
             title = "test title",
             date = now,
-            reservationEndTime = now + ofHours(2),
-            reservationStartTime = now + ofHours(1),
+            eventEndTime = now + ofHours(2),
+            eventStartTime = now + ofHours(1),
             maxAttendees = 10
         )
         val savedEvent = eventRepository.save(sampleEvent)
@@ -63,8 +63,8 @@ class EventRepositoryTest(
         val sampleEvent = Event(
             title = "test title",
             date = now,
-            reservationEndTime = now + ofHours(2),
-            reservationStartTime = now + ofHours(1),
+            eventEndTime = now + ofHours(2),
+            eventStartTime = now + ofHours(1),
             maxAttendees = 10
         )
         eventRepository.save(sampleEvent)
@@ -84,8 +84,8 @@ class EventRepositoryTest(
         val sampleEvent = Event(
             title = "test title",
             date = now,
-            reservationEndTime = now + ofHours(2),
-            reservationStartTime = now + ofHours(1),
+            eventEndTime = now + ofHours(2),
+            eventStartTime = now + ofHours(1),
             maxAttendees = 10
         )
         val savedEvent = eventRepository.save(sampleEvent)

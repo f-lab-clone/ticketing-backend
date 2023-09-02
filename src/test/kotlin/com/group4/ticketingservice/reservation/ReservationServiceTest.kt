@@ -50,8 +50,8 @@ class ReservationServiceTest(
         id = 1,
         title = "test title",
         date = OffsetDateTime.now(clock),
-        reservationEndTime = OffsetDateTime.now(clock) + ofHours(2),
-        reservationStartTime = OffsetDateTime.now(clock) + ofHours(1),
+        eventEndTime = OffsetDateTime.now(clock) + ofHours(2),
+        eventStartTime = OffsetDateTime.now(clock) + ofHours(1),
         maxAttendees = 10
     )
 

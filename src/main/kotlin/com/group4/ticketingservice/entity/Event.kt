@@ -17,11 +17,11 @@ class Event(
 
     var date: OffsetDateTime,
 
-    @Column(name = "reservation_start_time")
-    var reservationStartTime: OffsetDateTime,
+    @Column(name = "event_start_time")
+    var eventStartTime: OffsetDateTime,
 
-    @Column(name = "reservation_end_time")
-    var reservationEndTime: OffsetDateTime,
+    @Column(name = "event_end_time")
+    var eventEndTime: OffsetDateTime,
 
     @Column(name = "max_attendees")
     var maxAttendees: Int

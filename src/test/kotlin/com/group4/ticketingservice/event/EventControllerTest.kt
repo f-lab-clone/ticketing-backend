@@ -54,15 +54,15 @@ class EventControllerTest(
         id = 1,
         title = "test title",
         date = OffsetDateTime.now(clock),
-        reservationEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
-        reservationStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
+        eventEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
+        eventStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
         maxAttendees = 10
     )
     private val sampleEventCreateRequest: EventCreateRequest = EventCreateRequest(
         title = "test title",
         date = OffsetDateTime.now(clock),
-        reservationEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
-        reservationStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
+        eventEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
+        eventStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
         maxAttendees = 10
     )
     private val sampleEventDeleteRequest: EventDeleteRequest = EventDeleteRequest(

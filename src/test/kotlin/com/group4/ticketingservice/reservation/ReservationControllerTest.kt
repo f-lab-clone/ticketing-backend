@@ -81,8 +81,8 @@ class ReservationControllerTest(
         id = 1,
         title = "test title",
         date = OffsetDateTime.now(clock),
-        reservationEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
-        reservationStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
+        eventEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
+        eventStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
         maxAttendees = 10
     )
     private val sampleReservation: Reservation = Reservation(
@@ -149,8 +149,8 @@ class ReservationControllerTest(
                 id = 2,
                 title = "test title 2",
                 date = OffsetDateTime.now(clock),
-                reservationEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
-                reservationStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
+                eventEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
+                eventStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
                 maxAttendees = 10
             ),
             bookedAt = OffsetDateTime.now(clock)

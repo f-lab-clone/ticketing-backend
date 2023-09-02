@@ -26,16 +26,16 @@ class EventController @Autowired constructor(
         val event = eventService.createEvent(
             request.title,
             request.date,
-            request.reservationStartTime,
-            request.reservationEndTime,
+            request.eventStartTime,
+            request.eventEndTime,
             request.maxAttendees
         )
         val response = EventResponse(
             id = event.id!!,
             title = event.title,
             date = event.date,
-            reservationStartTime = event.reservationStartTime,
-            reservationEndTime = event.reservationEndTime,
+            eventStartTime = event.eventStartTime,
+            eventEndTime = event.eventEndTime,
             maxAttendees = event.maxAttendees
         )
         return ResponseEntity.status(HttpStatus.OK).body(response)
@@ -49,8 +49,8 @@ class EventController @Autowired constructor(
                     id = it.id!!,
                     title = it.title,
                     date = it.date,
-                    reservationStartTime = it.reservationStartTime,
-                    reservationEndTime = it.reservationEndTime,
+                    eventStartTime = it.eventStartTime,
+                    eventEndTime = it.eventEndTime,
                     maxAttendees = it.maxAttendees
                 )
             )
@@ -67,8 +67,8 @@ class EventController @Autowired constructor(
                 id = it.id!!,
                 title = it.title,
                 date = it.date,
-                reservationStartTime = it.reservationStartTime,
-                reservationEndTime = it.reservationEndTime,
+                eventStartTime = it.eventStartTime,
+                eventEndTime = it.eventEndTime,
                 maxAttendees = it.maxAttendees
             )
         }
@@ -88,16 +88,16 @@ class EventController @Autowired constructor(
             id,
             request.title,
             request.date,
-            request.reservationStartTime,
-            request.reservationEndTime,
+            request.eventStartTime,
+            request.eventEndTime,
             request.maxAttendees
         )
         val response = EventResponse(
             id = event.id!!,
             title = event.title,
             date = event.date,
-            reservationStartTime = event.reservationStartTime,
-            reservationEndTime = event.reservationEndTime,
+            eventStartTime = event.eventStartTime,
+            eventEndTime = event.eventEndTime,
             maxAttendees = event.maxAttendees
         )
         return ResponseEntity.status(HttpStatus.OK).body(response)
