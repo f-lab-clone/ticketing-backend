@@ -1,5 +1,6 @@
 package com.group4.ticketingservice.filter
 
+import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.GsonBuilder
 import com.group4.ticketingservice.dto.SignInRequest
@@ -13,7 +14,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import java.io.IOException
 import java.io.PrintWriter
 
 class JwtAuthenticationFilter(
@@ -27,26 +27,34 @@ class JwtAuthenticationFilter(
 
     override fun attemptAuthentication(request: HttpServletRequest?, response: HttpServletResponse?): Authentication? {
         super.setAuthenticationManager(authenticationManager)
+
+        lateinit var signInRequest: SignInRequest
         val om = ObjectMapper()
         try {
-            val signInRequest = om.readValue(request?.inputStream, SignInRequest::class.java)
-            val authenticationToken = UsernamePasswordAuthenticationToken(signInRequest.email, signInRequest.password)
-            val authentication = getAuthenticationManager().authenticate(authenticationToken)
-            return authentication
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+            signInRequest = om.readValue(request?.inputStream, SignInRequest::class.java)
+        } catch (e: JsonProcessingException) {
+            val body = GsonBuilder().create().toJson(mapOf("message" to e.message))
 
-        return null
+            response?.contentType = "application/json"
+            response?.status = HttpServletResponse.SC_BAD_REQUEST
+            val writer: PrintWriter? = response?.writer
+            writer?.println(body)
+
+            return null
+        }
+        val authenticationToken = UsernamePasswordAuthenticationToken(signInRequest.email, signInRequest.password)
+        val authentication = getAuthenticationManager().authenticate(authenticationToken)
+
+        return authentication
     }
 
     override fun successfulAuthentication(
         request: HttpServletRequest?,
         response: HttpServletResponse?,
         chain: FilterChain?,
-        authResult: Authentication?
+        authResult: Authentication
     ) {
-        val user = authResult?.principal as User
+        val user = authResult.principal as User
         val jwt = tokenProvider.createToken("${user.username}:${user.role}")
         val gson = GsonBuilder().create()
         val body = gson.toJson(mapOf("Authorization" to "Bearer $jwt"))

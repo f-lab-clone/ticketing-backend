@@ -37,7 +37,7 @@ jobs:
           if git status | grep -ic "Changes to be committed:"; then
             echo "Committing changes"
             git commit -m "docs: update open-api.yaml"
-            git push --force
+            git push
           else
             echo "No changes"
           fi
