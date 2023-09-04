@@ -65,7 +65,7 @@ class ReservationTest @Autowired constructor(
     @RepeatedTest(3)
     @Test
     fun `ReservationService_createReservation should not exceed the limit in the concurrency test`() {
-        val threadCount = 100
+        val threadCount = 1000
         val executorService = Executors.newFixedThreadPool(32)
         val countDownLatch = CountDownLatch(threadCount)
 
