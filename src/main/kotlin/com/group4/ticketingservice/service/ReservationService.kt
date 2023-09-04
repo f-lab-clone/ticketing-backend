@@ -23,7 +23,7 @@ class ReservationService @Autowired constructor(
         val user = userRepository.findById(userId).orElseThrow {
             IllegalArgumentException("User not found")
         }
-        val event = eventRepository.findByIdWithOptimisicLock(eventId) ?: throw RuntimeException("")
+        val event = eventRepository.findByIdWithPesimisticLock(eventId) ?: throw RuntimeException("")
 
         val reservation = Reservation(user = user, event = event, bookedAt = OffsetDateTime.now(clock))
 
