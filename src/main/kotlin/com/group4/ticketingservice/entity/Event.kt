@@ -1,10 +1,6 @@
 package com.group4.ticketingservice.entity
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 import java.time.OffsetDateTime
 
 @Entity
@@ -13,9 +9,11 @@ class Event(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    var title: String,
+    var name: String,
 
-    var date: OffsetDateTime,
+    @ManyToOne
+    @JoinColumn(name = "hall_id")
+    var hall: Hall? = null,
 
     @Column(name = "event_start_time")
     var eventStartTime: OffsetDateTime,
