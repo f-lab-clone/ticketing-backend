@@ -35,6 +35,4 @@ class Event(
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "event", targetEntity = Reservation::class)
     var reservations: List<Reservation>? = null
 
-    @Version
-    private val version: Long? = null
 }
