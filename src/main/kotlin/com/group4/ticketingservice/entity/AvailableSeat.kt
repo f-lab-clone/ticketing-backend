@@ -1,6 +1,11 @@
 package com.group4.ticketingservice.entity
 
-import jakarta.persistence.*
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 
 @Entity
 class AvailableSeat {
@@ -10,7 +15,7 @@ class AvailableSeat {
 
     @ManyToOne
     @JoinColumn(name = "seat_class_id")
-    var seatClass: SeatClass? = null
+    private var seatClass: SeatClass? = null
 
     @ManyToOne
     @JoinColumn(name = "stage_seat_id")
