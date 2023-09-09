@@ -1,1 +1,5 @@
-SHOW DATABASES;
+SELECT 'START init.sql';
+
+SELECT 'SLEEP', SLEEP(5);
+
+SELECT * FROM event;

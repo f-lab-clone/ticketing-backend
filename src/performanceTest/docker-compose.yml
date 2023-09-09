@@ -1,6 +1,6 @@
 version: '3'
 services:
-  init:
+  initdb:
     build:
       context: .
       dockerfile: ./initdb/Dockerfile
@@ -16,3 +16,14 @@ services:
       MYSQL_SCHEMA: ${MYSQL_SCHEMA}
       BASTION_HOST: ${BASTION_HOST}
       BASTION_USERNAME: ${BASTION_USERNAME}
+  
+  k6:
+    depends_on: 
+      initdb:
+        condition: service_completed_successfully
+    image: grafana/k6:latest
+    volumes:
+      - ./scripts:/scripts
+    command: run ${ENTRYPOINT}
+
+  
