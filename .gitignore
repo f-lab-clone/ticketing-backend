@@ -1,3 +1,6 @@
+.env
+*.pem
+
 jacocoReport/
 
 HELP.md
