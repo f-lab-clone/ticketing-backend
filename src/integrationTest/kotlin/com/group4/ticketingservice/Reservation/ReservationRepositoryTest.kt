@@ -37,8 +37,7 @@ class ReservationRepositoryTest @Autowired constructor(
         authority = Authority.USER
     )
     private val sampleEvent = Event(
-        title = "test title",
-        date = OffsetDateTime.now(clock),
+        name = "test name",
         eventEndTime = OffsetDateTime.now(clock),
         eventStartTime = OffsetDateTime.now(clock),
         maxAttendees = 10
@@ -53,8 +52,7 @@ class ReservationRepositoryTest @Autowired constructor(
     fun `ReservationRepository_save without mocked clock and OffsetDateTime should return savedReservation`() {
         // given
         val sampleEvent = Event(
-            title = "test title 2",
-            date = OffsetDateTime.now(),
+            name = "test name 2",
             eventEndTime = OffsetDateTime.now(),
             eventStartTime = OffsetDateTime.now(),
             maxAttendees = 10

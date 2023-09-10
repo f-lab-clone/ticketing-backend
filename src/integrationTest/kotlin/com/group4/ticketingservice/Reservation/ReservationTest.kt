@@ -41,10 +41,9 @@ class ReservationTest @Autowired constructor(
     )
 
     private val sampleEvent = Event(
-        title = "test title",
-        date = OffsetDateTime.now(),
-        reservationEndTime = OffsetDateTime.now(),
-        reservationStartTime = OffsetDateTime.now(),
+        name = "test name",
+        eventEndTime = OffsetDateTime.now(),
+        eventStartTime = OffsetDateTime.now(),
         maxAttendees = 100
     )
 

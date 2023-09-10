@@ -20,8 +20,7 @@ class EventRepositoryTest(
         // given
         val now = OffsetDateTime.now(ZoneOffset.UTC)
         val sampleEvent = Event(
-            title = "test title",
-            date = now,
+            name = "test name",
             eventEndTime = now + ofHours(2),
             eventStartTime = now + ofHours(1),
             maxAttendees = 10
@@ -39,8 +38,7 @@ class EventRepositoryTest(
         // given
         val now = OffsetDateTime.now(ZoneOffset.UTC)
         val sampleEvent = Event(
-            title = "test title",
-            date = now,
+            name = "test name",
             eventEndTime = now + ofHours(2),
             eventStartTime = now + ofHours(1),
             maxAttendees = 10
@@ -61,8 +59,7 @@ class EventRepositoryTest(
         // given
         val now = OffsetDateTime.now(ZoneOffset.UTC)
         val sampleEvent = Event(
-            title = "test title",
-            date = now,
+            name = "test name",
             eventEndTime = now + ofHours(2),
             eventStartTime = now + ofHours(1),
             maxAttendees = 10
@@ -82,8 +79,7 @@ class EventRepositoryTest(
         // given
         val now = OffsetDateTime.now(ZoneOffset.UTC)
         val sampleEvent = Event(
-            title = "test title",
-            date = now,
+            name = "test name",
             eventEndTime = now + ofHours(2),
             eventStartTime = now + ofHours(1),
             maxAttendees = 10

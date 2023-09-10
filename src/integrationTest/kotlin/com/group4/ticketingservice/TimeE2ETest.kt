@@ -22,8 +22,7 @@ class TimeE2ETest @Autowired constructor(
 
     @Test
     fun `All API only returns OffsetDateTime in UTC without any offset info`() {
-        val eventCreateRequest = "{\"title\":\"test title\"," +
-            "\"date\":\"2022-09-01T21:00:00.001+09:00\"," +
+        val eventCreateRequest = "{\"name\":\"name title\"," +
             "\"eventStartTime\":\"2022-09-01T22:00:00.001+09:00\"," +
             "\"eventEndTime\":\"2022-09-01T23:00:00.001+09:00\"," +
             "\"maxAttendees\":10}"
@@ -35,7 +34,6 @@ class TimeE2ETest @Autowired constructor(
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.date").value("2022-09-01T12:00:00.001Z"))
             .andExpect(jsonPath("$.eventStartTime").value("2022-09-01T13:00:00.001Z"))
             .andExpect(jsonPath("$.eventEndTime").value("2022-09-01T14:00:00.001Z"))
     }
