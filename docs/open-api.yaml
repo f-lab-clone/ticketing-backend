@@ -329,22 +329,18 @@ components:
           format: date-time
     EventCreateRequest:
       required:
-      - date
+      - eventEndTime
+      - eventStartTime
       - maxAttendees
-      - reservationEndTime
-      - reservationStartTime
-      - title
+      - name
       type: object
       properties:
-        title:
+        name:
           type: string
-        date:
-          type: string
-          format: date-time
-        reservationStartTime:
+        eventStartTime:
           type: string
           format: date-time
-        reservationEndTime:
+        eventEndTime:
           type: string
           format: date-time
         maxAttendees:
@@ -352,26 +348,22 @@ components:
           format: int32
     EventResponse:
       required:
-      - date
+      - eventEndTime
+      - eventStartTime
       - id
       - maxAttendees
-      - reservationEndTime
-      - reservationStartTime
-      - title
+      - name
       type: object
       properties:
         id:
           type: integer
           format: int64
-        title:
+        name:
           type: string
-        date:
-          type: string
-          format: date-time
-        reservationStartTime:
+        eventStartTime:
           type: string
           format: date-time
-        reservationEndTime:
+        eventEndTime:
           type: string
           format: date-time
         maxAttendees:
