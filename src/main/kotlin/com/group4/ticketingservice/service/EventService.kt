@@ -10,15 +10,13 @@ class EventService(
     val eventRepository: EventRepository
 ) {
     fun createEvent(
-        title: String,
-        date: OffsetDateTime,
+        name: String,
         eventStartTime: OffsetDateTime,
         eventEndTime: OffsetDateTime,
         maxAttendees: Int
     ): Event {
         val event = Event(
-            title = title,
-            date = date,
+            name = name,
             eventStartTime = eventStartTime,
             eventEndTime = eventEndTime,
             maxAttendees = maxAttendees
@@ -36,8 +34,7 @@ class EventService(
 
     fun updateEvent(
         id: Long,
-        title: String,
-        date: OffsetDateTime,
+        name: String,
         eventStartTime: OffsetDateTime,
         eventEndTime: OffsetDateTime,
         maxAttendees: Int
@@ -45,8 +42,7 @@ class EventService(
         val event = eventRepository.findById(id).orElseThrow {
             IllegalArgumentException("Event not found")
         }
-        event.title = title
-        event.date = date
+        event.name = name
         event.eventStartTime = eventStartTime
         event.eventEndTime = eventEndTime
         event.maxAttendees = maxAttendees

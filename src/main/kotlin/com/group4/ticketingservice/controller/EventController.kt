@@ -24,16 +24,14 @@ class EventController @Autowired constructor(
     @PostMapping
     fun createEvent(@RequestBody request: EventCreateRequest): ResponseEntity<EventResponse> {
         val event = eventService.createEvent(
-            request.title,
-            request.date,
+            request.name,
             request.eventStartTime,
             request.eventEndTime,
             request.maxAttendees
         )
         val response = EventResponse(
             id = event.id!!,
-            title = event.title,
-            date = event.date,
+            name = event.name,
             eventStartTime = event.eventStartTime,
             eventEndTime = event.eventEndTime,
             maxAttendees = event.maxAttendees
@@ -47,8 +45,7 @@ class EventController @Autowired constructor(
             ResponseEntity.status(HttpStatus.OK).body(
                 EventResponse(
                     id = it.id!!,
-                    title = it.title,
-                    date = it.date,
+                    name = it.name,
                     eventStartTime = it.eventStartTime,
                     eventEndTime = it.eventEndTime,
                     maxAttendees = it.maxAttendees
@@ -65,8 +62,7 @@ class EventController @Autowired constructor(
         val response: List<EventResponse> = events.map {
             EventResponse(
                 id = it.id!!,
-                title = it.title,
-                date = it.date,
+                name = it.name,
                 eventStartTime = it.eventStartTime,
                 eventEndTime = it.eventEndTime,
                 maxAttendees = it.maxAttendees
@@ -86,16 +82,14 @@ class EventController @Autowired constructor(
     ): ResponseEntity<EventResponse> {
         val event = eventService.updateEvent(
             id,
-            request.title,
-            request.date,
+            request.name,
             request.eventStartTime,
             request.eventEndTime,
             request.maxAttendees
         )
         val response = EventResponse(
             id = event.id!!,
-            title = event.title,
-            date = event.date,
+            name = event.name,
             eventStartTime = event.eventStartTime,
             eventEndTime = event.eventEndTime,
             maxAttendees = event.maxAttendees

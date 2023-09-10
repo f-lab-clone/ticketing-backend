@@ -48,8 +48,7 @@ class ReservationServiceTest(
     )
     private val sampleEvent: Event = Event(
         id = 1,
-        title = "test title",
-        date = OffsetDateTime.now(clock),
+        name = "test title",
         eventEndTime = OffsetDateTime.now(clock) + ofHours(2),
         eventStartTime = OffsetDateTime.now(clock) + ofHours(1),
         maxAttendees = 10

@@ -79,8 +79,7 @@ class ReservationControllerTest(
 
     private val sampleEvent: Event = Event(
         id = 1,
-        title = "test title",
-        date = OffsetDateTime.now(clock),
+        name = "test name",
         eventEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
         eventStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
         maxAttendees = 10
@@ -147,8 +146,7 @@ class ReservationControllerTest(
             user = sampleUser,
             event = Event(
                 id = 2,
-                title = "test title 2",
-                date = OffsetDateTime.now(clock),
+                name = "test name 2",
                 eventEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
                 eventStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
                 maxAttendees = 10

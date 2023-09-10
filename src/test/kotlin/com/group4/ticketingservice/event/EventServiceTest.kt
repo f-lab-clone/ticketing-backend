@@ -18,8 +18,7 @@ class EventServiceTest {
     )
     private val sampleEvent: Event = Event(
         id = 1,
-        title = "test title",
-        date = OffsetDateTime.now(),
+        name = "test name",
         eventEndTime = OffsetDateTime.now() + Duration.ofHours(2),
         eventStartTime = OffsetDateTime.now() + Duration.ofHours(1),
         maxAttendees = 10
@@ -29,8 +28,7 @@ class EventServiceTest {
     fun `EventService_createEvent invoke EventRepository_findById`() {
         every { eventRepository.save(any()) } returns sampleEvent
         eventService.createEvent(
-            title = sampleEvent.title,
-            date = sampleEvent.date,
+            name = sampleEvent.name,
             eventStartTime = sampleEvent.eventStartTime,
             eventEndTime = sampleEvent.eventEndTime,
             maxAttendees = sampleEvent.maxAttendees
@@ -56,8 +54,7 @@ class EventServiceTest {
     fun `EventService_updateEvent invoke EventRepository_findById`() {
         val updatedEvent = Event(
             id = sampleEvent.id!!,
-            title = "updated title",
-            date = sampleEvent.date,
+            name = "updated name",
             eventEndTime = sampleEvent.eventEndTime,
             eventStartTime = sampleEvent.eventStartTime,
             maxAttendees = sampleEvent.maxAttendees
@@ -67,8 +64,7 @@ class EventServiceTest {
 
         val result: Event = eventService.updateEvent(
             id = sampleEvent.id!!,
-            title = updatedEvent.title,
-            date = updatedEvent.date,
+            name = updatedEvent.name,
             eventStartTime = updatedEvent.eventStartTime,
             eventEndTime = updatedEvent.eventEndTime,
             maxAttendees = updatedEvent.maxAttendees

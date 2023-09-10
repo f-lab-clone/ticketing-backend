@@ -52,15 +52,13 @@ class EventControllerTest(
 
     private val sampleEvent: Event = Event(
         id = 1,
-        title = "test title",
-        date = OffsetDateTime.now(clock),
+        name = "test name",
         eventEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
         eventStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
         maxAttendees = 10
     )
     private val sampleEventCreateRequest: EventCreateRequest = EventCreateRequest(
-        title = "test title",
-        date = OffsetDateTime.now(clock),
+        name = "test name",
         eventEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
         eventStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
         maxAttendees = 10
@@ -72,7 +70,7 @@ class EventControllerTest(
 
     @Test
     fun `POST events should return created event`() {
-        every { eventService.createEvent(any(), any(), any(), any(), any()) } returns sampleEvent
+        every { eventService.createEvent(any(), any(), any(), any()) } returns sampleEvent
 
         mockMvc.perform(
             post("/events")
@@ -82,7 +80,7 @@ class EventControllerTest(
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(sampleEvent.id))
-            .andExpect(jsonPath("$.title").value(sampleEvent.title))
+            .andExpect(jsonPath("$.name").value(sampleEvent.name))
             .andExpect(jsonPath("$.maxAttendees").value(sampleEvent.maxAttendees))
     }
 
@@ -140,7 +138,6 @@ class EventControllerTest(
                 any(),
                 any(),
                 any(),
-                any(),
                 any()
             )
         } returns sampleEvent
@@ -152,7 +149,7 @@ class EventControllerTest(
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(sampleEvent.id))
-            .andExpect(jsonPath("$.title").value(sampleEvent.title))
+            .andExpect(jsonPath("$.name").value(sampleEvent.name))
             .andExpect(jsonPath("$.maxAttendees").value(sampleEvent.maxAttendees))
     }
 
