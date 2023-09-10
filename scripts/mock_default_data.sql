@@ -1,6 +1,6 @@
 INSERT INTO HALL (id, name) VALUES (1, 'Main Hall');
 
-INSERT INTO EVENT (id, hall_id, name, start_date, end_date) VALUES (1, 1, 'Concert A', '2023-10-01', '2023-10-10');
+INSERT INTO EVENT (id, hall_id, name, event_start_date, event_end_date) VALUES (1, 1, 'Concert A', '2023-10-01', '2023-10-10');
 
 INSERT INTO STAGE (id, hall_id, name) VALUES (1, 1, 'Stage 1');
 
