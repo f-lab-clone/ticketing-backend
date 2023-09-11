@@ -45,7 +45,8 @@ class ReservationTest @Autowired constructor(
         date = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),
         reservationStartTime = OffsetDateTime.now(),
-        maxAttendees = 100
+        maxAttendees = 100,
+        user = sampleUser
     )
 
     @BeforeEach fun addUserAndEvent() {

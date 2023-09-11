@@ -1,20 +1,39 @@
 package com.group4.ticketingservice.Event
 
 import com.group4.ticketingservice.AbstractIntegrationTest
+import com.group4.ticketingservice.Reservation.ReservationTest
 import com.group4.ticketingservice.entity.Event
+import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.EventRepository
+import com.group4.ticketingservice.repository.UserRepository
+import com.group4.ticketingservice.utils.Authority
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertInstanceOf
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.time.Duration.ofHours
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
-class EventRepositoryTest(
-    @Autowired val eventRepository: EventRepository
+class EventRepositoryTest @Autowired constructor(
+    @Autowired val eventRepository: EventRepository,
+    @Autowired val userRepository: UserRepository
 ) : AbstractIntegrationTest() {
+
+    val sampleUser = User(
+        name = ReservationTest.testFields.testName,
+        email = ReservationTest.testFields.testUserName,
+        password = BCryptPasswordEncoder().encode(ReservationTest.testFields.password),
+        authority = Authority.USER
+    )
+
+    @BeforeEach fun saveUser() {
+        userRepository.save(sampleUser)
+    }
+
     @Test
     fun `EventRepository_save should return savedEvent`() {
         // given
@@ -24,7 +43,8 @@ class EventRepositoryTest(
             date = now,
             reservationEndTime = now + ofHours(2),
             reservationStartTime = now + ofHours(1),
-            maxAttendees = 10
+            maxAttendees = 10,
+            user = sampleUser
         )
 
         // when
@@ -43,7 +63,8 @@ class EventRepositoryTest(
             date = now,
             reservationEndTime = now + ofHours(2),
             reservationStartTime = now + ofHours(1),
-            maxAttendees = 10
+            maxAttendees = 10,
+            user = sampleUser
         )
         val savedEvent = eventRepository.save(sampleEvent)
 
@@ -65,7 +86,8 @@ class EventRepositoryTest(
             date = now,
             reservationEndTime = now + ofHours(2),
             reservationStartTime = now + ofHours(1),
-            maxAttendees = 10
+            maxAttendees = 10,
+            user = sampleUser
         )
         eventRepository.save(sampleEvent)
 
@@ -86,7 +108,8 @@ class EventRepositoryTest(
             date = now,
             reservationEndTime = now + ofHours(2),
             reservationStartTime = now + ofHours(1),
-            maxAttendees = 10
+            maxAttendees = 10,
+            user = sampleUser
         )
         val savedEvent = eventRepository.save(sampleEvent)
 

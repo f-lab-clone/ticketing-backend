@@ -21,7 +21,7 @@ class SecurityConfig(
     private val tokenProvider: TokenProvider
 ) {
 
-    private val allowedUrls = arrayOf("/", "/api-docs.yaml", "/health", "/users/signup", "/reservations/**")
+    private val allowedUrls = arrayOf("/", "/api-docs.yaml", "/health", "/users/signup")
 
     @Bean
     fun filterChain(http: HttpSecurity): DefaultSecurityFilterChain {

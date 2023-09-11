@@ -13,7 +13,10 @@ import com.group4.ticketingservice.dto.ReservationUpdateRequest
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.entity.Reservation
 import com.group4.ticketingservice.entity.User
+import com.group4.ticketingservice.reservation.ReservationControllerTest.testFields.testUserId
+import com.group4.ticketingservice.reservation.ReservationControllerTest.testFields.testUserName
 import com.group4.ticketingservice.service.ReservationService
+import com.group4.ticketingservice.user.WithAuthUser
 import com.group4.ticketingservice.util.DateTimeConverter
 import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.TokenProvider
@@ -30,8 +33,13 @@ import org.springframework.context.annotation.FilterType
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.Clock
 import java.time.Duration
 import java.time.OffsetDateTime
@@ -53,6 +61,7 @@ class ReservationControllerTest(
     object testFields {
         const val testName = "minjun"
         const val testUserName = "minjun3021@qwer.com"
+        const val testUserId = 1L
         const val testUserRole = "USER"
         const val password = "1234"
     }
@@ -65,8 +74,7 @@ class ReservationControllerTest(
     )
 
     private val sampleReservationCreateRequest = ReservationCreateRequest(
-        eventId = 1,
-        userId = 1
+        eventId = 1
     )
     private val sampleReservationDeleteRequest = ReservationDeleteRequest(
         id = 1
@@ -91,6 +99,7 @@ class ReservationControllerTest(
     private val gson: Gson = GsonBuilder().registerTypeAdapter(OffsetDateTime::class.java, DateTimeConverter()).create()
 
     @Test
+    @WithAuthUser(email = testUserName, id = testUserId)
     fun `POST reservations should return created reservation`() {
         every { reservationService.createReservation(1, 1) } returns sampleReservation
         val sampleReservationResponse = ReservationResponse(
@@ -119,6 +128,7 @@ class ReservationControllerTest(
     }
 
     @Test
+    @WithAuthUser(email = testUserName, id = testUserId)
     fun `GET reservations should return reservation`() {
         every { reservationService.getReservation(1) } returns sampleReservation
 
@@ -134,6 +144,7 @@ class ReservationControllerTest(
     }
 
     @Test
+    @WithAuthUser(email = testUserName, id = testUserId)
     fun `PUT reservations should return updated reservation`() {
         val reservationUpdateRequest = ReservationUpdateRequest(
             eventId = 2
@@ -167,8 +178,9 @@ class ReservationControllerTest(
     }
 
     @Test
+    @WithAuthUser(email = testUserName, id = testUserId)
     fun `DELETE reservations should return no content`() {
-        every { reservationService.deleteReservation(1) } returns Unit
+        every { reservationService.deleteReservation(any(), any()) } returns Unit
 
         mockMvc.perform(
             delete("/reservations/${sampleReservationDeleteRequest.id}")

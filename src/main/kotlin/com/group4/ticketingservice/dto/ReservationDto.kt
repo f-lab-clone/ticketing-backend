@@ -3,8 +3,7 @@ package com.group4.ticketingservice.dto
 import java.time.OffsetDateTime
 
 data class ReservationCreateRequest(
-    val eventId: Long,
-    val userId: Long
+    val eventId: Long
 )
 
 data class ReservationUpdateRequest(

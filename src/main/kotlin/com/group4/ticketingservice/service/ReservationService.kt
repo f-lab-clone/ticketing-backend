@@ -5,11 +5,11 @@ import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.ReservationRepository
 import com.group4.ticketingservice.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Clock
 import java.time.OffsetDateTime
-import kotlin.RuntimeException
 
 @Service
 class ReservationService @Autowired constructor(
@@ -20,9 +20,7 @@ class ReservationService @Autowired constructor(
 ) {
     @Transactional
     fun createReservation(eventId: Long, userId: Long): Reservation {
-        val user = userRepository.findById(userId).orElseThrow {
-            IllegalArgumentException("User not found")
-        }
+        val user = userRepository.getReferenceById(userId)
         val event = eventRepository.findByIdWithPesimisticLock(eventId) ?: throw RuntimeException("")
 
         val reservation = Reservation(user = user, event = event, bookedAt = OffsetDateTime.now(clock))
@@ -56,11 +54,9 @@ class ReservationService @Autowired constructor(
         return reservationRepository.save(reservation)
     }
 
-    fun deleteReservation(id: Long) {
-        if (reservationRepository.existsById(id)) {
-            reservationRepository.deleteById(id)
-        } else {
-            throw IllegalArgumentException("Reservation not found")
-        }
+    fun deleteReservation(userId: Long, id: Long) {
+        val reservation = reservationRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("Reservation not found")
+        if (reservation.user.id != userId) throw IllegalArgumentException("It's not your reservation")
+        reservationRepository.delete(reservation)
     }
 }

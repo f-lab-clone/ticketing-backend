@@ -41,7 +41,8 @@ class ReservationRepositoryTest @Autowired constructor(
         date = OffsetDateTime.now(clock),
         reservationEndTime = OffsetDateTime.now(clock),
         reservationStartTime = OffsetDateTime.now(clock),
-        maxAttendees = 10
+        maxAttendees = 10,
+        user = sampleUser
     )
     private val sampleReservation = Reservation(
         user = sampleUser,
@@ -57,7 +58,8 @@ class ReservationRepositoryTest @Autowired constructor(
             date = OffsetDateTime.now(),
             reservationEndTime = OffsetDateTime.now(),
             reservationStartTime = OffsetDateTime.now(),
-            maxAttendees = 10
+            maxAttendees = 10,
+            user = sampleUser
         )
         val sampleReservation = Reservation(
             user = sampleUser,
