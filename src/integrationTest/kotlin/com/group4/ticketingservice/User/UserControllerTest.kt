@@ -38,6 +38,7 @@ class UserControllerTest : AbstractIntegrationTest() {
     private lateinit var tokenProvider: TokenProvider
 
     object testFields {
+        const val testUserId = 1
         const val testName = "minjun"
         const val testUserName = "minjun3021@qwer.com"
         const val password = "1234"
@@ -111,7 +112,7 @@ class UserControllerTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `GET_api_users_access_token_info should return username with HTTPStatus 200 OK`() {
+    fun `GET_api_users_access_token_info should return expires_in with HTTPStatus 200 OK`() {
         val jwt = getJwt()
 
         val resultActions: ResultActions =
@@ -120,7 +121,7 @@ class UserControllerTest : AbstractIntegrationTest() {
                     .header("Authorization", jwt)
             )
         resultActions.andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(testFields.testUserName))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.expires_in").exists())
     }
 
     @Test
