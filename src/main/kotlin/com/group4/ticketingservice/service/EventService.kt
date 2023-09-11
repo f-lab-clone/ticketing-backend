@@ -2,14 +2,17 @@ package com.group4.ticketingservice.service
 
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.repository.EventRepository
+import com.group4.ticketingservice.repository.UserRepository
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
 
 @Service
 class EventService(
-    val eventRepository: EventRepository
+    private val eventRepository: EventRepository,
+    private val userRepository: UserRepository
 ) {
     fun createEvent(
+        userId: Long,
         title: String,
         date: OffsetDateTime,
         reservationStartTime: OffsetDateTime,
@@ -21,7 +24,8 @@ class EventService(
             date = date,
             reservationStartTime = reservationStartTime,
             reservationEndTime = reservationEndTime,
-            maxAttendees = maxAttendees
+            maxAttendees = maxAttendees,
+            user = userRepository.getReferenceById(userId)
         )
         return eventRepository.save(event)
     }
@@ -45,6 +49,7 @@ class EventService(
         val event = eventRepository.findById(id).orElseThrow {
             IllegalArgumentException("Event not found")
         }
+
         event.title = title
         event.date = date
         event.reservationStartTime = reservationStartTime

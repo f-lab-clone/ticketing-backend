@@ -30,13 +30,8 @@ import org.springframework.context.annotation.FilterType
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.Clock
 import java.time.Duration
 import java.time.OffsetDateTime
@@ -83,7 +78,8 @@ class ReservationControllerTest(
         date = OffsetDateTime.now(clock),
         reservationEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
         reservationStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
-        maxAttendees = 10
+        maxAttendees = 10,
+        user = sampleUser
     )
     private val sampleReservation: Reservation = Reservation(
         id = 1,
@@ -151,7 +147,8 @@ class ReservationControllerTest(
                 date = OffsetDateTime.now(clock),
                 reservationEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
                 reservationStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
-                maxAttendees = 10
+                maxAttendees = 10,
+                user = sampleUser
             ),
             bookedAt = OffsetDateTime.now(clock)
         )

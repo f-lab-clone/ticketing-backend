@@ -3,14 +3,18 @@ package com.group4.ticketingservice.event
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.group4.ticketingservice.JwtAuthorizationEntryPoint
-import com.group4.ticketingservice.config.ClockConfig
 import com.group4.ticketingservice.config.SecurityConfig
 import com.group4.ticketingservice.controller.EventController
 import com.group4.ticketingservice.dto.EventCreateRequest
 import com.group4.ticketingservice.dto.EventDeleteRequest
 import com.group4.ticketingservice.entity.Event
+import com.group4.ticketingservice.entity.User
+import com.group4.ticketingservice.event.EventControllerTest.testFields.testUserId
+import com.group4.ticketingservice.event.EventControllerTest.testFields.testUserName
 import com.group4.ticketingservice.service.EventService
+import com.group4.ticketingservice.user.WithAuthUser
 import com.group4.ticketingservice.util.DateTimeConverter
+import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.TokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
@@ -21,22 +25,15 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.time.Clock
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.Duration
 import java.time.OffsetDateTime
 
 @ExtendWith(MockKExtension::class)
-@Import(ClockConfig::class)
+
 @WebMvcTest(
     EventController::class,
     includeFilters = arrayOf(
@@ -44,25 +41,41 @@ import java.time.OffsetDateTime
     )
 )
 class EventControllerTest(
-    @Autowired val mockMvc: MockMvc,
-    @Autowired val clock: Clock
+    @Autowired val mockMvc: MockMvc
+
 ) {
     @MockkBean
     private lateinit var eventService: EventService
 
+    object testFields {
+        const val testName = "minjun"
+        const val testUserId = 1L
+        const val testUserName = "minjun3021@qwer.com"
+        const val testUserRole = "USER"
+        const val password = "123456789"
+    }
+
+    val sampleUser = User(
+        name = "james",
+        email = "james@example.com",
+        password = "12345678",
+        authority = Authority.USER
+    )
     private val sampleEvent: Event = Event(
         id = 1,
         title = "test title",
-        date = OffsetDateTime.now(clock),
-        reservationEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
-        reservationStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
-        maxAttendees = 10
+        date = OffsetDateTime.now(),
+        reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
+        reservationStartTime = OffsetDateTime.now() + Duration.ofHours(1),
+        maxAttendees = 10,
+        user = sampleUser
+
     )
     private val sampleEventCreateRequest: EventCreateRequest = EventCreateRequest(
         title = "test title",
-        date = OffsetDateTime.now(clock),
-        reservationEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
-        reservationStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
+        date = OffsetDateTime.now(),
+        reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
+        reservationStartTime = OffsetDateTime.now() + Duration.ofHours(1),
         maxAttendees = 10
     )
     private val sampleEventDeleteRequest: EventDeleteRequest = EventDeleteRequest(
@@ -71,8 +84,9 @@ class EventControllerTest(
     private val gson: Gson = GsonBuilder().registerTypeAdapter(OffsetDateTime::class.java, DateTimeConverter()).create()
 
     @Test
+    @WithAuthUser(email = testUserName, id = testUserId)
     fun `POST events should return created event`() {
-        every { eventService.createEvent(any(), any(), any(), any(), any()) } returns sampleEvent
+        every { eventService.createEvent(any(), any(), any(), any(), any(), any()) } returns sampleEvent
 
         mockMvc.perform(
             post("/events")
@@ -87,6 +101,7 @@ class EventControllerTest(
     }
 
     @Test
+    @WithAuthUser(email = testUserName, id = testUserId)
     fun `GET events should return event`() {
         every { eventService.getEvent(any()) } returns sampleEvent
         mockMvc.perform(
@@ -99,6 +114,7 @@ class EventControllerTest(
     }
 
     @Test
+    @WithAuthUser(email = testUserName, id = testUserId)
     fun `GET events should return not found`() {
         every { eventService.getEvent(any()) } returns null
         mockMvc.perform(
@@ -109,6 +125,7 @@ class EventControllerTest(
     }
 
     @Test
+    @WithAuthUser(email = testUserName, id = testUserId)
     fun `GET List of events should return list of events`() {
         every { eventService.getEvents() } returns listOf(sampleEvent)
         mockMvc.perform(
@@ -121,6 +138,7 @@ class EventControllerTest(
     }
 
     @Test
+    @WithAuthUser(email = testUserName, id = testUserId)
     fun `GET List of events should return empty list`() {
         every { eventService.getEvents() } returns listOf()
         mockMvc.perform(
@@ -133,6 +151,7 @@ class EventControllerTest(
     }
 
     @Test
+    @WithAuthUser(email = testUserName, id = testUserId)
     fun `PUT event should return updated event`() {
         every {
             eventService.updateEvent(
@@ -157,6 +176,7 @@ class EventControllerTest(
     }
 
     @Test
+    @WithAuthUser(email = testUserName, id = testUserId)
     fun `DELETE event should return no content`() {
         every { eventService.deleteEvent(any()) } returns Unit
         mockMvc.perform(

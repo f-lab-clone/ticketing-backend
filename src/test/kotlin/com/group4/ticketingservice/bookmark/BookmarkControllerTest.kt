@@ -30,9 +30,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.Duration
 import java.time.OffsetDateTime
 
@@ -66,7 +64,8 @@ class BookmarkControllerTest(
         date = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
         reservationStartTime = OffsetDateTime.now() + Duration.ofHours(1),
-        maxAttendees = 10
+        maxAttendees = 10,
+        user = sampleUser
     )
 
     private val sampleBookmark = Bookmark(

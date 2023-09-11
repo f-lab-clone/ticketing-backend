@@ -6,6 +6,7 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Version
 import java.time.OffsetDateTime
@@ -30,7 +31,10 @@ class Event(
     var maxAttendees: Int,
 
     @Column(name = "available_attendees")
-    var availableAttendees: Int = maxAttendees
+    var availableAttendees: Int = maxAttendees,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    val user: User
 ) {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "event", targetEntity = Reservation::class)
     var reservations: List<Reservation>? = null
