@@ -410,13 +410,9 @@ components:
     ReservationCreateRequest:
       required:
       - eventId
-      - userId
       type: object
       properties:
         eventId:
-          type: integer
-          format: int64
-        userId:
           type: integer
           format: int64
     BookmarkFromdto:
