@@ -122,6 +122,7 @@ class UserControllerTest : AbstractIntegrationTest() {
             )
         resultActions.andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.expires_in").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.userId").exists())
     }
 
     @Test

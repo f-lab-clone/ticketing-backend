@@ -23,10 +23,10 @@ class JwtAuthorizationFilter(
         val jwt = tokenProvider.parseBearerToken(authorizationHeader)
 
         if (tokenProvider.validateToken(jwt)) {
-            val (username, userId) = tokenProvider.parseUserSpecification(jwt)
+            val (userId, role) = tokenProvider.parseUserSpecification(jwt)
 
             val authorties = mutableListOf<GrantedAuthority>()
-            authorties.add(SimpleGrantedAuthority("USER"))
+            authorties.add(SimpleGrantedAuthority(role))
 
             val authentication =
                 UsernamePasswordAuthenticationToken.authenticated(userId.toLong(), jwt, authorties)

@@ -37,7 +37,7 @@ class JwtAuthorizationFilterTest {
         // given
         every { tokenProvider.parseBearerToken(any()) } returns ""
         every { tokenProvider.validateToken(any()) } returns true
-        every { tokenProvider.parseUserSpecification(any()) } returns listOf(testUserName, testUserID.toString())
+        every { tokenProvider.parseUserSpecification(any()) } returns listOf(testUserID.toString(), testUserRole)
 
         // when
         val req = MockHttpServletRequest()

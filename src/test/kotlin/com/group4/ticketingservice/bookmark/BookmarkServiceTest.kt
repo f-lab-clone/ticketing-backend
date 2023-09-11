@@ -1,6 +1,5 @@
 package com.group4.ticketingservice.bookmark
 
-import com.group4.ticketingservice.config.ClockConfig
 import com.group4.ticketingservice.dto.BookmarkFromdto
 import com.group4.ticketingservice.entity.Bookmark
 import com.group4.ticketingservice.entity.Event
@@ -15,23 +14,9 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.modelmapper.ModelMapper
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.support.AnnotationConfigContextLoader
-import java.time.Clock
-import java.time.Duration
 import java.time.OffsetDateTime
-import java.util.*
 
-@ContextConfiguration(
-    classes = [ClockConfig::class],
-    loader = AnnotationConfigContextLoader::class
-)
-@SpringBootTest
-class BookmarkServiceTest(
-    @Autowired private val clock: Clock
-) {
+class BookmarkServiceTest() {
     private val userRepository: UserRepository = mockk()
     private val eventRepository: EventRepository = mockk()
     private val repository: BookmarkRepository = mockk()
@@ -50,9 +35,9 @@ class BookmarkServiceTest(
     private val sampleEvent: Event = Event(
         id = 1,
         title = "test title",
-        date = OffsetDateTime.now(clock),
-        reservationEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
-        reservationStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
+        date = OffsetDateTime.now(),
+        reservationEndTime = OffsetDateTime.now(),
+        reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 10
     )
 
