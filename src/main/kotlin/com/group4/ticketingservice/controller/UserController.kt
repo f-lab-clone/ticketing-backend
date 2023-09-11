@@ -43,11 +43,11 @@ class UserController(
      * @author MinJun Kim
      */
     @GetMapping("/access_token_info")
-    fun getAccessTokenInfo(@AuthenticationPrincipal username: String): ResponseEntity<Map<String, Any>> {
+    fun getAccessTokenInfo(@AuthenticationPrincipal userId: Long): ResponseEntity<Map<String, Any>> {
         val jwt = SecurityContextHolder.getContext().authentication.credentials.toString()
         val expiresInMillis = tokenProvider.parseTokenExpirationTime(jwt)
         val map = mapOf(
-            "username" to username,
+            "userId" to userId,
             "expires_in" to expiresInMillis
         )
         return ResponseEntity.ok(map)

@@ -67,7 +67,7 @@ class BookmarkRepositoryTest(
         val savedBookmark = bookmarkRepository.save(Bookmark(user = savedUser, event = savedEvent))
 
         // when
-        val foundBookmark = bookmarkRepository.findByIdAndUser(savedBookmark.id!!, savedUser)
+        val foundBookmark = bookmarkRepository.findByIdAndUserId(savedBookmark.id!!, savedUser)
 
         // then
         assert(savedBookmark.id == foundBookmark.id)
@@ -82,7 +82,7 @@ class BookmarkRepositoryTest(
         val savedBookmark = bookmarkRepository.save(Bookmark(user = savedUser, event = savedEvent))
 
         // when
-        bookmarkRepository.deleteByIdAndUser(savedBookmark.id!!, savedUser)
+        bookmarkRepository.deleteByIdAndUserId(savedBookmark.id!!, savedUser)
 
         // then
         val deletedBookmark = bookmarkRepository.findByIdOrNull(savedBookmark.id?.toLong())
@@ -98,7 +98,7 @@ class BookmarkRepositoryTest(
         bookmarkRepository.save(Bookmark(user = savedUser, event = savedEvent))
 
         // when
-        val listofBookmarks = bookmarkRepository.findByUser(savedUser)
+        val listofBookmarks = bookmarkRepository.findByUserId(savedUser)
 
         // then
         assertInstanceOf(ArrayList::class.java, listofBookmarks)

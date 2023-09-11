@@ -36,7 +36,7 @@ class BookmarkServiceTest(
     private val eventRepository: EventRepository = mockk()
     private val repository: BookmarkRepository = mockk()
     private val modelMapper: ModelMapper = ModelMapper()
-    private val bookmarkService: BookmarkService = BookmarkService(userRepository, eventRepository, repository, modelMapper, clock)
+    private val bookmarkService: BookmarkService = BookmarkService(userRepository, eventRepository, repository)
 
     val sampleUser = User(
         name = "james",
@@ -44,6 +44,8 @@ class BookmarkServiceTest(
         password = "12345678",
         authority = Authority.USER
     )
+
+    val sampleUserId = 1L
 
     private val sampleEvent: Event = Event(
         id = 1,
@@ -60,59 +62,57 @@ class BookmarkServiceTest(
     )
 
     private val sampleBookmarkDto = BookmarkFromdto(
-        show_id = 1
+        event_id = 1
     )
 
     @Test
     fun `bookmarkService_getList() invoke repository_findByUser`() {
         // given
-        every { userRepository.findByEmail(sampleUser.username) } returns sampleUser
-        every { repository.findByUser(sampleUser) } returns listOf(sampleBookmark)
+
+        every { repository.findByUserId(sampleUserId) } returns listOf(sampleBookmark)
 
         // when
-        bookmarkService.getList(sampleUser.username)
+        bookmarkService.getList(sampleUserId)
 
         // then
-        verify(exactly = 1) { repository.findByUser(sampleUser) }
+        verify(exactly = 1) { repository.findByUserId(sampleUserId) }
     }
 
     @Test
     fun `bookmarkService_getList() should return emptyList`() {
         // given
-        every { userRepository.findByEmail(sampleUser.username) } returns sampleUser
-        every { repository.findByUser(sampleUser) } returns listOf()
+        every { repository.findByUserId(sampleUserId) } returns listOf()
 
         // when
-        val result: List<Bookmark> = bookmarkService.getList(sampleUser.username)
+        val result: List<Bookmark> = bookmarkService.getList(sampleUserId)
 
         // then
-        verify(exactly = 1) { repository.findByUser(sampleUser) }
+        verify(exactly = 1) { repository.findByUserId(sampleUserId) }
         assert(result == listOf<Bookmark>())
     }
 
     @Test
     fun `bookmarkService_get() invoke repository_findByIdAndUser`() {
         // given
-        every { userRepository.findByEmail(sampleUser.username) } returns sampleUser
-        every { repository.findByIdAndUser(1, sampleUser) } returns sampleBookmark
+        every { repository.findByIdAndUserId(1, sampleUserId) } returns sampleBookmark
 
         // when
-        val result: Bookmark? = bookmarkService.get(sampleUser.username, 1)
+        val result: Bookmark? = bookmarkService.get(sampleUserId, 1)
 
         // then
-        verify(exactly = 1) { repository.findByIdAndUser(1, sampleUser) }
+        verify(exactly = 1) { repository.findByIdAndUserId(1, sampleUserId) }
         assert(result == sampleBookmark)
     }
 
     @Test
     fun `bookmarkService_create() invoke repository_save`() {
         // given
-        every { userRepository.findByEmail(any()) } returns sampleUser
-        every { eventRepository.findById(any()) } returns Optional.of(sampleEvent)
+        every { userRepository.getReferenceById(any()) } returns sampleUser
+        every { eventRepository.getReferenceById(any()) } returns sampleEvent
         every { repository.save(any()) } returns sampleBookmark
 
         // when
-        bookmarkService.create(sampleUser.name, sampleBookmarkDto)
+        bookmarkService.create(sampleUserId, sampleBookmarkDto)
 
         // then
         verify(exactly = 1) { repository.save(any()) }
@@ -121,13 +121,13 @@ class BookmarkServiceTest(
     @Test
     fun `bookmarkService_delete() invoke repository_deleteByIdAndUser`() {
         // given
-        every { userRepository.findByEmail(sampleUser.username) } returns sampleUser
-        every { repository.deleteByIdAndUser(1, sampleUser) } returns Unit
+
+        every { repository.deleteByIdAndUserId(1, sampleUserId) } returns Unit
 
         // when
-        bookmarkService.delete(sampleUser.username, 1)
+        bookmarkService.delete(sampleUserId, 1)
 
         // then
-        verify(exactly = 1) { repository.deleteByIdAndUser(1, sampleUser) }
+        verify(exactly = 1) { repository.deleteByIdAndUserId(1, sampleUserId) }
     }
 }

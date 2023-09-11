@@ -17,35 +17,25 @@ class BookmarkService @Autowired constructor(
     val bookmarkRepository: BookmarkRepository
 ) {
 
-    fun create(username: String, bookmarkFormDto: BookmarkFromdto): Int? {
-        val user: User = userRepository.findByEmail(username)
-            ?: throw IllegalArgumentException("User not found")
-        val event: Event = eventRepository.findById(bookmarkFormDto.show_id.toLong()).orElseThrow {
-            IllegalArgumentException("Event not found")
-        }
+    fun create(userId: Long, bookmarkFormDto: BookmarkFromdto): Int? {
+        val user: User = userRepository.getReferenceById(userId)
+
+        val event: Event = eventRepository.getReferenceById(bookmarkFormDto.event_id.toLong())
 
         val bookmark = Bookmark(user = user, event = event)
 
         return bookmarkRepository.save(bookmark).id
     }
 
-    fun get(username: String, id: Int): Bookmark? {
-        val user: User = userRepository.findByEmail(username)
-            ?: throw IllegalArgumentException("User not found")
-
-        return bookmarkRepository.findByIdAndUser(id, user)
+    fun get(userId: Long, id: Int): Bookmark? {
+        return bookmarkRepository.findByIdAndUserId(id, userId)
     }
 
-    fun delete(username: String, id: Int) {
-        val user: User = userRepository.findByEmail(username)
-            ?: throw IllegalArgumentException("User not found")
-
-        bookmarkRepository.deleteByIdAndUser(id, user)
+    fun delete(userId: Long, id: Int) {
+        bookmarkRepository.deleteByIdAndUserId(id, userId)
     }
 
-    fun getList(username: String): List<Bookmark> {
-        val user: User = userRepository.findByEmail(username)
-            ?: throw IllegalArgumentException("User not found")
-        return bookmarkRepository.findByUser(user)
+    fun getList(userId: Long): List<Bookmark> {
+        return bookmarkRepository.findByUserId(userId)
     }
 }

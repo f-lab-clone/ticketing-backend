@@ -12,12 +12,12 @@ import org.springframework.security.test.context.support.WithSecurityContextFact
 @WithSecurityContext(factory = WithAuthUserSecurityContextFactory::class)
 annotation class WithAuthUser(
     val email: String,
-    val role: String
+    val id: Long
 )
 
 class WithAuthUserSecurityContextFactory(private val tokenProvider: TokenProvider) : WithSecurityContextFactory<WithAuthUser> {
     override fun createSecurityContext(annotation: WithAuthUser): SecurityContext {
-        val token = UsernamePasswordAuthenticationToken(annotation.email, tokenProvider.createToken("${annotation.email}:${annotation.role}"), listOf(SimpleGrantedAuthority(annotation.role)))
+        val token = UsernamePasswordAuthenticationToken(annotation.id, tokenProvider.createToken("${annotation.email}:${annotation.id}"), listOf(SimpleGrantedAuthority("USER")))
         val context = SecurityContextHolder.getContext()
         context.authentication = token
         return context

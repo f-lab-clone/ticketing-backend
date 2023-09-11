@@ -25,6 +25,7 @@ class JwtAuthorizationFilterTest {
 
     val testUserName = "minjun3021@qwer.com"
     val testUserRole = "USER"
+    val testUserID = 1L
 
     @BeforeEach fun resetAuthentication() {
         val strategy: SecurityContextHolderStrategy = spy(SecurityContextHolder.getContextHolderStrategy())
@@ -36,7 +37,7 @@ class JwtAuthorizationFilterTest {
         // given
         every { tokenProvider.parseBearerToken(any()) } returns ""
         every { tokenProvider.validateToken(any()) } returns true
-        every { tokenProvider.parseUserSpecification(any()) } returns listOf(testUserName, testUserRole)
+        every { tokenProvider.parseUserSpecification(any()) } returns listOf(testUserName, testUserID.toString())
 
         // when
         val req = MockHttpServletRequest()
@@ -49,7 +50,7 @@ class JwtAuthorizationFilterTest {
 
         val authenticationPrincipal = strategy.context.authentication.principal
         // then
-        assertEquals(testUserName, authenticationPrincipal)
+        assertEquals(testUserID, authenticationPrincipal)
     }
 
     @Test
