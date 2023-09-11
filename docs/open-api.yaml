@@ -195,12 +195,12 @@ paths:
       tags:
       - bookmark-controller
       operationId: addBookmark
-      parameters:
-      - name: boardFormDto
-        in: query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookmarkFromdto'
         required: true
-        schema:
-          $ref: '#/components/schemas/BookmarkFromdto'
       responses:
         "200":
           description: OK
@@ -421,14 +421,10 @@ components:
           format: int64
     BookmarkFromdto:
       required:
-      - show_id
-      - user_id
+      - event_id
       type: object
       properties:
-        user_id:
-          type: integer
-          format: int32
-        show_id:
+        event_id:
           type: integer
           format: int32
     Unit:
