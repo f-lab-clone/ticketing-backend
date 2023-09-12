@@ -43,8 +43,8 @@ class EventRepositoryTest @Autowired constructor(
             date = now,
             reservationEndTime = now + ofHours(2),
             reservationStartTime = now + ofHours(1),
-            maxAttendees = 10,
-            user = sampleUser
+            maxAttendees = 10
+
         )
 
         // when
@@ -63,8 +63,8 @@ class EventRepositoryTest @Autowired constructor(
             date = now,
             reservationEndTime = now + ofHours(2),
             reservationStartTime = now + ofHours(1),
-            maxAttendees = 10,
-            user = sampleUser
+            maxAttendees = 10
+
         )
         val savedEvent = eventRepository.save(sampleEvent)
 
@@ -86,8 +86,8 @@ class EventRepositoryTest @Autowired constructor(
             date = now,
             reservationEndTime = now + ofHours(2),
             reservationStartTime = now + ofHours(1),
-            maxAttendees = 10,
-            user = sampleUser
+            maxAttendees = 10
+
         )
         eventRepository.save(sampleEvent)
 
@@ -108,8 +108,8 @@ class EventRepositoryTest @Autowired constructor(
             date = now,
             reservationEndTime = now + ofHours(2),
             reservationStartTime = now + ofHours(1),
-            maxAttendees = 10,
-            user = sampleUser
+            maxAttendees = 10
+
         )
         val savedEvent = eventRepository.save(sampleEvent)
 

@@ -14,15 +14,13 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import java.time.Clock
 import java.time.OffsetDateTime
 
 @Import(ClockConfig::class)
 class ReservationRepositoryTest @Autowired constructor(
     val userRepository: UserRepository,
     val eventRepository: EventRepository,
-    val reservationRepository: ReservationRepository,
-    clock: Clock
+    val reservationRepository: ReservationRepository
 ) : AbstractIntegrationTest() {
 
     object testFields {
@@ -38,16 +36,16 @@ class ReservationRepositoryTest @Autowired constructor(
     )
     private val sampleEvent = Event(
         title = "test title",
-        date = OffsetDateTime.now(clock),
-        reservationEndTime = OffsetDateTime.now(clock),
-        reservationStartTime = OffsetDateTime.now(clock),
-        maxAttendees = 10,
-        user = sampleUser
+        date = OffsetDateTime.now(),
+        reservationEndTime = OffsetDateTime.now(),
+        reservationStartTime = OffsetDateTime.now(),
+        maxAttendees = 10
+
     )
     private val sampleReservation = Reservation(
         user = sampleUser,
         event = sampleEvent,
-        bookedAt = OffsetDateTime.now(clock)
+        bookedAt = OffsetDateTime.now()
     )
 
     @Test
@@ -58,8 +56,8 @@ class ReservationRepositoryTest @Autowired constructor(
             date = OffsetDateTime.now(),
             reservationEndTime = OffsetDateTime.now(),
             reservationStartTime = OffsetDateTime.now(),
-            maxAttendees = 10,
-            user = sampleUser
+            maxAttendees = 10
+
         )
         val sampleReservation = Reservation(
             user = sampleUser,

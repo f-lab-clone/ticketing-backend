@@ -23,10 +23,10 @@ class ReservationService @Autowired constructor(
         val user = userRepository.getReferenceById(userId)
         val event = eventRepository.findByIdWithPesimisticLock(eventId) ?: throw RuntimeException("")
 
-        val reservation = Reservation(user = user, event = event, bookedAt = OffsetDateTime.now(clock))
+        val reservation = Reservation(user = user, event = event, bookedAt = OffsetDateTime.now())
 
-        if (event.availableAttendees > 0) {
-            event.availableAttendees -= 1
+        if (event.maxAttendees > event.currentReservationCount) {
+            event.currentReservationCount += 1
             eventRepository.saveAndFlush(event)
 
             reservationRepository.saveAndFlush(reservation)

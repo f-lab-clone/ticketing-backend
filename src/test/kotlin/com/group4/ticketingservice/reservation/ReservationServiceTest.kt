@@ -56,8 +56,7 @@ class ReservationServiceTest(
         date = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),
         reservationStartTime = OffsetDateTime.now(),
-        maxAttendees = 10,
-        user = sampleUser
+        maxAttendees = 10
     )
 
     private val sampleReservation: Reservation = Reservation(

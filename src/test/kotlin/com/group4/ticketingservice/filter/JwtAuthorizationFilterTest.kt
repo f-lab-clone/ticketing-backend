@@ -8,7 +8,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.spy
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockHttpServletRequest
@@ -37,7 +36,7 @@ class JwtAuthorizationFilterTest {
         // given
         every { tokenProvider.parseBearerToken(any()) } returns ""
         every { tokenProvider.validateToken(any()) } returns true
-        every { tokenProvider.parseUserSpecification(any()) } returns listOf(testUserID.toString(), testUserRole)
+        every { tokenProvider.parseUserSpecification(any()) } returns testUserID.toString()
 
         // when
         val req = MockHttpServletRequest()
@@ -58,7 +57,7 @@ class JwtAuthorizationFilterTest {
         // given
         every { tokenProvider.parseBearerToken(any()) } returns ""
         every { tokenProvider.validateToken(any()) } returns false
-        every { tokenProvider.parseUserSpecification(any()) } returns listOf(testUserName, testUserRole)
+        every { tokenProvider.parseUserSpecification(any()) } returns testUserID.toString()
 
         // when
         val req = MockHttpServletRequest()

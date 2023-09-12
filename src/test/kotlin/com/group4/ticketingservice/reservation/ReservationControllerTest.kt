@@ -41,7 +41,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.Clock
-import java.time.Duration
 import java.time.OffsetDateTime
 
 @ExtendWith(MockKExtension::class)
@@ -83,11 +82,10 @@ class ReservationControllerTest(
     private val sampleEvent: Event = Event(
         id = 1,
         title = "test title",
-        date = OffsetDateTime.now(clock),
-        reservationEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
-        reservationStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
-        maxAttendees = 10,
-        user = sampleUser
+        date = OffsetDateTime.now(),
+        reservationEndTime = OffsetDateTime.now(),
+        reservationStartTime = OffsetDateTime.now(),
+        maxAttendees = 10
     )
     private val sampleReservation: Reservation = Reservation(
         id = 1,
@@ -155,13 +153,12 @@ class ReservationControllerTest(
             event = Event(
                 id = 2,
                 title = "test title 2",
-                date = OffsetDateTime.now(clock),
-                reservationEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
-                reservationStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
-                maxAttendees = 10,
-                user = sampleUser
+                date = OffsetDateTime.now(),
+                reservationEndTime = OffsetDateTime.now(),
+                reservationStartTime = OffsetDateTime.now(),
+                maxAttendees = 10
             ),
-            bookedAt = OffsetDateTime.now(clock)
+            bookedAt = OffsetDateTime.now()
         )
         every { reservationService.updateReservation(1, 2) } returns updatedReservation
 

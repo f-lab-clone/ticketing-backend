@@ -9,10 +9,7 @@ import com.group4.ticketingservice.dto.EventCreateRequest
 import com.group4.ticketingservice.dto.EventDeleteRequest
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.entity.User
-import com.group4.ticketingservice.event.EventControllerTest.testFields.testUserId
-import com.group4.ticketingservice.event.EventControllerTest.testFields.testUserName
 import com.group4.ticketingservice.service.EventService
-import com.group4.ticketingservice.user.WithAuthUser
 import com.group4.ticketingservice.util.DateTimeConverter
 import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.TokenProvider
@@ -27,13 +24,14 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.Duration
 import java.time.OffsetDateTime
 
 @ExtendWith(MockKExtension::class)
-
 @WebMvcTest(
     EventController::class,
     includeFilters = arrayOf(
@@ -42,7 +40,6 @@ import java.time.OffsetDateTime
 )
 class EventControllerTest(
     @Autowired val mockMvc: MockMvc
-
 ) {
     @MockkBean
     private lateinit var eventService: EventService
@@ -67,8 +64,7 @@ class EventControllerTest(
         date = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
         reservationStartTime = OffsetDateTime.now() + Duration.ofHours(1),
-        maxAttendees = 10,
-        user = sampleUser
+        maxAttendees = 10
 
     )
     private val sampleEventCreateRequest: EventCreateRequest = EventCreateRequest(
@@ -84,24 +80,6 @@ class EventControllerTest(
     private val gson: Gson = GsonBuilder().registerTypeAdapter(OffsetDateTime::class.java, DateTimeConverter()).create()
 
     @Test
-    @WithAuthUser(email = testUserName, id = testUserId)
-    fun `POST events should return created event`() {
-        every { eventService.createEvent(any(), any(), any(), any(), any(), any()) } returns sampleEvent
-
-        mockMvc.perform(
-            post("/events")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(sampleEventCreateRequest))
-        )
-            .andExpect(status().isOk)
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(sampleEvent.id))
-            .andExpect(jsonPath("$.title").value(sampleEvent.title))
-            .andExpect(jsonPath("$.maxAttendees").value(sampleEvent.maxAttendees))
-    }
-
-    @Test
-    @WithAuthUser(email = testUserName, id = testUserId)
     fun `GET events should return event`() {
         every { eventService.getEvent(any()) } returns sampleEvent
         mockMvc.perform(
@@ -114,7 +92,6 @@ class EventControllerTest(
     }
 
     @Test
-    @WithAuthUser(email = testUserName, id = testUserId)
     fun `GET events should return not found`() {
         every { eventService.getEvent(any()) } returns null
         mockMvc.perform(
@@ -125,7 +102,6 @@ class EventControllerTest(
     }
 
     @Test
-    @WithAuthUser(email = testUserName, id = testUserId)
     fun `GET List of events should return list of events`() {
         every { eventService.getEvents() } returns listOf(sampleEvent)
         mockMvc.perform(
@@ -138,7 +114,6 @@ class EventControllerTest(
     }
 
     @Test
-    @WithAuthUser(email = testUserName, id = testUserId)
     fun `GET List of events should return empty list`() {
         every { eventService.getEvents() } returns listOf()
         mockMvc.perform(
@@ -148,41 +123,5 @@ class EventControllerTest(
             .andExpect(status().isNoContent)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$").isEmpty)
-    }
-
-    @Test
-    @WithAuthUser(email = testUserName, id = testUserId)
-    fun `PUT event should return updated event`() {
-        every {
-            eventService.updateEvent(
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
-            )
-        } returns sampleEvent
-        mockMvc.perform(
-            put("/events/${sampleEvent.id}")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(sampleEventCreateRequest))
-        )
-            .andExpect(status().isOk)
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(sampleEvent.id))
-            .andExpect(jsonPath("$.title").value(sampleEvent.title))
-            .andExpect(jsonPath("$.maxAttendees").value(sampleEvent.maxAttendees))
-    }
-
-    @Test
-    @WithAuthUser(email = testUserName, id = testUserId)
-    fun `DELETE event should return no content`() {
-        every { eventService.deleteEvent(any()) } returns Unit
-        mockMvc.perform(
-            delete("/events/${sampleEventDeleteRequest.id}")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-            .andExpect(status().isNoContent)
     }
 }

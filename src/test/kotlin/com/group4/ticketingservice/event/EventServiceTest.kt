@@ -18,8 +18,7 @@ class EventServiceTest {
     private val eventRepository: EventRepository = mockk()
     private val userRepository: UserRepository = mockk()
     private val eventService: EventService = EventService(
-        eventRepository = eventRepository,
-        userRepository = userRepository
+        eventRepository = eventRepository
     )
     val sampleUserId = 1L
 
@@ -35,24 +34,9 @@ class EventServiceTest {
         date = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
         reservationStartTime = OffsetDateTime.now() + Duration.ofHours(1),
-        maxAttendees = 10,
-        user = sampleUser
-    )
+        maxAttendees = 10
 
-    @Test
-    fun `EventService_createEvent invoke EventRepository_findById`() {
-        every { eventRepository.save(any()) } returns sampleEvent
-        every { userRepository.getReferenceById(any()) } returns sampleUser
-        eventService.createEvent(
-            title = sampleEvent.title,
-            date = sampleEvent.date,
-            reservationStartTime = sampleEvent.reservationStartTime,
-            reservationEndTime = sampleEvent.reservationEndTime,
-            maxAttendees = sampleEvent.maxAttendees,
-            userId = sampleUserId
-        )
-        verify(exactly = 1) { eventRepository.save(any()) }
-    }
+    )
 
     @Test
     fun `EventService_getEvent invoke EventRepository_findById`() {
@@ -66,42 +50,5 @@ class EventServiceTest {
         every { eventRepository.findAll() } returns listOf(sampleEvent)
         eventService.getEvents()
         verify(exactly = 1) { eventRepository.findAll() }
-    }
-
-    @Test
-    fun `EventService_updateEvent invoke EventRepository_findById`() {
-        val updatedEvent = Event(
-            id = sampleEvent.id!!,
-            title = "updated title",
-            date = sampleEvent.date,
-            reservationEndTime = sampleEvent.reservationEndTime,
-            reservationStartTime = sampleEvent.reservationStartTime,
-            maxAttendees = sampleEvent.maxAttendees,
-            user = sampleUser
-        )
-
-        every { eventRepository.findById(any()) } returns Optional.of(sampleEvent)
-        every { eventRepository.save(any()) } returns updatedEvent
-
-        val result: Event = eventService.updateEvent(
-            id = sampleEvent.id!!,
-            title = updatedEvent.title,
-            date = updatedEvent.date,
-            reservationStartTime = updatedEvent.reservationStartTime,
-            reservationEndTime = updatedEvent.reservationEndTime,
-            maxAttendees = updatedEvent.maxAttendees
-
-        )
-        assert(result == updatedEvent)
-        verify(exactly = 1) { eventRepository.findById(any()) }
-    }
-
-    @Test
-    fun `EventService_deleteEvent invoke EventRepository_findById`() {
-        every { eventRepository.existsById(any()) } returns true
-        every { eventRepository.deleteById(any()) } returns Unit
-        eventService.deleteEvent(sampleEvent.id!!)
-        verify(exactly = 1) { eventRepository.existsById(any()) }
-        verify(exactly = 1) { eventRepository.deleteById(any()) }
     }
 }

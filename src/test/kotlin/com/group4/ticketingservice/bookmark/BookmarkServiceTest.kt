@@ -38,8 +38,7 @@ class BookmarkServiceTest() {
         date = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),
         reservationStartTime = OffsetDateTime.now(),
-        maxAttendees = 10,
-        user = sampleUser
+        maxAttendees = 10
     )
 
     private val sampleBookmark = Bookmark(

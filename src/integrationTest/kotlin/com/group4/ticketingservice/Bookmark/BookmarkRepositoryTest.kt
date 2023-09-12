@@ -34,11 +34,10 @@ class BookmarkRepositoryTest(
 
     private val sampleEvent: Event = Event(
         title = "test title",
-        date = OffsetDateTime.now(clock),
-        reservationEndTime = OffsetDateTime.now(clock) + Duration.ofHours(2),
-        reservationStartTime = OffsetDateTime.now(clock) + Duration.ofHours(1),
-        maxAttendees = 10,
-        user = sampleUser
+        date = OffsetDateTime.now(),
+        reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
+        reservationStartTime = OffsetDateTime.now() + Duration.ofHours(1),
+        maxAttendees = 10
     )
 
     private val sampleBookmark = Bookmark(
