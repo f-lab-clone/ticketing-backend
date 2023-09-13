@@ -2,31 +2,40 @@ package com.group4.ticketingservice.service
 
 import com.group4.ticketingservice.dto.BookmarkFromdto
 import com.group4.ticketingservice.entity.Bookmark
+import com.group4.ticketingservice.entity.Event
+import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.BookmarkRepository
-import org.modelmapper.ModelMapper
+import com.group4.ticketingservice.repository.EventRepository
+import com.group4.ticketingservice.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
 class BookmarkService @Autowired constructor(
-    val bookmarkRepository: BookmarkRepository,
-    val modelMapper: ModelMapper
+    val userRepository: UserRepository,
+    val eventRepository: EventRepository,
+    val bookmarkRepository: BookmarkRepository
 ) {
 
-    fun create(bookmarkFormDto: BookmarkFromdto): Int? {
-        return bookmarkRepository.save(modelMapper.map(bookmarkFormDto, Bookmark::class.java)).id
+    fun create(userId: Long, bookmarkFormDto: BookmarkFromdto): Int? {
+        val user: User = userRepository.getReferenceById(userId)
+
+        val event: Event = eventRepository.getReferenceById(bookmarkFormDto.event_id.toLong())
+
+        val bookmark = Bookmark(user = user, event = event)
+
+        return bookmarkRepository.save(bookmark).id
     }
 
-    fun get(id: Int): Bookmark? {
-        return bookmarkRepository.findByIdOrNull(id.toLong())
+    fun get(userId: Long, id: Int): Bookmark? {
+        return bookmarkRepository.findByIdAndUserId(id, userId)
     }
 
-    fun delete(id: Int) {
-        bookmarkRepository.deleteById(id.toLong())
+    fun delete(userId: Long, id: Int) {
+        bookmarkRepository.deleteByIdAndUserId(id, userId)
     }
 
-    fun getList(): List<Bookmark> {
-        return bookmarkRepository.findAll()
+    fun getList(userId: Long): List<Bookmark> {
+        return bookmarkRepository.findByUserId(userId)
     }
 }

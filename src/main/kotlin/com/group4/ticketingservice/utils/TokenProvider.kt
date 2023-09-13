@@ -74,7 +74,7 @@ class TokenProvider(
             .parseClaimsJws(token)
             .body
     fun parseUserSpecification(token: String) =
-        getClaimsFromToken(token).subject.split(":")
+        getClaimsFromToken(token).subject
     fun parseBearerToken(header: String) = header.substring(7)
 
     fun parseTokenExpirationTime(token: String): Long {

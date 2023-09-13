@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -20,8 +22,8 @@ class BookmarkController @Autowired constructor(val bookmarkService: BookmarkSer
 
     // 북마크 등록
     @PostMapping
-    fun addBookmark(boardFormDto: BookmarkFromdto): ResponseEntity<Any> {
-        val savedBookmarkId = bookmarkService.create(boardFormDto)
+    fun addBookmark(@AuthenticationPrincipal userId: Long, @RequestBody boardFormDto: BookmarkFromdto): ResponseEntity<Any> {
+        val savedBookmarkId = bookmarkService.create(userId, boardFormDto)
         val headers = HttpHeaders()
         headers.set("Content-Location", "/bookmark/%d".format(savedBookmarkId))
         return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(savedBookmarkId)
@@ -29,9 +31,9 @@ class BookmarkController @Autowired constructor(val bookmarkService: BookmarkSer
 
     // 특정 북마크 조회하기
     @GetMapping("/{id}")
-    fun getBookmark(@PathVariable id: Int): ResponseEntity<out Any?> {
+    fun getBookmark(@AuthenticationPrincipal userId: Long, @PathVariable id: Int): ResponseEntity<out Any?> {
         try {
-            val foundBookmark = bookmarkService.get(id)
+            val foundBookmark = bookmarkService.get(userId, id)
             return ResponseEntity.status(HttpStatus.OK).body(foundBookmark ?: "null")
         } catch (e: MethodArgumentNotValidException) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
@@ -40,14 +42,15 @@ class BookmarkController @Autowired constructor(val bookmarkService: BookmarkSer
 
     // 북마크 삭제
     @DeleteMapping("/{id}")
-    fun deleteBookmark(@PathVariable id: Int): ResponseEntity<Any> {
-        bookmarkService.delete(id)
+    fun deleteBookmark(@AuthenticationPrincipal userId: Long, @PathVariable id: Int): ResponseEntity<Any> {
+        bookmarkService.delete(userId, id)
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 
-    // 전체사용자 북마크 목록
+    // 로그인한 사용자의 북마크 목록
     @GetMapping()
-    fun getBookmarks(): ResponseEntity<Any> {
-        return ResponseEntity.status(HttpStatus.OK).body(bookmarkService.getList())
+    fun getBookmarks(@AuthenticationPrincipal userId: Long): ResponseEntity<Any> {
+        val bookmarks = bookmarkService.getList(userId)
+        return ResponseEntity.status(HttpStatus.OK).body(bookmarks)
     }
 }

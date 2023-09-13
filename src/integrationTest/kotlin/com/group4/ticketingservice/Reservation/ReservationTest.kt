@@ -53,7 +53,7 @@ class ReservationTest @Autowired constructor(
         eventRepository.save(sampleEvent)
 
         val event = eventRepository.findById(1).get()
-        event.availableAttendees = 100
+        event.currentReservationCount = 0
 
         eventRepository.save(event)
     }

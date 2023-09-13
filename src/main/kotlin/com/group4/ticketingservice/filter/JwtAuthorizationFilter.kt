@@ -23,13 +23,13 @@ class JwtAuthorizationFilter(
         val jwt = tokenProvider.parseBearerToken(authorizationHeader)
 
         if (tokenProvider.validateToken(jwt)) {
-            val (username, authority) = tokenProvider.parseUserSpecification(jwt)
+            val userId = tokenProvider.parseUserSpecification(jwt)
 
             val authorties = mutableListOf<GrantedAuthority>()
-            authorties.add(SimpleGrantedAuthority(authority))
+            authorties.add(SimpleGrantedAuthority("USER"))
 
             val authentication =
-                UsernamePasswordAuthenticationToken.authenticated(username, jwt, authorties)
+                UsernamePasswordAuthenticationToken.authenticated(userId.toLong(), jwt, authorties)
             SecurityContextHolder.getContext().authentication = authentication
         }
         chain.doFilter(request, response)

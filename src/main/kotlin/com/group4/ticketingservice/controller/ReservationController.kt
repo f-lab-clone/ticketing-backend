@@ -6,6 +6,7 @@ import com.group4.ticketingservice.dto.ReservationUpdateRequest
 import com.group4.ticketingservice.entity.Reservation
 import com.group4.ticketingservice.service.ReservationService
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -19,10 +20,10 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/reservations")
 class ReservationController(val reservationService: ReservationService) {
     @PostMapping
-    fun createReservation(@RequestBody request: ReservationCreateRequest): ResponseEntity<ReservationResponse> {
+    fun createReservation(@AuthenticationPrincipal userId: Long, @RequestBody request: ReservationCreateRequest): ResponseEntity<ReservationResponse> {
         val reservation: Reservation = reservationService.createReservation(
             request.eventId,
-            request.userId
+            userId
         )
         val response = ReservationResponse(
             id = reservation.id!!,
@@ -61,8 +62,8 @@ class ReservationController(val reservationService: ReservationService) {
     }
 
     @DeleteMapping("/{id}")
-    fun deleteReservation(@PathVariable id: Long): ResponseEntity<Void> {
-        reservationService.deleteReservation(id)
+    fun deleteReservation(@AuthenticationPrincipal userId: Long, @PathVariable id: Long): ResponseEntity<Void> {
+        reservationService.deleteReservation(userId, id)
         return ResponseEntity.noContent().build()
     }
 }

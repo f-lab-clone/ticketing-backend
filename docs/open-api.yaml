@@ -64,67 +64,6 @@ paths:
       responses:
         "200":
           description: OK
-  /events/{id}:
-    get:
-      tags:
-      - event-controller
-      operationId: getEvent
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/EventResponse'
-    put:
-      tags:
-      - event-controller
-      operationId: updateEvent
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/EventCreateRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/EventResponse'
-    delete:
-      tags:
-      - event-controller
-      operationId: deleteEvent
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/Unit'
   /users/signup:
     post:
       tags:
@@ -161,24 +100,6 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ReservationResponse'
-  /events:
-    post:
-      tags:
-      - event-controller
-      operationId: createEvent
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/EventCreateRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/EventResponse'
   /bookmarks:
     get:
       tags:
@@ -195,12 +116,12 @@ paths:
       tags:
       - bookmark-controller
       operationId: addBookmark
-      parameters:
-      - name: boardFormDto
-        in: query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookmarkFromdto'
         required: true
-        schema:
-          $ref: '#/components/schemas/BookmarkFromdto'
       responses:
         "200":
           description: OK
@@ -234,6 +155,25 @@ paths:
             '*/*':
               schema:
                 type: object
+  /events/{id}:
+    get:
+      tags:
+      - event-controller
+      operationId: getEvent
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EventResponse'
   /events/:
     get:
       tags:
@@ -327,56 +267,6 @@ components:
         bookedAt:
           type: string
           format: date-time
-    EventCreateRequest:
-      required:
-      - date
-      - maxAttendees
-      - reservationEndTime
-      - reservationStartTime
-      - title
-      type: object
-      properties:
-        title:
-          type: string
-        date:
-          type: string
-          format: date-time
-        reservationStartTime:
-          type: string
-          format: date-time
-        reservationEndTime:
-          type: string
-          format: date-time
-        maxAttendees:
-          type: integer
-          format: int32
-    EventResponse:
-      required:
-      - date
-      - id
-      - maxAttendees
-      - reservationEndTime
-      - reservationStartTime
-      - title
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        title:
-          type: string
-        date:
-          type: string
-          format: date-time
-        reservationStartTime:
-          type: string
-          format: date-time
-        reservationEndTime:
-          type: string
-          format: date-time
-        maxAttendees:
-          type: integer
-          format: int32
     SignUpRequest:
       required:
       - email
@@ -410,26 +300,43 @@ components:
     ReservationCreateRequest:
       required:
       - eventId
-      - userId
       type: object
       properties:
         eventId:
           type: integer
           format: int64
-        userId:
-          type: integer
-          format: int64
     BookmarkFromdto:
       required:
-      - show_id
-      - user_id
+      - event_id
       type: object
       properties:
-        user_id:
+        event_id:
           type: integer
           format: int32
-        show_id:
-          type: integer
-          format: int32
-    Unit:
+    EventResponse:
+      required:
+      - date
+      - id
+      - maxAttendees
+      - reservationEndTime
+      - reservationStartTime
+      - title
       type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        date:
+          type: string
+          format: date-time
+        reservationStartTime:
+          type: string
+          format: date-time
+        reservationEndTime:
+          type: string
+          format: date-time
+        maxAttendees:
+          type: integer
+          format: int32
