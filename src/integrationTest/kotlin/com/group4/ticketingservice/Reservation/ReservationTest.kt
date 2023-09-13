@@ -8,9 +8,6 @@ import com.group4.ticketingservice.repository.ReservationRepository
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.service.ReservationService
 import com.group4.ticketingservice.utils.Authority
-import java.time.OffsetDateTime
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.Executors
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -19,6 +16,9 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.test.context.TestPropertySource
+import java.time.OffsetDateTime
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
 
 @TestPropertySource(properties = ["spring.jpa.hibernate.ddl-auto=create"])
 class ReservationTest @Autowired constructor(

@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.transaction.annotation.Transactional
 import java.time.Clock
-import java.time.Duration
 import java.time.OffsetDateTime
 
 class BookmarkRepositoryTest(
@@ -35,8 +34,8 @@ class BookmarkRepositoryTest(
     private val sampleEvent: Event = Event(
         title = "test title",
         date = OffsetDateTime.now(),
-        reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
-        reservationStartTime = OffsetDateTime.now() + Duration.ofHours(1),
+        reservationEndTime = OffsetDateTime.now(),
+        reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 10
     )
 

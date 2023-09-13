@@ -10,9 +10,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
-import java.time.Duration
 import java.time.OffsetDateTime
-import java.util.*
+import java.util.Optional
 
 class EventServiceTest {
     private val eventRepository: EventRepository = mockk()
@@ -32,8 +31,8 @@ class EventServiceTest {
         id = 1,
         title = "test title",
         date = OffsetDateTime.now(),
-        reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
-        reservationStartTime = OffsetDateTime.now() + Duration.ofHours(1),
+        reservationEndTime = OffsetDateTime.now(),
+        reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 10
 
     )

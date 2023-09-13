@@ -33,7 +33,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.time.Duration
 import java.time.OffsetDateTime
 
 @ExtendWith(MockKExtension::class)
@@ -64,8 +63,8 @@ class BookmarkControllerTest(
         id = 1,
         title = "test title",
         date = OffsetDateTime.now(),
-        reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
-        reservationStartTime = OffsetDateTime.now() + Duration.ofHours(1),
+        reservationEndTime = OffsetDateTime.now(),
+        reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 10
     )
 
