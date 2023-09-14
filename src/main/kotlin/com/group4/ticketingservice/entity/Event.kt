@@ -1,6 +1,5 @@
 package com.group4.ticketingservice.entity
 
-import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
@@ -38,11 +37,11 @@ class Event(
 
 ) {
 
-    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = [ CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     val bookmarks: List<Bookmark> = mutableListOf()
 
-    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = [ CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     val reservations: List<Reservation> = mutableListOf()
 }
