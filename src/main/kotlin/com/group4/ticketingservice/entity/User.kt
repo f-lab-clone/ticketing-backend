@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import jakarta.validation.constraints.NotNull
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -31,18 +32,22 @@ class User(name: String, email: String, password: String, authority: Authority, 
     var id: Long? = id
 
     @Column(nullable = false)
+    @NotNull
     var name: String = name
         protected set
 
     @Column(nullable = false)
+    @NotNull
     var email: String = email
         protected set
 
     @Column(nullable = false)
+    @NotNull
     var pw: String = password
         protected set
 
     @Column(nullable = false)
+    @NotNull
     @Enumerated(EnumType.STRING)
     var role: Authority = authority
 
