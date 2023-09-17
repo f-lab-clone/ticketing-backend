@@ -8,12 +8,12 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 
 @Repository
-interface EventRepository : JpaRepository<Event, Long> {
+interface EventRepository : JpaRepository<Event, Int> {
     @Lock(value = LockModeType.PESSIMISTIC_WRITE)
     @Query("select e from Event e where e.id = :id")
-    fun findByIdWithPesimisticLock(id: Long): Event?
+    fun findByIdWithPesimisticLock(id: Int): Event?
 
     @Lock(LockModeType.OPTIMISTIC)
     @Query("select e from Event e where e.id = :id")
-    fun findByIdWithOptimisicLock(id: Long): Event?
+    fun findByIdWithOptimisicLock(id: Int): Event?
 }

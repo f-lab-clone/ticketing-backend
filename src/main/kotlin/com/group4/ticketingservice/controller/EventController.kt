@@ -17,7 +17,7 @@ class EventController @Autowired constructor(
 ) {
 
     @GetMapping("/{id}")
-    fun getEvent(@PathVariable id: Long): ResponseEntity<EventResponse?> {
+    fun getEvent(@PathVariable id: Int): ResponseEntity<EventResponse?> {
         return eventService.getEvent(id)?.let {
             ResponseEntity.status(HttpStatus.OK).body(
                 EventResponse(

@@ -60,7 +60,7 @@ class ReservationControllerTest(
     object testFields {
         const val testName = "minjun"
         const val testUserName = "minjun3021@qwer.com"
-        const val testUserId = 1L
+        const val testUserId = 1
         const val testUserRole = "USER"
         const val password = "1234"
     }

@@ -15,7 +15,7 @@ import java.time.OffsetDateTime
 class Event(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    val id: Int? = null,
 
     @NotNull
     var title: String,

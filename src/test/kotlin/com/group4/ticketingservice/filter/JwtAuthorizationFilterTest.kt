@@ -24,7 +24,7 @@ class JwtAuthorizationFilterTest {
 
     val testUserName = "minjun3021@qwer.com"
     val testUserRole = "USER"
-    val testUserID = 1L
+    val testUserID = 1
 
     @BeforeEach fun resetAuthentication() {
         val strategy: SecurityContextHolderStrategy = spy(SecurityContextHolder.getContextHolderStrategy())

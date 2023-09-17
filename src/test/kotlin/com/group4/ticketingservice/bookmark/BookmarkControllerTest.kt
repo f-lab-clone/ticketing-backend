@@ -46,7 +46,7 @@ class BookmarkControllerTest(
     @MockkBean
     private lateinit var service: BookmarkService
     object testFields {
-        const val testUserId = 1L
+        const val testUserId = 1
         const val testUserName = "james@example.com"
         const val testUserRole = "USER"
         const val password = "12345678"

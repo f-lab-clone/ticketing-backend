@@ -30,7 +30,7 @@ class BookmarkServiceTest() {
         authority = Authority.USER
     )
 
-    val sampleUserId = 1L
+    val sampleUserId = 1
 
     private val sampleEvent: Event = Event(
         id = 1,

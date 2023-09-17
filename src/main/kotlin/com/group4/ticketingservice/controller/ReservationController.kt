@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/reservations")
 class ReservationController(val reservationService: ReservationService) {
     @PostMapping
-    fun createReservation(@AuthenticationPrincipal userId: Long, @RequestBody request: ReservationCreateRequest): ResponseEntity<ReservationResponse> {
+    fun createReservation(@AuthenticationPrincipal userId: Int, @RequestBody request: ReservationCreateRequest): ResponseEntity<ReservationResponse> {
         val reservation: Reservation = reservationService.createReservation(
             request.eventId,
             userId
@@ -35,7 +35,7 @@ class ReservationController(val reservationService: ReservationService) {
     }
 
     @GetMapping("/{id}")
-    fun getReservation(@PathVariable id: Long): ResponseEntity<ReservationResponse> {
+    fun getReservation(@PathVariable id: Int): ResponseEntity<ReservationResponse> {
         val reservation = reservationService.getReservation(id)
         val response = ReservationResponse(
             id = reservation.id!!,
@@ -48,7 +48,7 @@ class ReservationController(val reservationService: ReservationService) {
 
     @PutMapping("/{id}")
     fun updateReservation(
-        @PathVariable id: Long,
+        @PathVariable id: Int,
         @RequestBody request: ReservationUpdateRequest
     ): ResponseEntity<ReservationResponse> {
         val reservation = reservationService.updateReservation(id, request.eventId)
@@ -62,7 +62,7 @@ class ReservationController(val reservationService: ReservationService) {
     }
 
     @DeleteMapping("/{id}")
-    fun deleteReservation(@AuthenticationPrincipal userId: Long, @PathVariable id: Long): ResponseEntity<Void> {
+    fun deleteReservation(@AuthenticationPrincipal userId: Int, @PathVariable id: Int): ResponseEntity<Void> {
         reservationService.deleteReservation(userId, id)
         return ResponseEntity.noContent().build()
     }

@@ -84,7 +84,7 @@ class BookmarkRepositoryTest(
         bookmarkRepository.deleteByIdAndUserId(savedBookmark.id!!, savedUser.id!!)
 
         // then
-        val deletedBookmark = bookmarkRepository.findByIdOrNull(savedBookmark.id?.toLong())
+        val deletedBookmark = bookmarkRepository.findByIdOrNull(savedBookmark.id)
 
         assertThat(deletedBookmark).isEqualTo(null)
     }

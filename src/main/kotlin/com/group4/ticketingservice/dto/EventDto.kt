@@ -11,11 +11,11 @@ data class EventCreateRequest(
 )
 
 data class EventDeleteRequest(
-    val id: Long
+    val id: Int
 )
 
 data class EventResponse(
-    val id: Long,
+    val id: Int,
     val title: String,
     val date: OffsetDateTime,
     val reservationStartTime: OffsetDateTime,
