@@ -14,7 +14,7 @@ import java.time.OffsetDateTime
 class Reservation(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null,
+    var id: Int? = null,
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)

@@ -17,25 +17,25 @@ class BookmarkService @Autowired constructor(
     val bookmarkRepository: BookmarkRepository
 ) {
 
-    fun create(userId: Long, bookmarkFormDto: BookmarkFromdto): Int? {
+    fun create(userId: Int, bookmarkFormDto: BookmarkFromdto): Int? {
         val user: User = userRepository.getReferenceById(userId)
 
-        val event: Event = eventRepository.getReferenceById(bookmarkFormDto.event_id.toLong())
+        val event: Event = eventRepository.getReferenceById(bookmarkFormDto.event_id)
 
         val bookmark = Bookmark(user = user, event = event)
 
         return bookmarkRepository.save(bookmark).id
     }
 
-    fun get(userId: Long, id: Int): Bookmark? {
+    fun get(userId: Int, id: Int): Bookmark? {
         return bookmarkRepository.findByIdAndUserId(id, userId)
     }
 
-    fun delete(userId: Long, id: Int) {
+    fun delete(userId: Int, id: Int) {
         bookmarkRepository.deleteByIdAndUserId(id, userId)
     }
 
-    fun getList(userId: Long): List<Bookmark> {
+    fun getList(userId: Int): List<Bookmark> {
         return bookmarkRepository.findByUserId(userId)
     }
 }

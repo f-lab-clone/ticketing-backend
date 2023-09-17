@@ -12,7 +12,7 @@ import org.springframework.security.test.context.support.WithSecurityContextFact
 @WithSecurityContext(factory = WithAuthUserSecurityContextFactory::class)
 annotation class WithAuthUser(
     val email: String,
-    val id: Long
+    val id: Int
 )
 
 class WithAuthUserSecurityContextFactory(private val tokenProvider: TokenProvider) : WithSecurityContextFactory<WithAuthUser> {

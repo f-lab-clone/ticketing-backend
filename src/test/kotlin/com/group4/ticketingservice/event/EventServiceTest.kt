@@ -11,7 +11,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import java.time.OffsetDateTime
-import java.util.Optional
+import java.util.*
 
 class EventServiceTest {
     private val eventRepository: EventRepository = mockk()
@@ -19,7 +19,7 @@ class EventServiceTest {
     private val eventService: EventService = EventService(
         eventRepository = eventRepository
     )
-    val sampleUserId = 1L
+    val sampleUserId = 1
 
     val sampleUser = User(
         name = "james",

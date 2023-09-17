@@ -9,7 +9,7 @@ class EventService(
     private val eventRepository: EventRepository
 ) {
 
-    fun getEvent(id: Long): Event? {
+    fun getEvent(id: Int): Event? {
         return eventRepository.findById(id).orElse(null)
     }
 

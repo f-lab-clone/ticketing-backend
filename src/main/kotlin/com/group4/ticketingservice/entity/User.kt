@@ -17,7 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails
 
 @Entity
 @Table(name = "user")
-class User(name: String, email: String, password: String, authority: Authority, id: Long? = null) : BaseTimeEntity(), UserDetails {
+class User(name: String, email: String, password: String, authority: Authority, id: Int? = null) : BaseTimeEntity(), UserDetails {
     companion object {
         fun toDto(user: User) = UserDto(
             name = user.name,
@@ -29,7 +29,7 @@ class User(name: String, email: String, password: String, authority: Authority, 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    var id: Long? = id
+    var id: Int? = id
 
     @Column(nullable = false)
     @NotNull

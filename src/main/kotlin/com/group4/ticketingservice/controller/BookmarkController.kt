@@ -22,7 +22,7 @@ class BookmarkController @Autowired constructor(val bookmarkService: BookmarkSer
 
     // 북마크 등록
     @PostMapping
-    fun addBookmark(@AuthenticationPrincipal userId: Long, @RequestBody boardFormDto: BookmarkFromdto): ResponseEntity<Any> {
+    fun addBookmark(@AuthenticationPrincipal userId: Int, @RequestBody boardFormDto: BookmarkFromdto): ResponseEntity<Any> {
         val savedBookmarkId = bookmarkService.create(userId, boardFormDto)
         val headers = HttpHeaders()
         headers.set("Content-Location", "/bookmark/%d".format(savedBookmarkId))
@@ -31,7 +31,7 @@ class BookmarkController @Autowired constructor(val bookmarkService: BookmarkSer
 
     // 특정 북마크 조회하기
     @GetMapping("/{id}")
-    fun getBookmark(@AuthenticationPrincipal userId: Long, @PathVariable id: Int): ResponseEntity<out Any?> {
+    fun getBookmark(@AuthenticationPrincipal userId: Int, @PathVariable id: Int): ResponseEntity<out Any?> {
         try {
             val foundBookmark = bookmarkService.get(userId, id)
             return ResponseEntity.status(HttpStatus.OK).body(foundBookmark ?: "null")
@@ -42,14 +42,14 @@ class BookmarkController @Autowired constructor(val bookmarkService: BookmarkSer
 
     // 북마크 삭제
     @DeleteMapping("/{id}")
-    fun deleteBookmark(@AuthenticationPrincipal userId: Long, @PathVariable id: Int): ResponseEntity<Any> {
+    fun deleteBookmark(@AuthenticationPrincipal userId: Int, @PathVariable id: Int): ResponseEntity<Any> {
         bookmarkService.delete(userId, id)
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 
     // 로그인한 사용자의 북마크 목록
     @GetMapping()
-    fun getBookmarks(@AuthenticationPrincipal userId: Long): ResponseEntity<Any> {
+    fun getBookmarks(@AuthenticationPrincipal userId: Int): ResponseEntity<Any> {
         val bookmarks = bookmarkService.getList(userId)
         return ResponseEntity.status(HttpStatus.OK).body(bookmarks)
     }

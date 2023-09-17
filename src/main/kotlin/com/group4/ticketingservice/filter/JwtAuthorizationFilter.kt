@@ -29,7 +29,7 @@ class JwtAuthorizationFilter(
             authorties.add(SimpleGrantedAuthority("USER"))
 
             val authentication =
-                UsernamePasswordAuthenticationToken.authenticated(userId.toLong(), jwt, authorties)
+                UsernamePasswordAuthenticationToken.authenticated(userId.toInt(), jwt, authorties)
             SecurityContextHolder.getContext().authentication = authentication
         }
         chain.doFilter(request, response)

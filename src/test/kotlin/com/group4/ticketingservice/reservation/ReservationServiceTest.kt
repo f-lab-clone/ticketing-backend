@@ -40,7 +40,7 @@ class ReservationServiceTest(
         clock = clock
     )
 
-    val sampleUserId = 1L
+    val sampleUserId = 1
 
     val sampleUser = User(
         name = "minjun3021@qwer.com",
@@ -116,7 +116,7 @@ class ReservationServiceTest(
         every { reservationRepository.findById(any()) } returns Optional.of(sampleReservation)
         every { reservationRepository.delete(any()) } returns Unit
 
-        val exception = assertThrows<IllegalArgumentException> { reservationService.deleteReservation(2L, 1) }
+        val exception = assertThrows<IllegalArgumentException> { reservationService.deleteReservation(2, 1) }
         assert(exception.message == "It's not your reservation")
     }
 }

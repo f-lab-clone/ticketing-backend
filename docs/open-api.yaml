@@ -18,7 +18,7 @@ paths:
         required: true
         schema:
           type: integer
-          format: int64
+          format: int32
       responses:
         "200":
           description: OK
@@ -36,7 +36,7 @@ paths:
         required: true
         schema:
           type: integer
-          format: int64
+          format: int32
       requestBody:
         content:
           application/json:
@@ -60,7 +60,7 @@ paths:
         required: true
         schema:
           type: integer
-          format: int64
+          format: int32
       responses:
         "200":
           description: OK
@@ -166,7 +166,7 @@ paths:
         required: true
         schema:
           type: integer
-          format: int64
+          format: int32
       responses:
         "200":
           description: OK
@@ -246,7 +246,7 @@ components:
       properties:
         eventId:
           type: integer
-          format: int64
+          format: int32
     ReservationResponse:
       required:
       - bookedAt
@@ -257,13 +257,13 @@ components:
       properties:
         id:
           type: integer
-          format: int64
+          format: int32
         eventId:
           type: integer
-          format: int64
+          format: int32
         userId:
           type: integer
-          format: int64
+          format: int32
         bookedAt:
           type: string
           format: date-time
@@ -304,7 +304,7 @@ components:
       properties:
         eventId:
           type: integer
-          format: int64
+          format: int32
     BookmarkFromdto:
       required:
       - event_id
@@ -325,7 +325,7 @@ components:
       properties:
         id:
           type: integer
-          format: int64
+          format: int32
         title:
           type: string
         date:
