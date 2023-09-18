@@ -1,5 +1,6 @@
 package com.group4.ticketingservice.controller
 
+import com.group4.ticketingservice.dto.EventCreateRequest
 import com.group4.ticketingservice.dto.EventResponse
 import com.group4.ticketingservice.service.EventService
 import org.springframework.beans.factory.annotation.Autowired
@@ -7,6 +8,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -15,6 +18,26 @@ import org.springframework.web.bind.annotation.RestController
 class EventController @Autowired constructor(
     val eventService: EventService
 ) {
+
+    @PostMapping
+    fun createEvent(@RequestBody request: EventCreateRequest): ResponseEntity<EventResponse> {
+        val event = eventService.createEvent(
+            request.title,
+            request.date,
+            request.reservationStartTime,
+            request.reservationEndTime,
+            request.maxAttendees
+        )
+        val response = EventResponse(
+            id = event.id!!,
+            title = event.title,
+            date = event.date,
+            reservationStartTime = event.reservationStartTime,
+            reservationEndTime = event.reservationEndTime,
+            maxAttendees = event.maxAttendees
+        )
+        return ResponseEntity.status(HttpStatus.OK).body(response)
+    }
 
     @GetMapping("/{id}")
     fun getEvent(@PathVariable id: Int): ResponseEntity<EventResponse?> {
