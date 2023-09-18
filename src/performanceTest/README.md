@@ -12,6 +12,14 @@ This `betion.pem` is a public key file used to access AWS RDS to initialize the 
 
 ### 3. Run the following commands
 
+
+Move to the directory 
+
+```sh
+cd src/performanceTest
+```
+
+
 You can change the `ENTRYPOINT` variable to run different test files:
 
 
