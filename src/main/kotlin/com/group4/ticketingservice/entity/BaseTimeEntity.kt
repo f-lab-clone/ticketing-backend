@@ -3,8 +3,6 @@ package com.group4.ticketingservice.entity
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.MappedSuperclass
-import jakarta.persistence.PrePersist
-import jakarta.persistence.PreUpdate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.OffsetDateTime
 
@@ -13,19 +11,8 @@ import java.time.OffsetDateTime
 abstract class BaseTimeEntity {
 
     @Column(updatable = false)
-    lateinit var createdAt: OffsetDateTime
+    val createdAt: OffsetDateTime = OffsetDateTime.now()
 
     @Column(updatable = true)
-    lateinit var updatedAt: OffsetDateTime
-
-    @PrePersist
-    fun setBothColumn() {
-        createdAt = OffsetDateTime.now()
-        updatedAt = OffsetDateTime.now()
-    }
-
-    @PreUpdate
-    fun setUpdatedColumn() {
-        updatedAt = OffsetDateTime.now()
-    }
+    val updatedAt: OffsetDateTime = OffsetDateTime.now()
 }

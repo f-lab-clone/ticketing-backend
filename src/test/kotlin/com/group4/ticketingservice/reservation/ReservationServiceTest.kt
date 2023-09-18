@@ -13,16 +13,9 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.support.AnnotationConfigContextLoader
 import java.time.OffsetDateTime
 import java.util.*
 
-@ContextConfiguration(
-    loader = AnnotationConfigContextLoader::class
-)
-@SpringBootTest
 class ReservationServiceTest() {
     private val userRepository: UserRepository = mockk()
     private val eventRepository: EventRepository = mockk()

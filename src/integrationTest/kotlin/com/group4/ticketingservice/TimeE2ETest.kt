@@ -1,7 +1,5 @@
 package com.group4.ticketingservice
 
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonObject
 import com.group4.ticketingservice.TimeE2ETest.testFields.password
 import com.group4.ticketingservice.TimeE2ETest.testFields.testName
 import com.group4.ticketingservice.TimeE2ETest.testFields.testUserName
@@ -19,7 +17,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
@@ -66,29 +63,16 @@ class TimeE2ETest @Autowired constructor(
             "\"reservationStartTime\":\"2022-09-01T22:00:00.001+09:00\"," +
             "\"reservationEndTime\":\"2022-09-01T23:00:00.001+09:00\"," +
             "\"maxAttendees\":10}"
-        val jwt = getJwt()
+
         mockMvc.perform(
             post("/events")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(eventCreateRequest)
-                .header("Authorization", jwt)
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.date").value("2022-09-01T12:00:00.001Z"))
             .andExpect(jsonPath("$.reservationStartTime").value("2022-09-01T13:00:00.001Z"))
             .andExpect(jsonPath("$.reservationEndTime").value("2022-09-01T14:00:00.001Z"))
-    }
-
-    fun getJwt(): String {
-        val gson = GsonBuilder().create()
-
-        val result = mockMvc.perform(
-            MockMvcRequestBuilders.post("/users/signin")
-                .content(gson.toJson(sampleSignInRequest).toString())
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andReturn()
-        val jwt = gson.fromJson(result.response.contentAsString, JsonObject::class.java)
-        return jwt.get("Authorization").asString
     }
 }

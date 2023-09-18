@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 @WebMvcTest(
     controllers = [UserController::class],
@@ -57,7 +57,7 @@ class UserControllerTest(
     val sampleUserDTO = UserDto(
         name = testName,
         email = testUserName,
-        createdAt = LocalDateTime.now()
+        createdAt = OffsetDateTime.now()
     )
 
     val invalidSignUpRequest = SignUpRequest(

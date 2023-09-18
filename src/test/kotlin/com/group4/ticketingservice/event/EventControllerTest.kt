@@ -75,7 +75,7 @@ class EventControllerTest(
     private val sampleEventDeleteRequest: EventDeleteRequest = EventDeleteRequest(
         id = 1
     )
-    private val gson: Gson = GsonBuilder().registerTypeAdapter(OffsetDateTime::class.java, DateTimeConverter()).create()
+    private val gson: Gson = GsonBuilder().create()
 
     @Test
     fun `GET events should return event`() {

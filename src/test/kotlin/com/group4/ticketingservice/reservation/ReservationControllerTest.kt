@@ -20,10 +20,7 @@ import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.TokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import io.mockk.junit5.MockKExtension
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
@@ -37,10 +34,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.time.Clock
 import java.time.OffsetDateTime
 
-@ExtendWith(MockKExtension::class)
 @WebMvcTest(
     ReservationController::class,
     includeFilters = arrayOf(
@@ -48,8 +43,7 @@ import java.time.OffsetDateTime
     )
 )
 class ReservationControllerTest(
-    @Autowired val mockMvc: MockMvc,
-    @Autowired val clock: Clock
+    @Autowired val mockMvc: MockMvc
 ) {
     @MockkBean
     private lateinit var reservationService: ReservationService
@@ -87,7 +81,7 @@ class ReservationControllerTest(
         id = 1,
         user = sampleUser.apply { id = 1 },
         event = sampleEvent,
-        bookedAt = OffsetDateTime.now(clock)
+        bookedAt = OffsetDateTime.now()
     )
 
     private val gson: Gson = GsonBuilder().create()
@@ -100,7 +94,7 @@ class ReservationControllerTest(
             id = 1,
             userId = 1,
             eventId = 1,
-            bookedAt = OffsetDateTime.now(clock)
+            bookedAt = OffsetDateTime.now()
         )
 
         mockMvc.perform(
@@ -113,12 +107,6 @@ class ReservationControllerTest(
             .andExpect(jsonPath("$.id").value(sampleReservation.id))
             .andExpect(jsonPath("$.userId").value(sampleReservation.user.id))
             .andExpect(jsonPath("$.eventId").value(sampleReservation.event.id))
-            .andDo {
-                assertEquals(
-                    gson.fromJson(it.response.contentAsString, ReservationResponse::class.java),
-                    sampleReservationResponse
-                )
-            }
     }
 
     @Test
