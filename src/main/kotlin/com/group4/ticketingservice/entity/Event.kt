@@ -35,7 +35,7 @@ class Event(
     @NotNull
     var currentReservationCount: Int = 0
 
-) {
+) : BaseTimeEntity() {
 
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)

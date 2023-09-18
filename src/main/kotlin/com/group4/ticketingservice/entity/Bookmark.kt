@@ -21,4 +21,4 @@ class Bookmark(
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     var event: Event
-)
+) : BaseTimeEntity()
