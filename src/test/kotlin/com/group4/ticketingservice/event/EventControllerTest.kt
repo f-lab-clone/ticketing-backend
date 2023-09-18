@@ -10,7 +10,6 @@ import com.group4.ticketingservice.dto.EventDeleteRequest
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.service.EventService
-import com.group4.ticketingservice.util.DateTimeConverter
 import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.TokenProvider
 import com.ninjasquad.springmockk.MockkBean

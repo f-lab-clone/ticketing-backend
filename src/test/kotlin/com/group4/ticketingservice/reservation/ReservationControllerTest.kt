@@ -3,7 +3,6 @@ package com.group4.ticketingservice.reservation
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.group4.ticketingservice.JwtAuthorizationEntryPoint
-import com.group4.ticketingservice.config.ClockConfig
 import com.group4.ticketingservice.config.SecurityConfig
 import com.group4.ticketingservice.controller.ReservationController
 import com.group4.ticketingservice.dto.ReservationCreateRequest
@@ -17,7 +16,6 @@ import com.group4.ticketingservice.reservation.ReservationControllerTest.testFie
 import com.group4.ticketingservice.reservation.ReservationControllerTest.testFields.testUserName
 import com.group4.ticketingservice.service.ReservationService
 import com.group4.ticketingservice.user.WithAuthUser
-import com.group4.ticketingservice.util.DateTimeConverter
 import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.TokenProvider
 import com.ninjasquad.springmockk.MockkBean
@@ -30,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
@@ -44,7 +41,6 @@ import java.time.Clock
 import java.time.OffsetDateTime
 
 @ExtendWith(MockKExtension::class)
-@Import(ClockConfig::class)
 @WebMvcTest(
     ReservationController::class,
     includeFilters = arrayOf(
@@ -94,7 +90,7 @@ class ReservationControllerTest(
         bookedAt = OffsetDateTime.now(clock)
     )
 
-    private val gson: Gson = GsonBuilder().registerTypeAdapter(OffsetDateTime::class.java, DateTimeConverter()).create()
+    private val gson: Gson = GsonBuilder().create()
 
     @Test
     @WithAuthUser(email = testUserName, id = testUserId)

@@ -8,15 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.Clock
 import java.time.OffsetDateTime
 
 @Service
 class ReservationService @Autowired constructor(
     private val userRepository: UserRepository,
     private val eventRepository: EventRepository,
-    private val reservationRepository: ReservationRepository,
-    private val clock: Clock
+    private val reservationRepository: ReservationRepository
 ) {
     @Transactional
     fun createReservation(eventId: Int, userId: Int): Reservation {

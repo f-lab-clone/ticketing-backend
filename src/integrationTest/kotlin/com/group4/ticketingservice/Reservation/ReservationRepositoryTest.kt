@@ -1,7 +1,6 @@
 package com.group4.ticketingservice.Reservation
 
 import com.group4.ticketingservice.AbstractIntegrationTest
-import com.group4.ticketingservice.config.ClockConfig
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.entity.Reservation
 import com.group4.ticketingservice.entity.User
@@ -12,11 +11,9 @@ import com.group4.ticketingservice.utils.Authority
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Import
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.time.OffsetDateTime
 
-@Import(ClockConfig::class)
 class ReservationRepositoryTest @Autowired constructor(
     val userRepository: UserRepository,
     val eventRepository: EventRepository,
