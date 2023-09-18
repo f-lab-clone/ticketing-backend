@@ -24,6 +24,9 @@ services:
     image: grafana/k6:latest
     volumes:
       - ./scripts:/scripts
-    command: run ${ENTRYPOINT}
+    environment:
+      HOST: http://3.36.100.189/api
+    command: run /scripts/${ENTRYPOINT}
+
 
   
