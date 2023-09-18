@@ -9,8 +9,8 @@ import com.group4.ticketingservice.dto.UserDto
 import com.group4.ticketingservice.service.UserService
 import com.group4.ticketingservice.user.UserControllerTest.testFields.password
 import com.group4.ticketingservice.user.UserControllerTest.testFields.testName
+import com.group4.ticketingservice.user.UserControllerTest.testFields.testUserId
 import com.group4.ticketingservice.user.UserControllerTest.testFields.testUserName
-import com.group4.ticketingservice.user.UserControllerTest.testFields.testUserRole
 import com.group4.ticketingservice.utils.TokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
@@ -43,6 +43,7 @@ class UserControllerTest(
 
     object testFields {
         const val testName = "minjun"
+        const val testUserId = 1
         const val testUserName = "minjun3021@qwer.com"
         const val testUserRole = "USER"
         const val password = "123456789"
@@ -70,13 +71,14 @@ class UserControllerTest(
      * Controller가 Spring SecurityContext에 들어있는 유저 인증정보를 주입받는지를 확인할수있음
      */
     @Test
-    @WithAuthUser(email = testUserName, role = testUserRole)
-    fun `GET_api_users_access_token_info should return username injected by Spring Security with HTTP 200 OK`() {
+    @WithAuthUser(email = testUserName, id = testUserId)
+    fun `GET_api_users_access_token_info should return userId injected by Spring Security with HTTP 200 OK`() {
         // when
         val resultActions: ResultActions =
             mockMvc.perform(MockMvcRequestBuilders.get("/users/access_token_info"))
         resultActions.andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(testUserName))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.expires_in").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(testUserId))
     }
 
     @Test

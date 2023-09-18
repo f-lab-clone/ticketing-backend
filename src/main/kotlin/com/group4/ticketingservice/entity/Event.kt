@@ -1,40 +1,47 @@
 package com.group4.ticketingservice.entity
 
-import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
-import jakarta.persistence.Version
+import jakarta.validation.constraints.NotNull
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 import java.time.OffsetDateTime
 
 @Entity
 class Event(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    val id: Int? = null,
 
+    @NotNull
     var title: String,
 
+    @NotNull
     var date: OffsetDateTime,
 
-    @Column(name = "reservation_start_time")
+    @NotNull
     var reservationStartTime: OffsetDateTime,
 
-    @Column(name = "reservation_end_time")
+    @NotNull
     var reservationEndTime: OffsetDateTime,
 
-    @Column(name = "max_attendees")
+    @NotNull
     var maxAttendees: Int,
 
-    @Column(name = "available_attendees")
-    var availableAttendees: Int = maxAttendees
-) {
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "event", targetEntity = Reservation::class)
-    var reservations: List<Reservation>? = null
+    @NotNull
+    var currentReservationCount: Int = 0
 
-    @Version
-    private val version: Long? = null
+) {
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    val bookmarks: List<Bookmark> = mutableListOf()
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    val reservations: List<Reservation> = mutableListOf()
 }

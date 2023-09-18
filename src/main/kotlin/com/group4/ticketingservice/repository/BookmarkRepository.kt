@@ -5,4 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface BookmarkRepository : JpaRepository<Bookmark, Long>
+interface BookmarkRepository : JpaRepository<Bookmark, Int> {
+    fun findByIdAndUserId(id: Int, userId: Int): Bookmark
+    fun deleteByIdAndUserId(id: Int, userId: Int)
+    fun findByUserId(userId: Int): List<Bookmark>
+}

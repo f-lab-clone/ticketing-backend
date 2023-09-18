@@ -5,11 +5,11 @@ import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.ReservationRepository
 import com.group4.ticketingservice.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Clock
 import java.time.OffsetDateTime
-import kotlin.RuntimeException
 
 @Service
 class ReservationService @Autowired constructor(
@@ -19,16 +19,14 @@ class ReservationService @Autowired constructor(
     private val clock: Clock
 ) {
     @Transactional
-    fun createReservation(eventId: Long, userId: Long): Reservation {
-        val user = userRepository.findById(userId).orElseThrow {
-            IllegalArgumentException("User not found")
-        }
+    fun createReservation(eventId: Int, userId: Int): Reservation {
+        val user = userRepository.getReferenceById(userId)
         val event = eventRepository.findByIdWithPesimisticLock(eventId) ?: throw RuntimeException("")
 
-        val reservation = Reservation(user = user, event = event, bookedAt = OffsetDateTime.now(clock))
+        val reservation = Reservation(user = user, event = event, bookedAt = OffsetDateTime.now())
 
-        if (event.availableAttendees > 0) {
-            event.availableAttendees -= 1
+        if (event.maxAttendees > event.currentReservationCount) {
+            event.currentReservationCount += 1
             eventRepository.saveAndFlush(event)
 
             reservationRepository.saveAndFlush(reservation)
@@ -38,13 +36,13 @@ class ReservationService @Autowired constructor(
         return reservation
     }
 
-    fun getReservation(reservationId: Long): Reservation {
+    fun getReservation(reservationId: Int): Reservation {
         return reservationRepository.findById(reservationId).orElseThrow {
             IllegalArgumentException("Reservation not found")
         }
     }
 
-    fun updateReservation(reservationId: Long, eventId: Long): Reservation {
+    fun updateReservation(reservationId: Int, eventId: Int): Reservation {
         val reservation: Reservation = reservationRepository.findById(reservationId).orElseThrow {
             IllegalArgumentException("Reservation not found")
         }
@@ -56,11 +54,9 @@ class ReservationService @Autowired constructor(
         return reservationRepository.save(reservation)
     }
 
-    fun deleteReservation(id: Long) {
-        if (reservationRepository.existsById(id)) {
-            reservationRepository.deleteById(id)
-        } else {
-            throw IllegalArgumentException("Reservation not found")
-        }
+    fun deleteReservation(userId: Int, id: Int) {
+        val reservation = reservationRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("Reservation not found")
+        if (reservation.user.id != userId) throw IllegalArgumentException("It's not your reservation")
+        reservationRepository.delete(reservation)
     }
 }

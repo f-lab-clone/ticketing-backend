@@ -8,7 +8,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.spy
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockHttpServletRequest
@@ -25,6 +24,7 @@ class JwtAuthorizationFilterTest {
 
     val testUserName = "minjun3021@qwer.com"
     val testUserRole = "USER"
+    val testUserID = 1
 
     @BeforeEach fun resetAuthentication() {
         val strategy: SecurityContextHolderStrategy = spy(SecurityContextHolder.getContextHolderStrategy())
@@ -36,7 +36,7 @@ class JwtAuthorizationFilterTest {
         // given
         every { tokenProvider.parseBearerToken(any()) } returns ""
         every { tokenProvider.validateToken(any()) } returns true
-        every { tokenProvider.parseUserSpecification(any()) } returns listOf(testUserName, testUserRole)
+        every { tokenProvider.parseUserSpecification(any()) } returns testUserID.toString()
 
         // when
         val req = MockHttpServletRequest()
@@ -49,7 +49,7 @@ class JwtAuthorizationFilterTest {
 
         val authenticationPrincipal = strategy.context.authentication.principal
         // then
-        assertEquals(testUserName, authenticationPrincipal)
+        assertEquals(testUserID, authenticationPrincipal)
     }
 
     @Test
@@ -57,7 +57,7 @@ class JwtAuthorizationFilterTest {
         // given
         every { tokenProvider.parseBearerToken(any()) } returns ""
         every { tokenProvider.validateToken(any()) } returns false
-        every { tokenProvider.parseUserSpecification(any()) } returns listOf(testUserName, testUserRole)
+        every { tokenProvider.parseUserSpecification(any()) } returns testUserID.toString()
 
         // when
         val req = MockHttpServletRequest()

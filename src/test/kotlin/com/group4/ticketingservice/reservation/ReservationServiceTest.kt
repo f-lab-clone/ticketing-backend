@@ -19,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.AnnotationConfigContextLoader
 import java.time.Clock
-import java.time.Duration.ofHours
 import java.time.OffsetDateTime
 import java.util.*
 
@@ -40,30 +39,35 @@ class ReservationServiceTest(
         reservationRepository = reservationRepository,
         clock = clock
     )
+
+    val sampleUserId = 1
+
     val sampleUser = User(
         name = "minjun3021@qwer.com",
         email = "minjun",
         password = "1234",
-        authority = Authority.USER
+        authority = Authority.USER,
+        id = sampleUserId
     )
+
     private val sampleEvent: Event = Event(
         id = 1,
         title = "test title",
-        date = OffsetDateTime.now(clock),
-        reservationEndTime = OffsetDateTime.now(clock) + ofHours(2),
-        reservationStartTime = OffsetDateTime.now(clock) + ofHours(1),
+        date = OffsetDateTime.now(),
+        reservationEndTime = OffsetDateTime.now(),
+        reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 10
     )
 
     private val sampleReservation: Reservation = Reservation(
         user = sampleUser,
         event = sampleEvent,
-        bookedAt = OffsetDateTime.now(clock)
+        bookedAt = OffsetDateTime.now()
     )
 
     @Test
     fun `ReservationService_createReservation invoke ReservationRepository_save`() {
-        every { userRepository.findById(any()) } returns Optional.of(sampleUser)
+        every { userRepository.getReferenceById(any()) } returns sampleUser
         every { eventRepository.findByIdWithPesimisticLock(any()) } returns sampleEvent
         every { eventRepository.findByIdWithOptimisicLock(any()) } returns sampleEvent
 
@@ -91,17 +95,28 @@ class ReservationServiceTest(
 
     @Test
     fun `ReservationService_deleteReservation invoke ReservationRepository_deleteById`() {
-        every { reservationRepository.existsById(any()) } returns true
-        every { reservationRepository.deleteById(any()) } returns Unit
-        reservationService.deleteReservation(1)
-        verify(exactly = 1) { reservationRepository.deleteById(any()) }
+        every { reservationRepository.findById(any()) } returns Optional.of(sampleReservation)
+        every { reservationRepository.delete(any()) } returns Unit
+        reservationService.deleteReservation(sampleUserId, 1)
+        verify(exactly = 1) { reservationRepository.delete(any()) }
     }
 
     @Test
     fun `ReservationService_deleteReservation throw IllegalArgumentException`() {
-        every { reservationRepository.existsById(any()) } returns false
-        val exception = assertThrows<IllegalArgumentException> { reservationService.deleteReservation(1) }
+        every { reservationRepository.findById(any()) } returns Optional.ofNullable(null)
+        every { reservationRepository.delete(any()) } returns Unit
+
+        val exception = assertThrows<IllegalArgumentException> { reservationService.deleteReservation(sampleUserId, 1) }
         assert(exception.message == "Reservation not found")
-        verify(exactly = 0) { reservationRepository.deleteById(any()) }
+        verify(exactly = 0) { reservationRepository.delete(any()) }
+    }
+
+    @Test
+    fun `ReservationService_deleteReservation throw IllegalArgumentException when deleting other's reservation`() {
+        every { reservationRepository.findById(any()) } returns Optional.of(sampleReservation)
+        every { reservationRepository.delete(any()) } returns Unit
+
+        val exception = assertThrows<IllegalArgumentException> { reservationService.deleteReservation(2, 1) }
+        assert(exception.message == "It's not your reservation")
     }
 }
