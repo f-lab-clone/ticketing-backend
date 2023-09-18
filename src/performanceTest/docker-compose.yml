@@ -6,7 +6,7 @@ services:
       dockerfile: ./initdb/Dockerfile
     volumes:
       - ./initdb/initdb.sh:/initdb.sh
-      - ./initdb/init.sql:/init.sql
+      - ./initdb/sqls:/sqls
       - ./initdb/bastion.pem:/bastion.pem
     environment:
       MYSQL_HOST: ${MYSQL_HOST}

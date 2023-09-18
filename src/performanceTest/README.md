@@ -1,8 +1,24 @@
 # PerforanceTest
 
-## How to do
+It runs on Docker Engine with [k6](https://k6.io/)
+
+## How to Run
+
+### 1. Start the Docker Engine on your host
+
+### 2. Copy the `bastion.pem` into `/src/performanceTest/initdb` directory
+
+This `betion.pem` is a public key file used to access AWS RDS to initialize the database.
+
+### 3. Run the following commands
+
+You can change the `ENTRYPOINT` variable to run different test files:
+
 
 ```shell 
-ENTRYPOINT=1s.js docker-compose up
-ENTRYPOINT=10s.js docker-compose up
+# To run the `a_test.js` file
+ENTRYPOINT=a_test.js docker-compose up
+
+# To run the `b_test.js` file
+ENTRYPOINT=b_test.js docker-compose up
 ```
