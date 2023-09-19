@@ -100,6 +100,24 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ReservationResponse'
+  /events:
+    post:
+      tags:
+      - event-controller
+      operationId: createEvent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventCreateRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EventResponse'
   /bookmarks:
     get:
       tags:
@@ -305,12 +323,27 @@ components:
         eventId:
           type: integer
           format: int32
-    BookmarkFromdto:
+    EventCreateRequest:
       required:
-      - event_id
+      - date
+      - maxAttendees
+      - reservationEndTime
+      - reservationStartTime
+      - title
       type: object
       properties:
-        event_id:
+        title:
+          type: string
+        date:
+          type: string
+          format: date-time
+        reservationStartTime:
+          type: string
+          format: date-time
+        reservationEndTime:
+          type: string
+          format: date-time
+        maxAttendees:
           type: integer
           format: int32
     EventResponse:
@@ -338,5 +371,13 @@ components:
           type: string
           format: date-time
         maxAttendees:
+          type: integer
+          format: int32
+    BookmarkFromdto:
+      required:
+      - event_id
+      type: object
+      properties:
+        event_id:
           type: integer
           format: int32
