@@ -19,6 +19,7 @@ class EventController @Autowired constructor(
     val eventService: EventService
 ) {
 
+    // TimeE2ETest를 위한 임시 EndPoint입니다.
     @PostMapping
     fun createEvent(@RequestBody request: EventCreateRequest): ResponseEntity<EventResponse> {
         val event = eventService.createEvent(
