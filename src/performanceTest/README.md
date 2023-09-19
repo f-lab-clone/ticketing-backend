@@ -30,3 +30,11 @@ ENTRYPOINT=a_test.js docker-compose up
 # To run the `b_test.js` file
 ENTRYPOINT=b_test.js docker-compose up
 ```
+
+## How to Test
+
+If you only want to run the K6 script without initializing the database:
+
+```sh
+HOST=http://... k6 run scripts/healthCheck.js   
+```

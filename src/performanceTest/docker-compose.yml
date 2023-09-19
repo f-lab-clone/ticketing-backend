@@ -25,7 +25,7 @@ services:
     volumes:
       - ./scripts:/scripts
     environment:
-      HOST: http://3.36.100.189/api
+      HOST: http://3.36.100.189
     command: run /scripts/${ENTRYPOINT}
 
 
