@@ -5,6 +5,8 @@ import com.group4.ticketingservice.dto.UserDto
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.utils.Authority
+import com.group4.ticketingservice.utils.exception.CustomException
+import com.group4.ticketingservice.utils.exception.ErrorCodes
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -15,9 +17,8 @@ class UserService(
 ) {
 
     fun createUser(request: SignUpRequest): UserDto {
-        if (userRepository.existsByEmail(request.email!!)) {
-            throw IllegalArgumentException("Email is already used")
-        }
+        if (userRepository.existsByEmail(request.email!!)) throw CustomException(ErrorCodes.DUPLICATED_EMAIL_ADDRESS)
+
 
         val newUser = User(
             name = request.name!!,
