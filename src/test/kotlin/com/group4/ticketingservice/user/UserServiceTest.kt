@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 class UserServiceTest {
 
@@ -30,7 +30,7 @@ class UserServiceTest {
     val sampleUserDTO = UserDto(
         name = "minjun3021@qwer.com",
         email = "minjun",
-        createdAt = LocalDateTime.now()
+        createdAt = OffsetDateTime.now()
     )
 
     val sampleUser = User(

@@ -1,6 +1,5 @@
 package com.group4.ticketingservice.reservation
 
-import com.group4.ticketingservice.config.ClockConfig
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.entity.Reservation
 import com.group4.ticketingservice.entity.User
@@ -14,30 +13,17 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.support.AnnotationConfigContextLoader
-import java.time.Clock
 import java.time.OffsetDateTime
 import java.util.*
 
-@ContextConfiguration(
-    classes = [ClockConfig::class],
-    loader = AnnotationConfigContextLoader::class
-)
-@SpringBootTest
-class ReservationServiceTest(
-    @Autowired private val clock: Clock
-) {
+class ReservationServiceTest() {
     private val userRepository: UserRepository = mockk()
     private val eventRepository: EventRepository = mockk()
     private val reservationRepository: ReservationRepository = mockk()
     private val reservationService: ReservationService = ReservationService(
         userRepository = userRepository,
         eventRepository = eventRepository,
-        reservationRepository = reservationRepository,
-        clock = clock
+        reservationRepository = reservationRepository
     )
 
     val sampleUserId = 1

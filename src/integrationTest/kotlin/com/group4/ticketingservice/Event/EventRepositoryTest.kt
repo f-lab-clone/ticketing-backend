@@ -37,7 +37,7 @@ class EventRepositoryTest @Autowired constructor(
     @Test
     fun `EventRepository_save should return savedEvent`() {
         // given
-        val now = OffsetDateTime.now(ZoneOffset.UTC)
+        val now = OffsetDateTime.now()
         val sampleEvent = Event(
             title = "test title",
             date = now,

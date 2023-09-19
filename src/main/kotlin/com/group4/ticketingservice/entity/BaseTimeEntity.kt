@@ -1,18 +1,18 @@
 package com.group4.ticketingservice.entity
 
+import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.MappedSuperclass
-import org.springframework.data.annotation.CreatedDate
-import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
 abstract class BaseTimeEntity {
-    @CreatedDate
-    var createdAt: LocalDateTime? = null
 
-    @LastModifiedDate
-    var updatedAt: LocalDateTime? = null
+    @Column(updatable = false)
+    val createdAt: OffsetDateTime = OffsetDateTime.now()
+
+    @Column(updatable = true)
+    val updatedAt: OffsetDateTime = OffsetDateTime.now()
 }

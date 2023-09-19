@@ -11,7 +11,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import java.time.OffsetDateTime
-import java.util.*
+import java.util.Optional
 
 class EventServiceTest {
     private val eventRepository: EventRepository = mockk()
@@ -38,9 +38,23 @@ class EventServiceTest {
     )
 
     @Test
+    fun `EventService_createEvent invoke EventRepository_findById`() {
+        every { eventRepository.save(any()) } returns sampleEvent
+        eventService.createEvent(
+            title = sampleEvent.title,
+            date = sampleEvent.date,
+            reservationStartTime = sampleEvent.reservationStartTime,
+            reservationEndTime = sampleEvent.reservationEndTime,
+            maxAttendees = sampleEvent.maxAttendees
+        )
+        verify(exactly = 1) { eventRepository.save(any()) }
+    }
+
+    @Test
     fun `EventService_getEvent invoke EventRepository_findById`() {
         every { eventRepository.findById(any()) } returns Optional.of(sampleEvent)
         eventService.getEvent(sampleEvent.id!!)
+
         verify(exactly = 1) { eventRepository.findById(any()) }
     }
 

@@ -14,14 +14,12 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.transaction.annotation.Transactional
-import java.time.Clock
 import java.time.OffsetDateTime
 
 class BookmarkRepositoryTest(
     @Autowired val bookmarkRepository: BookmarkRepository,
     @Autowired val userRepository: UserRepository,
-    @Autowired val eventRepository: EventRepository,
-    @Autowired private val clock: Clock
+    @Autowired val eventRepository: EventRepository
 ) : AbstractIntegrationTest() {
 
     val sampleUser = User(
