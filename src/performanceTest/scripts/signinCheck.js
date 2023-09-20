@@ -3,6 +3,7 @@ import Request from "./lib/request.js";
 import generator from "./lib/generator.js";
 import { getOneFromList } from "./lib/helpers.js";
 
+export const handleSummary = hooks.handleSummary
 
 export default function () {
    const req = new Request()
