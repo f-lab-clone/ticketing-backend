@@ -26,9 +26,9 @@ services:
       - ./scripts:/scripts
       - ./results:/results
     environment:
-      HOST: http://3.36.90.245
-      GRAFANA_SERVER_URL: http://3.36.90.245:30000
-      K6_PROMETHEUS_RW_SERVER_URL: http://3.36.90.245:30010/api/v1/write
+      HOST: ${HOST}
+      GRAFANA_HOST: ${GRAFANA_HOST}
+      K6_PROMETHEUS_RW_HOST: ${K6_PROMETHEUS_RW_HOST}
       K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM: true
       OUTPUT_HTML_DIR: "/results"
     command: run /scripts/${ENTRYPOINT} -o experimental-prometheus-rw 
