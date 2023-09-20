@@ -11,7 +11,7 @@ export default {
         if (config.GRAFANA_SERVER_URL) {
             const DELAY = 1000 * 15 // 15 SEC
 
-            const timeRange = `from=${config.START}&to=${new Date().valueOf() + DELAY}`
+            const timeRange = `from=${config.START - DELAY}&to=${new Date().valueOf() + DELAY}`
             const query = `&orgId=1&refresh=10s&${timeRange}`
             Dahboard = `
     ------------------------DASHBOARD----------------------------
