@@ -157,15 +157,21 @@ class UserControllerTest(
                     .content(GsonBuilder().create().toJson(invalidSignUpRequest).toString())
             )
         // then
-        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.errors").exists())
 
         resultActions.andExpect(
-            MockMvcResultMatchers.jsonPath("$.errors[*]").value(
-                Matchers.containsInAnyOrder(
-                    Matchers.containsString("name"),
-                    Matchers.containsString("email"),
-                    Matchers.containsString("password")
-                )
+            MockMvcResultMatchers.jsonPath("$.message").value(
+                Matchers.containsString("name")
+
+            )
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$.message").value(
+                Matchers.containsString("email")
+
+            )
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$.message").value(
+                Matchers.containsString("password")
+
             )
         )
     }

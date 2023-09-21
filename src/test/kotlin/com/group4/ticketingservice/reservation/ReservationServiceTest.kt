@@ -8,13 +8,15 @@ import com.group4.ticketingservice.repository.ReservationRepository
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.service.ReservationService
 import com.group4.ticketingservice.utils.Authority
+import com.group4.ticketingservice.utils.exception.CustomException
+import com.group4.ticketingservice.utils.exception.ErrorCodes
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.time.OffsetDateTime
-import java.util.*
+import java.util.Optional
 
 class ReservationServiceTest() {
     private val userRepository: UserRepository = mockk()
@@ -88,21 +90,21 @@ class ReservationServiceTest() {
     }
 
     @Test
-    fun `ReservationService_deleteReservation throw IllegalArgumentException`() {
+    fun `ReservationService_deleteReservation throw CustomException`() {
         every { reservationRepository.findById(any()) } returns Optional.ofNullable(null)
         every { reservationRepository.delete(any()) } returns Unit
 
-        val exception = assertThrows<IllegalArgumentException> { reservationService.deleteReservation(sampleUserId, 1) }
-        assert(exception.message == "Reservation not found")
+        val exception = assertThrows<CustomException> { reservationService.deleteReservation(sampleUserId, 1) }
+        assert(exception.errorCode == ErrorCodes.RESERVATION_NOT_FOUND)
         verify(exactly = 0) { reservationRepository.delete(any()) }
     }
 
     @Test
-    fun `ReservationService_deleteReservation throw IllegalArgumentException when deleting other's reservation`() {
+    fun `ReservationService_deleteReservation throw CustomException when deleting other's reservation`() {
         every { reservationRepository.findById(any()) } returns Optional.of(sampleReservation)
         every { reservationRepository.delete(any()) } returns Unit
 
-        val exception = assertThrows<IllegalArgumentException> { reservationService.deleteReservation(2, 1) }
-        assert(exception.message == "It's not your reservation")
+        val exception = assertThrows<CustomException> { reservationService.deleteReservation(2, 1) }
+        assert(exception.errorCode == ErrorCodes.NOT_OWNER_OF_RESERVATION)
     }
 }
