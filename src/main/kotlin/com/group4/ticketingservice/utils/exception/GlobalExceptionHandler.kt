@@ -1,6 +1,7 @@
 package com.group4.ticketingservice.utils.exception
 
 import com.group4.ticketingservice.dto.ErrorResponseDTO
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -11,14 +12,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 class GlobalExceptionHandler {
 
     @ExceptionHandler(value = [CustomException::class])
-    fun handlingCustomException(exception: CustomException): ResponseEntity<ErrorResponseDTO> {
+    fun handlingCustomException(exception: CustomException, request: HttpServletRequest): ResponseEntity<ErrorResponseDTO> {
         val errorCode = exception.errorCode
-        val errorDto = ErrorResponseDTO(errorCode = errorCode.name, message = errorCode.message, errors = listOf<Any>())
+        val errorDto = ErrorResponseDTO(
+            status = exception.errorCode.status.value(),
+            error = exception.errorCode.name,
+            message = exception.errorCode.message,
+            path = request.requestURI
+        )
+
         return ResponseEntity(errorDto, errorCode.status)
     }
 
     @ExceptionHandler(value = [MethodArgumentNotValidException::class])
-    fun handlingValidException(exception: MethodArgumentNotValidException): ResponseEntity<ErrorResponseDTO> {
+    fun handlingValidException(exception: MethodArgumentNotValidException, request: HttpServletRequest): ResponseEntity<ErrorResponseDTO> {
         val builder = StringBuilder()
         val array = mutableListOf<String>()
 
@@ -27,13 +34,19 @@ class GlobalExceptionHandler {
             builder.append(fieldError.field)
             builder.append("](은)는 ")
             builder.append(fieldError.defaultMessage)
-            builder.append("  ||  입력된 값: [")
+            builder.append(".(입력된 값: [")
             builder.append(fieldError.rejectedValue)
-            builder.append("]")
+            builder.append("])")
             array.add(builder.toString())
             builder.clear()
         }
-        val errorDto = ErrorResponseDTO(errorCode = ErrorCodes.VALIDATION_FAILED.name, errors = array, message = ErrorCodes.VALIDATION_FAILED.message)
+
+        val errorDto = ErrorResponseDTO(
+            status = ErrorCodes.VALIDATION_FAILED.status.value(),
+            error = ErrorCodes.VALIDATION_FAILED.name,
+            message = array.joinToString("  ||  "),
+            path = request.requestURI
+        )
 
         return ResponseEntity(errorDto, HttpStatus.BAD_REQUEST)
     }

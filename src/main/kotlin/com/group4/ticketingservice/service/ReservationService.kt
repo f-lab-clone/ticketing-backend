@@ -6,11 +6,11 @@ import com.group4.ticketingservice.repository.ReservationRepository
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.utils.exception.CustomException
 import com.group4.ticketingservice.utils.exception.ErrorCodes
-import java.time.OffsetDateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.OffsetDateTime
 
 @Service
 class ReservationService @Autowired constructor(

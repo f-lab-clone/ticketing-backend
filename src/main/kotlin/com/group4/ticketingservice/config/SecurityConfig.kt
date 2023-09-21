@@ -21,7 +21,7 @@ class SecurityConfig(
     private val tokenProvider: TokenProvider
 ) {
 
-    private val allowedUrls = arrayOf("/", "/api-docs.yaml", "/health", "/users/signup", "/bookmarks/**", "/reservations/**", "/events/**", "/actuator/**")
+    // private val allowedUrls = arrayOf("/", "/api-docs.yaml", "/health", "/users/signup", "/bookmarks/**", "/reservations/**", "/events/**", "/actuator/**")
 
     @Bean
     fun filterChain(http: HttpSecurity): DefaultSecurityFilterChain {
@@ -31,11 +31,12 @@ class SecurityConfig(
             .httpBasic { it.disable() }
             .csrf { it.disable() }
             .authorizeHttpRequests {
-                it.requestMatchers(*allowedUrls).permitAll()
-                    .anyRequest().authenticated()
+                it.requestMatchers("/reservations").authenticated()
+                it.requestMatchers("/bookmarks/**").authenticated()
+                it.requestMatchers("/users/access_token_info").authenticated()
+                it.anyRequest().permitAll()
             }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
-            .exceptionHandling { it.authenticationEntryPoint(jwtAuthorizationEntryPoint) }
             .apply(CustomFilterConfigurer(tokenProvider, jwtAuthorizationEntryPoint))
 
         return http.build()!!

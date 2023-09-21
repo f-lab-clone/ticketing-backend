@@ -19,7 +19,6 @@ class UserService(
     fun createUser(request: SignUpRequest): UserDto {
         if (userRepository.existsByEmail(request.email!!)) throw CustomException(ErrorCodes.DUPLICATED_EMAIL_ADDRESS)
 
-
         val newUser = User(
             name = request.name!!,
             email = request.email,
