@@ -95,7 +95,7 @@ class ReservationServiceTest() {
         every { reservationRepository.delete(any()) } returns Unit
 
         val exception = assertThrows<CustomException> { reservationService.deleteReservation(sampleUserId, 1) }
-        assert(exception.errorCode == ErrorCodes.RESERVATION_NOT_FOUND)
+        assert(exception.errorCode == ErrorCodes.ENTITY_NOT_FOUND)
         verify(exactly = 0) { reservationRepository.delete(any()) }
     }
 

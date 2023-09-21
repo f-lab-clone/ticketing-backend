@@ -21,7 +21,7 @@ class ReservationService @Autowired constructor(
     @Transactional
     fun createReservation(eventId: Int, userId: Int): Reservation {
         val user = userRepository.getReferenceById(userId)
-        val event = eventRepository.findByIdWithPesimisticLock(eventId) ?: throw CustomException(ErrorCodes.EVENT_NOT_FOUND)
+        val event = eventRepository.findByIdWithPesimisticLock(eventId) ?: throw CustomException(ErrorCodes.ENTITY_NOT_FOUND)
 
         val reservation = Reservation(user = user, event = event, bookedAt = OffsetDateTime.now())
 
@@ -38,16 +38,16 @@ class ReservationService @Autowired constructor(
 
     fun getReservation(reservationId: Int): Reservation {
         return reservationRepository.findById(reservationId).orElseThrow {
-            CustomException(ErrorCodes.RESERVATION_NOT_FOUND)
+            CustomException(ErrorCodes.ENTITY_NOT_FOUND)
         }
     }
 
     fun updateReservation(reservationId: Int, eventId: Int): Reservation {
         val reservation: Reservation = reservationRepository.findById(reservationId).orElseThrow {
-            CustomException(ErrorCodes.RESERVATION_NOT_FOUND)
+            CustomException(ErrorCodes.ENTITY_NOT_FOUND)
         }
         val event = eventRepository.findById(eventId).orElseThrow {
-            CustomException(ErrorCodes.EVENT_NOT_FOUND)
+            CustomException(ErrorCodes.ENTITY_NOT_FOUND)
         }
         reservation.event = event
 
@@ -55,7 +55,7 @@ class ReservationService @Autowired constructor(
     }
 
     fun deleteReservation(userId: Int, id: Int) {
-        val reservation = reservationRepository.findByIdOrNull(id) ?: throw CustomException(ErrorCodes.RESERVATION_NOT_FOUND)
+        val reservation = reservationRepository.findByIdOrNull(id) ?: throw CustomException(ErrorCodes.ENTITY_NOT_FOUND)
         if (reservation.user.id != userId) throw CustomException(ErrorCodes.NOT_OWNER_OF_RESERVATION)
         reservationRepository.delete(reservation)
     }
