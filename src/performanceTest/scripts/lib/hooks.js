@@ -8,22 +8,20 @@ export default {
 
 
         let Dahboard = ''
-        if (config.GRAFANA_SERVER_URL) {
-            const DELAY = 1000 * 15 // 15 SEC
-
-            const timeRange = `from=${config.START - DELAY}&to=${new Date().valueOf() + DELAY}`
+        if (config.GRAFANA_HOST) {
+            const timeRange = `from=${config.START - config.DASHBOARD_DELAY}&to=${new Date().valueOf() + config.DASHBOARD_DELAY}`
             const query = `&orgId=1&refresh=10s&${timeRange}`
             Dahboard = `
     ------------------------DASHBOARD----------------------------
     HTML   : ${htmlPath}
 
-    K6     : ${config.GRAFANA_SERVER_URL}/d/01npcT44k/official-k6-test-result?${query}
+    K6     : ${config.GRAFANA_HOST}/d/01npcT44k/official-k6-test-result?${query}
 
-    CLUSTER: ${config.GRAFANA_SERVER_URL}/d/85a562078cdf77779eaa1add43ccec1e/kubernetes-compute-resources-namespace-pods?${query}&var-datasource=default&var-cluster=&var-namespace=default
+    CLUSTER: ${config.GRAFANA_HOST}/d/85a562078cdf77779eaa1add43ccec1e/kubernetes-compute-resources-namespace-pods?${query}&var-datasource=default&var-cluster=&var-namespace=default
 
-    SPRING : ${config.GRAFANA_SERVER_URL}/d/OS7-NUiGz/spring-boot-statistics?${query}
+    SPRING : ${config.GRAFANA_HOST}/d/OS7-NUiGz/spring-boot-statistics?${query}
 
-    MYSQL  : ${config.GRAFANA_SERVER_URL}/d/549c2bf8936f7767ea6ac47c47b00f2a/mysql-exporter?${query}
+    MYSQL  : ${config.GRAFANA_HOST}/d/549c2bf8936f7767ea6ac47c47b00f2a/mysql-exporter?${query}
     -------------------------------------------------------------
 
 
