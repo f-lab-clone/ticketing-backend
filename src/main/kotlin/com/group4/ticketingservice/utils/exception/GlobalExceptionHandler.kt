@@ -15,9 +15,20 @@ class GlobalExceptionHandler {
     fun handlingCustomException(exception: CustomException, request: HttpServletRequest): ResponseEntity<ErrorResponseDTO> {
         val errorCode = exception.errorCode
         val errorDto = ErrorResponseDTO(
-            status = exception.errorCode.status.value(),
-            error = exception.errorCode.name,
+            errorCode = exception.errorCode.errorCode,
             message = exception.errorCode.message,
+            path = request.requestURI
+        )
+
+        return ResponseEntity(errorDto, errorCode.status)
+    }
+
+    @ExceptionHandler(value = [Exception::class])
+    fun handlingServerError(exception: Exception, request: HttpServletRequest): ResponseEntity<ErrorResponseDTO> {
+        val errorCode = ErrorCodes.INTERNAL_SERVER_ERROR
+        val errorDto = ErrorResponseDTO(
+            errorCode = errorCode.errorCode,
+            message = exception.javaClass.name,
             path = request.requestURI
         )
 
@@ -42,8 +53,7 @@ class GlobalExceptionHandler {
         }
 
         val errorDto = ErrorResponseDTO(
-            status = ErrorCodes.VALIDATION_FAILED.status.value(),
-            error = ErrorCodes.VALIDATION_FAILED.name,
+            errorCode = ErrorCodes.VALIDATION_FAILED.errorCode,
             message = array.joinToString("  ||  "),
             path = request.requestURI
         )

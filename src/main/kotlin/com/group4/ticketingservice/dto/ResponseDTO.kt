@@ -11,8 +11,7 @@ data class SuccessResponseDTO(
 
 data class ErrorResponseDTO(
     val timestamp: OffsetDateTime = OffsetDateTime.now(),
-    val status: Int,
-    val error: String,
+    val errorCode: Int,
     val message: String,
     val path: String
 )
