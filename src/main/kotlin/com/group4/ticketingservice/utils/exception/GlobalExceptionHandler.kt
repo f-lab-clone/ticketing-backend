@@ -4,15 +4,18 @@ import com.group4.ticketingservice.dto.ErrorResponseDTO
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.web.HttpMediaTypeNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.servlet.NoHandlerFoundException
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
 
     @ExceptionHandler(value = [CustomException::class])
-    fun handlingCustomException(exception: CustomException, request: HttpServletRequest): ResponseEntity<ErrorResponseDTO> {
+    fun handleCustomException(exception: CustomException, request: HttpServletRequest): ResponseEntity<ErrorResponseDTO> {
         val errorCode = exception.errorCode
         val errorDto = ErrorResponseDTO(
             errorCode = exception.errorCode.errorCode,
@@ -23,9 +26,45 @@ class GlobalExceptionHandler {
         return ResponseEntity(errorDto, errorCode.status)
     }
 
+    @ExceptionHandler(value = [NoHandlerFoundException::class])
+    fun handleEndpointNotFound(exception: NoHandlerFoundException, request: HttpServletRequest): ResponseEntity<ErrorResponseDTO> {
+        val errorCode = ErrorCodes.END_POINT_NOT_FOUND
+        val errorDto = ErrorResponseDTO(
+            errorCode = errorCode.errorCode,
+            message = exception.javaClass.name,
+            path = request.requestURI
+        )
+
+        return ResponseEntity(errorDto, errorCode.status)
+    }
+
     @ExceptionHandler(value = [Exception::class])
-    fun handlingServerError(exception: Exception, request: HttpServletRequest): ResponseEntity<ErrorResponseDTO> {
+    fun handleServerError(exception: Exception, request: HttpServletRequest): ResponseEntity<ErrorResponseDTO> {
         val errorCode = ErrorCodes.INTERNAL_SERVER_ERROR
+        val errorDto = ErrorResponseDTO(
+            errorCode = errorCode.errorCode,
+            message = exception.javaClass.name,
+            path = request.requestURI
+        )
+
+        return ResponseEntity(errorDto, errorCode.status)
+    }
+
+    @ExceptionHandler(value = [HttpMediaTypeNotSupportedException::class])
+    fun handleNotSupportedType(exception: HttpMediaTypeNotSupportedException, request: HttpServletRequest): ResponseEntity<ErrorResponseDTO> {
+        val errorCode = ErrorCodes.NOT_SUPPORTED_HTTP_MEDIA_TYPE
+        val errorDto = ErrorResponseDTO(
+            errorCode = errorCode.errorCode,
+            message = exception.javaClass.name,
+            path = request.requestURI
+        )
+
+        return ResponseEntity(errorDto, errorCode.status)
+    }
+
+    @ExceptionHandler(value = [HttpMessageNotReadableException::class])
+    fun handleMessageNotReadable(exception: HttpMessageNotReadableException, request: HttpServletRequest): ResponseEntity<ErrorResponseDTO> {
+        val errorCode = ErrorCodes.MESSAGE_NOT_READABLE
         val errorDto = ErrorResponseDTO(
             errorCode = errorCode.errorCode,
             message = exception.javaClass.name,

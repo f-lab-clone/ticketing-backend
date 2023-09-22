@@ -115,7 +115,7 @@ class BookmarkControllerTest(
 
     @Test
     @WithAuthUser(email = testUserName, id = testUserId)
-    fun `POST_api_bookmark should return HTTP ERROR 500 for invalid parameter`() {
+    fun `POST_api_bookmark should return HTTP ERROR 400 for invalid parameter`() {
         // given
         every { service.create(testUserId, sampleBookmarkDto) } returns 1
 
@@ -126,7 +126,7 @@ class BookmarkControllerTest(
         )
 
         // then
-        resultActions.andExpect(status().isInternalServerError)
+        resultActions.andExpect(status().isBadRequest)
     }
 
     @Test

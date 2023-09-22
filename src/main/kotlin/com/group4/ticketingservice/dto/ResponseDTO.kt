@@ -3,9 +3,10 @@ package com.group4.ticketingservice.dto
 import java.time.OffsetDateTime
 
 data class SuccessResponseDTO(
-    val success: Boolean = true,
+    val timestamp: OffsetDateTime = OffsetDateTime.now(),
     val message: String,
-    val data: Any
+    val data: Any,
+    val path: String
 
 )
 
