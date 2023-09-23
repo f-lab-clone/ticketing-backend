@@ -161,6 +161,18 @@ paths:
                 type: object
                 additionalProperties:
                   type: object
+  /test500:
+    get:
+      tags:
+      - test-controller
+      operationId: throwError
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
   /health:
     get:
       tags:
