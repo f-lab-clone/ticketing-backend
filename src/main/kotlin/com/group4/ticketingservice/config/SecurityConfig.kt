@@ -31,7 +31,7 @@ class SecurityConfig(
             .httpBasic { it.disable() }
             .csrf { it.disable() }
             .authorizeHttpRequests {
-                it.requestMatchers("/reservations").authenticated()
+                it.requestMatchers("/reservations/**").authenticated()
                 it.requestMatchers("/bookmarks/**").authenticated()
                 it.requestMatchers("/users/access_token_info").authenticated()
                 it.anyRequest().permitAll()

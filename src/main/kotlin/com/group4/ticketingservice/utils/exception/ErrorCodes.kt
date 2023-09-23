@@ -11,7 +11,7 @@ enum class ErrorCodes(val status: HttpStatus, val message: String, val errorCode
     LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "로그인에 실패했습니다", 20000),
 
     // 403  Forbidden
-    NOT_OWNER_OF_RESERVATION(HttpStatus.FORBIDDEN, "예약의 주인이 아닙니다.", 30000),
+    FORBIDDEN(HttpStatus.FORBIDDEN, "접근 할 수 없습니다.", 30000),
 
     // 404  Not Found
     ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 레코드를 찾을수 없습니다.", 40000),

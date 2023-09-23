@@ -41,6 +41,7 @@ import java.time.OffsetDateTime
     includeFilters = arrayOf(
         ComponentScan.Filter(value = [ (SecurityConfig::class), (TokenProvider::class), (JwtAuthorizationEntryPoint::class)], type = FilterType.ASSIGNABLE_TYPE)
     )
+
 )
 class ReservationControllerTest(
     @Autowired val mockMvc: MockMvc

@@ -56,7 +56,7 @@ class ReservationService @Autowired constructor(
 
     fun deleteReservation(userId: Int, id: Int) {
         val reservation = reservationRepository.findByIdOrNull(id) ?: throw CustomException(ErrorCodes.ENTITY_NOT_FOUND)
-        if (reservation.user.id != userId) throw CustomException(ErrorCodes.NOT_OWNER_OF_RESERVATION)
+        if (reservation.user.id != userId) throw CustomException(ErrorCodes.FORBIDDEN)
         reservationRepository.delete(reservation)
     }
 }

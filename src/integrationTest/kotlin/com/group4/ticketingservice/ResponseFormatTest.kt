@@ -64,6 +64,6 @@ class ResponseFormatTest : AbstractIntegrationTest() {
         assertNotNull(errorResponse.timestamp)
         assertEquals(ErrorCodes.INTERNAL_SERVER_ERROR.errorCode, errorResponse.errorCode)
         assertNotNull(errorResponse.message)
-        assertNotNull(errorResponse.message)
+        assertNotNull(errorResponse.path)
     }
 }
