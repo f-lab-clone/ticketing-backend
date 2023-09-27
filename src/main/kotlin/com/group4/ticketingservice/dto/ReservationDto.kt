@@ -1,7 +1,7 @@
 package com.group4.ticketingservice.dto
 
-import java.time.OffsetDateTime
 import jakarta.validation.constraints.NotNull
+import java.time.OffsetDateTime
 
 data class ReservationCreateRequest(
     @field:NotNull

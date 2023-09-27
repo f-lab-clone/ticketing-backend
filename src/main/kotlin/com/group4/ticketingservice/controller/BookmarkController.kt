@@ -24,8 +24,9 @@ class BookmarkController @Autowired constructor(val bookmarkService: BookmarkSer
     // 북마크 등록
     @PostMapping
     fun addBookmark(
-            @AuthenticationPrincipal userId: Int,
-            @RequestBody @Valid boardFormDto: BookmarkFromdto
+        @AuthenticationPrincipal userId: Int,
+        @RequestBody @Valid
+        boardFormDto: BookmarkFromdto
     ): ResponseEntity<Any> {
         val savedBookmarkId = bookmarkService.create(userId, boardFormDto)
         val headers = HttpHeaders()

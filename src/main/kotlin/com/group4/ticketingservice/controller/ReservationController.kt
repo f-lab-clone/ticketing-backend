@@ -22,8 +22,9 @@ import org.springframework.web.bind.annotation.RestController
 class ReservationController(val reservationService: ReservationService) {
     @PostMapping
     fun createReservation(
-            @AuthenticationPrincipal userId: Int,
-            @RequestBody @Valid request: ReservationCreateRequest
+        @AuthenticationPrincipal userId: Int,
+        @RequestBody @Valid
+        request: ReservationCreateRequest
     ): ResponseEntity<ReservationResponse> {
         val reservation: Reservation = reservationService.createReservation(
             request.eventId!!,
@@ -53,7 +54,8 @@ class ReservationController(val reservationService: ReservationService) {
     @PutMapping("/{id}")
     fun updateReservation(
         @PathVariable id: Int,
-        @RequestBody @Valid request: ReservationUpdateRequest
+        @RequestBody @Valid
+        request: ReservationUpdateRequest
     ): ResponseEntity<ReservationResponse> {
         val reservation = reservationService.updateReservation(id, request.eventId!!)
         val response = ReservationResponse(
