@@ -4,6 +4,8 @@ import config from "./config.js";
 
 export default {
     setup: function() {
+
+        console.log(`setup: ${new Date().toISOString()}`)
         // https://stackoverflow.com/questions/73458542/k6-storing-data-between-setup-and-default-functions
         return {
             START: new Date().valueOf()
@@ -11,9 +13,12 @@ export default {
     },
 
     handleSummary: function(data) {
+        console.log(`end: ${new Date().toISOString()}`)
+
+        const ONE_MINUTE = 1000 * 60
         const htmlPath = `${config.OUTPUT_HTML_DIR}/result.html`
-        const START = data.setup_data.START - config.DASHBOARD_DELAY
-        const END = new Date().valueOf() + (config.DASHBOARD_DELAY * 2)
+        const START = data.setup_data.START - ONE_MINUTE
+        const END = new Date().valueOf() + (ONE_MINUTE * 3)
 
         let Dahboard = ''
         if (config.GRAFANA_HOST) {
