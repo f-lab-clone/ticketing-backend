@@ -1,6 +1,5 @@
 package com.group4.ticketingservice.filter
 
-import com.group4.ticketingservice.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.utils.TokenProvider
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest

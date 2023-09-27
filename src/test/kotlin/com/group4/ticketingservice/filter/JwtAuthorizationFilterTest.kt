@@ -1,6 +1,5 @@
 package com.group4.ticketingservice.filter
 
-import com.group4.ticketingservice.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.utils.TokenProvider
 import io.mockk.every
 import io.mockk.mockk

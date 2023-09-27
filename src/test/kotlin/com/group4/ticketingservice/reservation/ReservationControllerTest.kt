@@ -2,7 +2,6 @@ package com.group4.ticketingservice.reservation
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.group4.ticketingservice.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.config.SecurityConfig
 import com.group4.ticketingservice.controller.ReservationController
 import com.group4.ticketingservice.dto.ReservationCreateRequest
@@ -12,6 +11,7 @@ import com.group4.ticketingservice.dto.ReservationUpdateRequest
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.entity.Reservation
 import com.group4.ticketingservice.entity.User
+import com.group4.ticketingservice.filter.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.reservation.ReservationControllerTest.testFields.testUserId
 import com.group4.ticketingservice.reservation.ReservationControllerTest.testFields.testUserName
 import com.group4.ticketingservice.service.ReservationService

@@ -1,7 +1,6 @@
 package com.group4.ticketingservice.bookmark
 
 import com.google.gson.GsonBuilder
-import com.group4.ticketingservice.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.bookmark.BookmarkControllerTest.testFields.testUserId
 import com.group4.ticketingservice.bookmark.BookmarkControllerTest.testFields.testUserName
 import com.group4.ticketingservice.config.SecurityConfig
@@ -10,6 +9,7 @@ import com.group4.ticketingservice.dto.BookmarkFromdto
 import com.group4.ticketingservice.entity.Bookmark
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.entity.User
+import com.group4.ticketingservice.filter.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.service.BookmarkService
 import com.group4.ticketingservice.user.WithAuthUser
 import com.group4.ticketingservice.utils.Authority

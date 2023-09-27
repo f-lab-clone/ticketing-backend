@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.security.core.AuthenticationException
 import org.springframework.web.HttpMediaTypeNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -44,6 +45,18 @@ class GlobalExceptionHandler {
         val errorDto = ErrorResponseDTO(
             errorCode = errorCode.errorCode,
             message = exception.javaClass.name,
+            path = request.requestURI
+        )
+
+        return ResponseEntity(errorDto, errorCode.status)
+    }
+
+    @ExceptionHandler(value = [AuthenticationException::class])
+    fun handleAuthenticationError(exception: AuthenticationException, request: HttpServletRequest): ResponseEntity<ErrorResponseDTO> {
+        val errorCode = ErrorCodes.JWT_AUTHENTICATION_FAILED
+        val errorDto = ErrorResponseDTO(
+            errorCode = errorCode.errorCode,
+            message = exception.message!!,
             path = request.requestURI
         )
 

@@ -1,7 +1,8 @@
 package com.group4.ticketingservice.config
 
-import com.group4.ticketingservice.JwtAuthorizationEntryPoint
+import com.google.gson.Gson
 import com.group4.ticketingservice.filter.JwtAuthenticationFilter
+import com.group4.ticketingservice.filter.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.filter.JwtAuthorizationFilter
 import com.group4.ticketingservice.utils.TokenProvider
 import org.springframework.context.annotation.Bean
@@ -18,7 +19,8 @@ import org.springframework.security.web.DefaultSecurityFilterChain
 @Configuration
 class SecurityConfig(
     private val jwtAuthorizationEntryPoint: JwtAuthorizationEntryPoint,
-    private val tokenProvider: TokenProvider
+    private val tokenProvider: TokenProvider,
+    private val gson: Gson
 ) {
 
     // private val allowedUrls = arrayOf("/", "/api-docs.yaml", "/health", "/users/signup", "/bookmarks/**", "/reservations/**", "/events/**", "/actuator/**")
@@ -36,20 +38,22 @@ class SecurityConfig(
                 it.requestMatchers("/users/access_token_info").authenticated()
                 it.anyRequest().permitAll()
             }
+            .exceptionHandling { it.authenticationEntryPoint(jwtAuthorizationEntryPoint) }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
-            .apply(CustomFilterConfigurer(tokenProvider, jwtAuthorizationEntryPoint))
+            .apply(CustomFilterConfigurer(tokenProvider, jwtAuthorizationEntryPoint, gson))
 
         return http.build()!!
     }
 
     class CustomFilterConfigurer(
         private val tokenProvider: TokenProvider,
-        private val jwtAuthorizationEntryPoint: JwtAuthorizationEntryPoint
+        private val jwtAuthorizationEntryPoint: JwtAuthorizationEntryPoint,
+        private val gson: Gson
     ) :
         AbstractHttpConfigurer<CustomFilterConfigurer?, HttpSecurity?>() {
         override fun configure(builder: HttpSecurity?) {
             val authenticationManager = builder?.getSharedObject(AuthenticationManager::class.java)
-            val jwtAuthenticationFilter = JwtAuthenticationFilter(authenticationManager, tokenProvider)
+            val jwtAuthenticationFilter = JwtAuthenticationFilter(authenticationManager, tokenProvider, gson)
             jwtAuthenticationFilter.setFilterProcessesUrl("/users/signin")
             val jwtAuthorizationFilter = JwtAuthorizationFilter(authenticationManager, jwtAuthorizationEntryPoint, tokenProvider)
             builder?.addFilter(jwtAuthorizationFilter)

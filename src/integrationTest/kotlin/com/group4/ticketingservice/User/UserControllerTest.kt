@@ -126,20 +126,20 @@ class UserControllerTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `GET_api_users_access_token_info should return HTTPStatus 403 Forbidden when header not exist`() {
+    fun `GET_api_users_access_token_info should return HTTPStatus 401 Unauthorized when header not exist`() {
         val resultActions: ResultActions =
             mockMvc.perform(MockMvcRequestBuilders.get("/users/access_token_info"))
-        resultActions.andExpect(status().isForbidden)
+        resultActions.andExpect(status().isUnauthorized)
     }
 
     @Test
-    fun `GET_api_users_access_token_info should return HTTPStatus 403 Forbidden when jwt is expired`() {
+    fun `GET_api_users_access_token_info should return HTTPStatus 401 Unauthorized when jwt is expired`() {
         val jwt = tokenProvider.createWrongTokenForTest("${testFields.testUserName}:USER")
         val resultActions: ResultActions =
             mockMvc.perform(
                 MockMvcRequestBuilders.get("/users/access_token_info")
                     .header("Authorization", jwt)
             )
-        resultActions.andExpect(status().isForbidden)
+        resultActions.andExpect(status().isUnauthorized)
     }
 }

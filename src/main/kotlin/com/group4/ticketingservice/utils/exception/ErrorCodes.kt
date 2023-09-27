@@ -9,6 +9,7 @@ enum class ErrorCodes(val status: HttpStatus, val message: String, val errorCode
 
     // 401  Unauthorized
     LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "로그인에 실패했습니다", 20000),
+    JWT_AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "JWT 인증에 실패 하였습니다.", 20001),
 
     // 403  Forbidden
     FORBIDDEN(HttpStatus.FORBIDDEN, "접근 할 수 없습니다.", 30000),

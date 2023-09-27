@@ -1,13 +1,18 @@
 package com.group4.ticketingservice.filter
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.gson.FieldNamingPolicy
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.group4.ticketingservice.dto.SignInRequest
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.utils.Authority
+import com.group4.ticketingservice.utils.OffsetDateTimeAdapter
 import com.group4.ticketingservice.utils.TokenProvider
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -24,7 +29,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 class JwtAuthenticationFilterTest {
     private val tokenProvider: TokenProvider = mockk()
     private val authenticationManager: AuthenticationManager = mockk()
-    private val filter: JwtAuthenticationFilter = JwtAuthenticationFilter(authenticationManager, tokenProvider)
+    private val gson: Gson = GsonBuilder()
+        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+        .registerTypeAdapter(OffsetDateTime::class.java, OffsetDateTimeAdapter())
+        .create()
+    private val filter: JwtAuthenticationFilter = JwtAuthenticationFilter(authenticationManager, tokenProvider, gson)
 
     val sampleSignInRequest = SignInRequest().apply {
         email = "minjun3021@naver.com"
@@ -36,6 +45,7 @@ class JwtAuthenticationFilterTest {
         password = "1234",
         authority = Authority.USER
     )
+    val sample = "{}"
 
     @Test
     fun `JwtAuthenticationFilter_attemptAuthentication() should return Authentication when credential is good `() {
@@ -83,7 +93,7 @@ class JwtAuthenticationFilterTest {
     }
 
     @Test
-    fun `JwtAuthenticationFilter_dofilter() should write meassage at JwtAuthenticationFilter_unsuccessfulAuthentication when credential is bad`() {
+    fun `JwtAuthenticationFilter_dofilter() should write message at JwtAuthenticationFilter_unsuccessfulAuthentication when credential is bad`() {
         // given
 
         every { authenticationManager.authenticate(any()) } throws BadCredentialsException("")
@@ -100,7 +110,8 @@ class JwtAuthenticationFilterTest {
         filter.doFilter(req, res, chain)
 
         // then
-        assertThat(String(res.contentAsByteArray).contains("Authentication failed.")).isTrue()
+
+        assertThat(String(res.contentAsByteArray).contains("error_code")).isTrue()
     }
 
     @Test
@@ -117,22 +128,5 @@ class JwtAuthenticationFilterTest {
         assertThrows(BadCredentialsException::class.java) {
             filter.attemptAuthentication(req, res)
         }
-    }
-
-    @Test
-    fun `JwtAuthenticationFilter_attemptAuthentication() should return null when request parameter is urlencoded `() {
-        // given
-        every { authenticationManager.authenticate(any()) } throws BadCredentialsException("")
-        // when
-        val req = MockHttpServletRequest()
-        val res = MockHttpServletResponse()
-        req.contentType = "application/x-www-form-urlencoded"
-        req.addParameter("email", sampleSignInRequest.email)
-        req.addParameter("password", sampleSignInRequest.password)
-
-        val result = filter.attemptAuthentication(req, res)
-
-        // then
-        assertThat(result).isNull()
     }
 }
