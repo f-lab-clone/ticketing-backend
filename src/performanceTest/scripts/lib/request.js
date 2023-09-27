@@ -2,6 +2,7 @@ import http from "k6/http";
 import { sleep } from "k6";
 import config from "./config.js";
 
+
 export default class Request {
     constructor(baseURL = config.HOST) {
         this.baseURL = baseURL
@@ -57,6 +58,12 @@ export default class Request {
     getEvents() {
         this.beforeHook()
         const res =  http.get(`${this.baseURL}/events/`);
+        this.afterHook()
+        return res
+    }
+    getEvent(id) {
+        this.beforeHook()
+        const res =  http.get(`${this.baseURL}/events/${id}`);
         this.afterHook()
         return res
     }

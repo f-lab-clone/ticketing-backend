@@ -16,7 +16,7 @@ services:
       MYSQL_SCHEMA: ${MYSQL_SCHEMA}
       BASTION_HOST: ${BASTION_HOST}
       BASTION_USERNAME: ${BASTION_USERNAME}
-  
+
   k6:
     depends_on: 
       initdb:
@@ -26,14 +26,17 @@ services:
       - ./scripts:/scripts
       - ./results:/results
     environment:
+      ENTRYPOINT: ${ENTRYPOINT}
+
       HOST: ${HOST}
       GRAFANA_HOST: ${GRAFANA_HOST}
+      OUTPUT_HTML_DIR: "/results"
+
+      # https://k6.io/docs/using-k6/k6-options/reference/#results-output
+      K6_OUT: ${K6_OUT}
       K6_PROMETHEUS_RW_SERVER_URL: ${K6_PROMETHEUS_RW_SERVER_URL}
       K6_PROMETHEUS_RW_USERNAME: ${K6_PROMETHEUS_RW_USERNAME}
       K6_PROMETHEUS_RW_PASSWORD: ${K6_PROMETHEUS_RW_PASSWORD}
       K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM: true
-      OUTPUT_HTML_DIR: "/results"
-    command: run /scripts/${ENTRYPOINT} -o experimental-prometheus-rw 
 
-
-  
+    command: run /scripts/${ENTRYPOINT} -e START_UNIX_EPOCH=$(date +%s)
