@@ -334,7 +334,7 @@ components:
       properties:
         title:
           maxLength: 255
-          minLength: 2
+          minLength: 1
           type: string
         date:
           type: string
