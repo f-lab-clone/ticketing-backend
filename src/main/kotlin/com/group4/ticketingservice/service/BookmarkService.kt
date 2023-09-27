@@ -20,7 +20,7 @@ class BookmarkService @Autowired constructor(
     fun create(userId: Int, bookmarkFormDto: BookmarkFromdto): Int? {
         val user: User = userRepository.getReferenceById(userId)
 
-        val event: Event = eventRepository.getReferenceById(bookmarkFormDto.event_id)
+        val event: Event = eventRepository.getReferenceById(bookmarkFormDto.event_id!!)
 
         val bookmark = Bookmark(user = user, event = event)
 

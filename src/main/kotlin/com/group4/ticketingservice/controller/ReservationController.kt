@@ -5,6 +5,7 @@ import com.group4.ticketingservice.dto.ReservationResponse
 import com.group4.ticketingservice.dto.ReservationUpdateRequest
 import com.group4.ticketingservice.entity.Reservation
 import com.group4.ticketingservice.service.ReservationService
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -20,9 +21,12 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/reservations")
 class ReservationController(val reservationService: ReservationService) {
     @PostMapping
-    fun createReservation(@AuthenticationPrincipal userId: Int, @RequestBody request: ReservationCreateRequest): ResponseEntity<ReservationResponse> {
+    fun createReservation(
+            @AuthenticationPrincipal userId: Int,
+            @RequestBody @Valid request: ReservationCreateRequest
+    ): ResponseEntity<ReservationResponse> {
         val reservation: Reservation = reservationService.createReservation(
-            request.eventId,
+            request.eventId!!,
             userId
         )
         val response = ReservationResponse(
@@ -49,9 +53,9 @@ class ReservationController(val reservationService: ReservationService) {
     @PutMapping("/{id}")
     fun updateReservation(
         @PathVariable id: Int,
-        @RequestBody request: ReservationUpdateRequest
+        @RequestBody @Valid request: ReservationUpdateRequest
     ): ResponseEntity<ReservationResponse> {
-        val reservation = reservationService.updateReservation(id, request.eventId)
+        val reservation = reservationService.updateReservation(id, request.eventId!!)
         val response = ReservationResponse(
             id = reservation.id!!,
             eventId = reservation.event.id!!,

@@ -1,17 +1,26 @@
 package com.group4.ticketingservice.dto
 
 import java.time.OffsetDateTime
+import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Size
 
 data class EventCreateRequest(
-    val title: String,
-    val date: OffsetDateTime,
-    val reservationStartTime: OffsetDateTime,
-    val reservationEndTime: OffsetDateTime,
-    val maxAttendees: Int
+    @field:NotNull
+    @field:Size(min = 2, max = 255)
+    val title: String?,
+    @field:NotNull
+    val date: OffsetDateTime?,
+    @field:NotNull
+    val reservationStartTime: OffsetDateTime?,
+    @field:NotNull
+    val reservationEndTime: OffsetDateTime?,
+    @field:NotNull
+    val maxAttendees: Int?
 )
 
 data class EventDeleteRequest(
-    val id: Int
+    @field:NotNull
+    val id: Int?
 )
 
 data class EventResponse(
