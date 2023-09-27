@@ -333,6 +333,8 @@ components:
       type: object
       properties:
         title:
+          maxLength: 255
+          minLength: 2
           type: string
         date:
           type: string
