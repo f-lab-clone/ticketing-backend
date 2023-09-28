@@ -39,4 +39,4 @@ services:
       K6_PROMETHEUS_RW_PASSWORD: ${K6_PROMETHEUS_RW_PASSWORD}
       K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM: true
 
-    command: run /scripts/${ENTRYPOINT} -e START_UNIX_EPOCH=$(date +%s)
+    command: run /scripts/${ENTRYPOINT}
