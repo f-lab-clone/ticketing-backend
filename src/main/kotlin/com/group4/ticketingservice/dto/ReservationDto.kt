@@ -1,17 +1,25 @@
 package com.group4.ticketingservice.dto
 
+import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Positive
 import java.time.OffsetDateTime
 
 data class ReservationCreateRequest(
-    val eventId: Int
+    @field:NotNull
+    @field:Positive
+    val eventId: Int?
 )
 
 data class ReservationUpdateRequest(
-    val eventId: Int
+    @field:NotNull
+    @field:Positive
+    val eventId: Int?
 )
 
 data class ReservationDeleteRequest(
-    val id: Int
+    @field:NotNull
+    @field:Positive
+    val id: Int?
 )
 
 data class ReservationResponse(

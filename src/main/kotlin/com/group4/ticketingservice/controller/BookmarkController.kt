@@ -2,6 +2,7 @@ package com.group4.ticketingservice.controller
 
 import com.group4.ticketingservice.dto.BookmarkFromdto
 import com.group4.ticketingservice.service.BookmarkService
+import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -22,7 +23,11 @@ class BookmarkController @Autowired constructor(val bookmarkService: BookmarkSer
 
     // 북마크 등록
     @PostMapping
-    fun addBookmark(@AuthenticationPrincipal userId: Int, @RequestBody boardFormDto: BookmarkFromdto): ResponseEntity<Any> {
+    fun addBookmark(
+        @AuthenticationPrincipal userId: Int,
+        @RequestBody @Valid
+        boardFormDto: BookmarkFromdto
+    ): ResponseEntity<Any> {
         val savedBookmarkId = bookmarkService.create(userId, boardFormDto)
         val headers = HttpHeaders()
         headers.set("Content-Location", "/bookmark/%d".format(savedBookmarkId))

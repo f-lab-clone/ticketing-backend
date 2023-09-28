@@ -3,6 +3,7 @@ package com.group4.ticketingservice.controller
 import com.group4.ticketingservice.dto.EventCreateRequest
 import com.group4.ticketingservice.dto.EventResponse
 import com.group4.ticketingservice.service.EventService
+import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -21,13 +22,16 @@ class EventController @Autowired constructor(
 
     // TimeE2ETest를 위한 임시 EndPoint입니다.
     @PostMapping
-    fun createEvent(@RequestBody request: EventCreateRequest): ResponseEntity<EventResponse> {
+    fun createEvent(
+        @RequestBody @Valid
+        request: EventCreateRequest
+    ): ResponseEntity<EventResponse> {
         val event = eventService.createEvent(
-            request.title,
-            request.date,
-            request.reservationStartTime,
-            request.reservationEndTime,
-            request.maxAttendees
+            request.title!!,
+            request.date!!,
+            request.reservationStartTime!!,
+            request.reservationEndTime!!,
+            request.maxAttendees!!
         )
         val response = EventResponse(
             id = event.id!!,
