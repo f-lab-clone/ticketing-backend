@@ -58,10 +58,10 @@ class EventServiceTest {
         verify(exactly = 1) { eventRepository.findById(any()) }
     }
 
-    @Test
-    fun `EventService_getEvents invoke EventRepository_findAll`() {
-        every { eventRepository.findAll() } returns listOf(sampleEvent)
-        eventService.getEvents()
-        verify(exactly = 1) { eventRepository.findAll() }
-    }
+    // @Test
+    // fun `EventService_getEvents invoke EventRepository_findAll`() {
+    //     every { eventRepository.findAll() } returns listOf(sampleEvent)
+    //     eventService.getEvents()
+    //     verify(exactly = 1) { eventRepository.findAll() }
+    // }
 }

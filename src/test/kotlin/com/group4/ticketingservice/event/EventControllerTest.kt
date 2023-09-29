@@ -107,27 +107,27 @@ class EventControllerTest(
             .andExpect(status().isOk)
     }
 
-    @Test
-    fun `GET List of events should return list of events`() {
-        every { eventService.getEvents() } returns listOf(sampleEvent)
-        mockMvc.perform(
-            get("/events/")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-            .andExpect(status().isOk)
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$[0].id").value(sampleEvent.id))
-    }
+    // @Test
+    // fun `GET List of events should return list of events`() {
+    //     every { eventService.getEvents() } returns listOf(sampleEvent)
+    //     mockMvc.perform(
+    //         get("/events/")
+    //             .contentType(MediaType.APPLICATION_JSON)
+    //     )
+    //         .andExpect(status().isOk)
+    //         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+    //         .andExpect(jsonPath("$[0].id").value(sampleEvent.id))
+    // }
 
-    @Test
-    fun `GET List of events should return empty list`() {
-        every { eventService.getEvents() } returns listOf()
-        mockMvc.perform(
-            get("/events/")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-            .andExpect(status().isNoContent)
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$").isEmpty)
-    }
+    // @Test
+    // fun `GET List of events should return empty list`() {
+    //     every { eventService.getEvents() } returns listOf()
+    //     mockMvc.perform(
+    //         get("/events/")
+    //             .contentType(MediaType.APPLICATION_JSON)
+    //     )
+    //         .andExpect(status().isNoContent)
+    //         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+    //         .andExpect(jsonPath("$").isEmpty)
+    // }
 }

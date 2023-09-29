@@ -1,7 +1,10 @@
 package com.group4.ticketingservice.service
 
+import com.group4.ticketingservice.dto.EventSpecifications
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.repository.EventRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
 
@@ -30,7 +33,8 @@ class EventService(
         return eventRepository.findById(id).orElse(null)
     }
 
-    fun getEvents(): List<Event> {
-        return eventRepository.findAll()
+    fun getEvents(title: String?, pageable: Pageable): Page<Event> {
+        val specification = EventSpecifications.withTitle(title)
+        return eventRepository.findAll(specification, pageable)
     }
 }
