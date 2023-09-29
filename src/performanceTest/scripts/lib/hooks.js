@@ -32,7 +32,7 @@ export default {
 
     CLUSTER: ${config.GRAFANA_HOST}/d/85a562078cdf77779eaa1add43ccec1e/kubernetes-compute-resources-namespace-pods?${query}&var-datasource=default&var-cluster=&var-namespace=default
 
-    NGINX  : ${config.GRAFANA_HOST}/d/nginx/nginx-ingress-controller?${query}
+    NGINX  : ${config.GRAFANA_HOST}/d/k8s-nginx-ingress-prometheus-ng/kubernetes-nginx-ingress-prometheus-nextgen?${query}
 
     SPRING : ${config.GRAFANA_HOST}/d/OS7-NUiGz/spring-boot-statistics?${query}
 
