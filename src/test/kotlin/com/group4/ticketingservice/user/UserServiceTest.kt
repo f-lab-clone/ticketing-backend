@@ -6,6 +6,7 @@ import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.service.UserService
 import com.group4.ticketingservice.utils.Authority
+import com.group4.ticketingservice.utils.exception.CustomException
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -92,7 +93,7 @@ class UserServiceTest {
         // userService.createUser(sampleSignUpRequest)
 
         // then
-        assertThrows(IllegalArgumentException::class.java) {
+        assertThrows(CustomException::class.java) {
             userService.createUser(sampleSignUpRequest)
         }
     }

@@ -1,11 +1,8 @@
 package com.group4.ticketingservice.utils
 
 import io.jsonwebtoken.Claims
-import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.SignatureAlgorithm
-import io.jsonwebtoken.UnsupportedJwtException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.PropertySource
 import org.springframework.stereotype.Component
@@ -15,7 +12,8 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
-import java.util.*
+import java.util.Base64
+import java.util.Date
 import javax.crypto.spec.SecretKeySpec
 
 @Component
@@ -44,29 +42,6 @@ class TokenProvider(
         .setExpiration(Date.from(Instant.now().plus(expirationHours, ChronoUnit.HOURS)))
         .compact()!!
 
-    fun createExpiredTokenForTest(userSpecification: String) = Jwts.builder()
-        .signWith(createKey())
-        .setSubject(userSpecification)
-        .setIssuer(issuer)
-        .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
-        .setExpiration(Date.from(Instant.now().minusSeconds(100)))
-        .compact()!!
-
-    fun createWrongTokenForTest(userSpecification: String) {
-        val secretBytes = Base64.getDecoder()
-            .decode("bGFmZGo7ZGRkZGRkZmRhc2Rma2phcztrYWpkZjtkZmxrc2RqanNkYWZqYXNlaWZqb2FzZWppZmVqZmllamZpamVmaWplZmY=")
-        // not .decode(secretKey)
-        val key = SecretKeySpec(secretBytes, signatureAlgorithm.jcaName)
-
-        Jwts.builder()
-            .signWith(key)
-            .setSubject(userSpecification)
-            .setIssuer(issuer)
-            .setIssuedAt(Timestamp.valueOf(LocalDateTime.now()))
-            .setExpiration(Date.from(Instant.now().plus(expirationHours, ChronoUnit.HOURS)))
-            .compact()!!
-    }
-
     fun getClaimsFromToken(token: String): Claims =
         Jwts.parserBuilder()
             .setSigningKey(createKey())
@@ -85,22 +60,5 @@ class TokenProvider(
 
         val expiresInMillis = ChronoUnit.MILLIS.between(LocalDateTime.now(), localDateTime)
         return expiresInMillis
-    }
-    fun validateToken(token: String): Boolean {
-        try {
-            getClaimsFromToken(token)
-            return true
-        } catch (e: SecurityException) {
-            // "잘못된 JWT 서명입니다."
-        } catch (e: MalformedJwtException) {
-            // "잘못된 JWT 서명입니다."
-        } catch (e: ExpiredJwtException) {
-            // "만료된 JWT 토큰입니다."
-        } catch (e: UnsupportedJwtException) {
-            // "지원되지 않는 JWT 토큰입니다."
-        } catch (e: IllegalArgumentException) {
-            // "JWT 토큰이 잘못되었습니다."
-        }
-        return false
     }
 }

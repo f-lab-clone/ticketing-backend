@@ -1,6 +1,5 @@
 package com.group4.ticketingservice.filter
 
-import com.group4.ticketingservice.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.utils.TokenProvider
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -22,16 +21,18 @@ class JwtAuthorizationFilter(
         val authorizationHeader = request.getHeader("Authorization")
         val jwt = tokenProvider.parseBearerToken(authorizationHeader)
 
-        if (tokenProvider.validateToken(jwt)) {
-            val userId = tokenProvider.parseUserSpecification(jwt)
-
+        lateinit var userId: String
+        try {
+            userId = tokenProvider.parseUserSpecification(jwt)
             val authorties = mutableListOf<GrantedAuthority>()
             authorties.add(SimpleGrantedAuthority("USER"))
-
             val authentication =
                 UsernamePasswordAuthenticationToken.authenticated(userId.toInt(), jwt, authorties)
             SecurityContextHolder.getContext().authentication = authentication
+        } catch (e: Exception) {
+            request.setAttribute("exception", e)
         }
+
         chain.doFilter(request, response)
     }
 

@@ -82,6 +82,20 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/UserDto'
+  /test:
+    post:
+      tags:
+      - test-controller
+      operationId: test
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SampleDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
   /reservations:
     post:
       tags:
@@ -161,6 +175,18 @@ paths:
                 type: object
                 additionalProperties:
                   type: object
+  /test500:
+    get:
+      tags:
+      - test-controller
+      operationId: throwError
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
   /health:
     get:
       tags:
@@ -315,6 +341,13 @@ components:
         createdAt:
           type: string
           format: date-time
+    SampleDTO:
+      required:
+      - text
+      type: object
+      properties:
+        text:
+          type: string
     ReservationCreateRequest:
       required:
       - eventId

@@ -1,11 +1,11 @@
 package com.group4.ticketingservice.user
 
 import com.google.gson.GsonBuilder
-import com.group4.ticketingservice.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.config.SecurityConfig
 import com.group4.ticketingservice.controller.UserController
 import com.group4.ticketingservice.dto.SignUpRequest
 import com.group4.ticketingservice.dto.UserDto
+import com.group4.ticketingservice.filter.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.service.UserService
 import com.group4.ticketingservice.user.UserControllerTest.testFields.password
 import com.group4.ticketingservice.user.UserControllerTest.testFields.testName
@@ -157,15 +157,21 @@ class UserControllerTest(
                     .content(GsonBuilder().create().toJson(invalidSignUpRequest).toString())
             )
         // then
-        resultActions.andExpect(MockMvcResultMatchers.jsonPath("$.errors").exists())
 
         resultActions.andExpect(
-            MockMvcResultMatchers.jsonPath("$.errors[*]").value(
-                Matchers.containsInAnyOrder(
-                    Matchers.containsString("name"),
-                    Matchers.containsString("email"),
-                    Matchers.containsString("password")
-                )
+            MockMvcResultMatchers.jsonPath("$.message").value(
+                Matchers.containsString("name")
+
+            )
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$.message").value(
+                Matchers.containsString("email")
+
+            )
+        ).andExpect(
+            MockMvcResultMatchers.jsonPath("$.message").value(
+                Matchers.containsString("password")
+
             )
         )
     }

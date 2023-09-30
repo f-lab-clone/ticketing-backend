@@ -1,8 +1,8 @@
 package com.group4.ticketingservice.health
 
-import com.group4.ticketingservice.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.config.SecurityConfig
 import com.group4.ticketingservice.controller.HealthController
+import com.group4.ticketingservice.filter.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.utils.TokenProvider
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,10 +1,10 @@
 package com.group4.ticketingservice.event
 
-import com.group4.ticketingservice.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.config.SecurityConfig
 import com.group4.ticketingservice.controller.EventController
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.entity.User
+import com.group4.ticketingservice.filter.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.service.EventService
 import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.TokenProvider

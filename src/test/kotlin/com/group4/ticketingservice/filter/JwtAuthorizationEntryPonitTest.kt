@@ -1,22 +1,23 @@
 package com.group4.ticketingservice.filter
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.group4.ticketingservice.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.dto.SignInRequest
 import io.mockk.every
 import io.mockk.mockk
-import jakarta.servlet.http.HttpServletResponse
-import org.junit.jupiter.api.Assertions.assertEquals
+import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.web.servlet.HandlerExceptionResolver
+import org.springframework.web.servlet.ModelAndView
 
 class JwtAuthorizationEntryPonitTest {
+
+    private val resolver: HandlerExceptionResolver = mockk()
     private val authenticationManager: AuthenticationManager = mockk()
-    private val entryPoint = JwtAuthorizationEntryPoint()
+    private val entryPoint = JwtAuthorizationEntryPoint(resolver)
+    private val modelAndView: ModelAndView = mockk()
 
     val sampleSignInRequest = SignInRequest().apply {
         email = "minjun3021@naver.com"
@@ -24,13 +25,10 @@ class JwtAuthorizationEntryPonitTest {
     }
 
     @Test
-    fun `JwtAuthorizationEntryPonit_commence() should write content at response `() {
+    fun `JwtAuthorizationEntryPoint_commence() should invoke resolver_resolveException`() {
         // given
-        every { authenticationManager.authenticate(any()) } returns UsernamePasswordAuthenticationToken(
-            sampleSignInRequest.email,
-            null,
-            listOf(SimpleGrantedAuthority("USER"))
-        )
+        every { resolver.resolveException(any(), any(), any(), any()) } returns modelAndView
+
         // when
         val req = MockHttpServletRequest()
         val res = MockHttpServletResponse()
@@ -40,6 +38,6 @@ class JwtAuthorizationEntryPonitTest {
         entryPoint.commence(req, res, mockk())
 
         // then
-        assertEquals(HttpServletResponse.SC_UNAUTHORIZED, res.status)
+        verify(exactly = 1) { resolver.resolveException(any(), any(), any(), any()) }
     }
 }

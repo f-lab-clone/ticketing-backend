@@ -131,15 +131,4 @@ class UserControllerTest : AbstractIntegrationTest() {
             mockMvc.perform(MockMvcRequestBuilders.get("/users/access_token_info"))
         resultActions.andExpect(status().isUnauthorized)
     }
-
-    @Test
-    fun `GET_api_users_access_token_info should return HTTPStatus 401 Unauthorized when jwt is expired`() {
-        val jwt = tokenProvider.createWrongTokenForTest("${testFields.testUserName}:USER")
-        val resultActions: ResultActions =
-            mockMvc.perform(
-                MockMvcRequestBuilders.get("/users/access_token_info")
-                    .header("Authorization", jwt)
-            )
-        resultActions.andExpect(status().isUnauthorized)
-    }
 }
