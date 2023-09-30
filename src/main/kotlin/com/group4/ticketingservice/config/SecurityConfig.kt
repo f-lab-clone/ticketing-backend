@@ -23,8 +23,6 @@ class SecurityConfig(
     private val gson: Gson
 ) {
 
-    // private val allowedUrls = arrayOf("/", "/api-docs.yaml", "/health", "/users/signup", "/bookmarks/**", "/reservations/**", "/events/**", "/actuator/**")
-
     @Bean
     fun filterChain(http: HttpSecurity): DefaultSecurityFilterChain {
         http

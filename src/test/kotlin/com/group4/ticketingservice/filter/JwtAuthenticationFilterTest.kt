@@ -12,7 +12,6 @@ import com.group4.ticketingservice.utils.TokenProvider
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -25,6 +24,7 @@ import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import java.time.OffsetDateTime
 
 class JwtAuthenticationFilterTest {
     private val tokenProvider: TokenProvider = mockk()

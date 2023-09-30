@@ -1,6 +1,7 @@
 package com.group4.ticketingservice.filter
 
 import com.group4.ticketingservice.utils.TokenProvider
+import io.jsonwebtoken.JwtException
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
@@ -34,7 +35,6 @@ class JwtAuthorizationFilterTest {
     fun `JwtAuthorizationFilterTest_doFilterInternal() should set Authentication when jwt is valid `() {
         // given
         every { tokenProvider.parseBearerToken(any()) } returns ""
-        every { tokenProvider.validateToken(any()) } returns true
         every { tokenProvider.parseUserSpecification(any()) } returns testUserID.toString()
 
         // when
@@ -55,8 +55,7 @@ class JwtAuthorizationFilterTest {
     fun `JwtAuthorizationFilterTest_doFilterInternal() should not set Authentication when jwt is invalid `() {
         // given
         every { tokenProvider.parseBearerToken(any()) } returns ""
-        every { tokenProvider.validateToken(any()) } returns false
-        every { tokenProvider.parseUserSpecification(any()) } returns testUserID.toString()
+        every { tokenProvider.parseUserSpecification(any()) } throws JwtException("")
 
         // when
         val req = MockHttpServletRequest()

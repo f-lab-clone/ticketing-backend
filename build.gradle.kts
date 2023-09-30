@@ -122,7 +122,7 @@ subprojects {
 }
 
 tasks.jacocoTestReport {
-    dependsOn(tasks.test)
+    dependsOn(tasks.test, integrationTest)
 
     reports {
         html.required.set(true)

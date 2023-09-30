@@ -24,15 +24,15 @@ class JwtAuthenticationFilter(
 
 ) : UsernamePasswordAuthenticationFilter() {
 
-    override fun attemptAuthentication(request: HttpServletRequest?, response: HttpServletResponse?): Authentication? {
+    override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse): Authentication? {
         super.setAuthenticationManager(authenticationManager)
 
         var signInRequest = SignInRequest()
         val om = ObjectMapper()
         try {
-            signInRequest = om.readValue(request?.inputStream, SignInRequest::class.java)
+            signInRequest = om.readValue(request.inputStream, SignInRequest::class.java)
         } catch (e: Exception) {
-            request?.setAttribute("exception", e)
+            request.setAttribute("exception", e)
         }
         val authenticationToken = UsernamePasswordAuthenticationToken(signInRequest.email, signInRequest.password)
         val authentication = getAuthenticationManager().authenticate(authenticationToken)
@@ -40,22 +40,22 @@ class JwtAuthenticationFilter(
     }
 
     override fun successfulAuthentication(
-        request: HttpServletRequest?,
-        response: HttpServletResponse?,
-        chain: FilterChain?,
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        chain: FilterChain,
         authResult: Authentication
     ) {
         val user = authResult.principal as User
         val jwt = tokenProvider.createToken("${user.id}")
         val body = gson.toJson(mapOf("Authorization" to "Bearer $jwt"))
-        response?.contentType = "application/json"
-        val writer: PrintWriter? = response?.writer
-        writer?.println(body)
+        response.contentType = "application/json"
+        val writer: PrintWriter = response.writer
+        writer.println(body)
     }
 
     override fun unsuccessfulAuthentication(
         request: HttpServletRequest,
-        response: HttpServletResponse?,
+        response: HttpServletResponse,
         failed: AuthenticationException?
     ) {
         val errorCode = ErrorCodes.LOGIN_FAIL
@@ -66,9 +66,9 @@ class JwtAuthenticationFilter(
         )
 
         val body = gson.toJson(errorDto)
-        response?.contentType = "application/json;charset=UTF-8"
-        response?.status = HttpServletResponse.SC_UNAUTHORIZED
-        val writer: PrintWriter? = response?.writer
-        writer?.println(body)
+        response.contentType = "application/json;charset=UTF-8"
+        response.status = HttpServletResponse.SC_UNAUTHORIZED
+        val writer: PrintWriter = response.writer
+        writer.println(body)
     }
 }

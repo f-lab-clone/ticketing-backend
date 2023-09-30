@@ -13,10 +13,12 @@ enum class ErrorCodes(val status: HttpStatus, val message: String, val errorCode
 
     // 403  Forbidden
     FORBIDDEN(HttpStatus.FORBIDDEN, "접근 할 수 없습니다.", 30000),
+    JWT_EXPIRED(HttpStatus.FORBIDDEN, "JWT가 만료 되었습니다.", 30001),
 
     // 404  Not Found
     ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 레코드를 찾을수 없습니다.", 40000),
     END_POINT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 엔드포인트를 찾을수업습니다.", 40400),
+    TEST_ERROR(HttpStatus.NOT_FOUND, "테스트 입니다.", 40401),
 
     // 409  Conflict
     EVENT_ALREADY_RESERVED_ALL(HttpStatus.CONFLICT, "이미 예약정원이 가득찬 공연입니다.", 50001),

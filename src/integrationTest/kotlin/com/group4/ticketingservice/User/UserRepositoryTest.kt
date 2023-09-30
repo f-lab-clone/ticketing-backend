@@ -73,7 +73,6 @@ class UserRepositoryTest(
     @Test
     fun `userRepository_existByEmail return false when user not exist`() {
         // given
-
         // when
         val isUserExist = userRepository.existsByEmail(sampleUser.email)
         // then
