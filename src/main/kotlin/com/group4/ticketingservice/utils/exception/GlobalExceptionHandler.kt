@@ -1,6 +1,7 @@
 package com.group4.ticketingservice.utils.exception
 
 import com.group4.ticketingservice.dto.ErrorResponseDTO
+import com.group4.ticketingservice.utils.logging.logger
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.JwtException
 import jakarta.servlet.http.HttpServletRequest
@@ -17,6 +18,8 @@ import org.springframework.web.servlet.NoHandlerFoundException
 @RestControllerAdvice
 class GlobalExceptionHandler {
 
+    private val log = logger()
+
     @ExceptionHandler(value = [CustomException::class])
     fun handleCustomException(exception: CustomException, request: HttpServletRequest): ResponseEntity<ErrorResponseDTO> {
         val errorCode = exception.errorCode
@@ -25,7 +28,6 @@ class GlobalExceptionHandler {
             message = exception.errorCode.message,
             path = request.requestURI
         )
-
         return ResponseEntity(errorDto, errorCode.status)
     }
 
@@ -49,7 +51,7 @@ class GlobalExceptionHandler {
             message = exception.javaClass.name,
             path = request.requestURI
         )
-
+        log.warn(exception.message)
         return ResponseEntity(errorDto, errorCode.status)
     }
 
@@ -61,7 +63,6 @@ class GlobalExceptionHandler {
             message = exception.message!!,
             path = request.requestURI
         )
-
         return ResponseEntity(errorDto, errorCode.status)
     }
 
@@ -73,7 +74,6 @@ class GlobalExceptionHandler {
             message = exception.message!!,
             path = request.requestURI
         )
-
         return ResponseEntity(errorDto, errorCode.status)
     }
 
@@ -97,7 +97,6 @@ class GlobalExceptionHandler {
             message = exception.javaClass.name,
             path = request.requestURI
         )
-
         return ResponseEntity(errorDto, errorCode.status)
     }
 
@@ -109,7 +108,6 @@ class GlobalExceptionHandler {
             message = exception.javaClass.name,
             path = request.requestURI
         )
-
         return ResponseEntity(errorDto, errorCode.status)
     }
 
@@ -135,7 +133,6 @@ class GlobalExceptionHandler {
             message = array.joinToString("  ||  "),
             path = request.requestURI
         )
-
         return ResponseEntity(errorDto, HttpStatus.BAD_REQUEST)
     }
 }

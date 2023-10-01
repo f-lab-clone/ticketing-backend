@@ -23,7 +23,6 @@ class JwtAuthenticationFilter(
     private val gson: Gson
 
 ) : UsernamePasswordAuthenticationFilter() {
-
     override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse): Authentication? {
         super.setAuthenticationManager(authenticationManager)
 
