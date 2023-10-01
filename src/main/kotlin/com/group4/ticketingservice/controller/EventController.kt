@@ -2,11 +2,11 @@ package com.group4.ticketingservice.controller
 
 import com.group4.ticketingservice.dto.EventCreateRequest
 import com.group4.ticketingservice.dto.EventResponse
-import com.group4.ticketingservice.entity.Event
+import com.group4.ticketingservice.dto.SuccessResponseDTO
 import com.group4.ticketingservice.service.EventService
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
@@ -69,24 +69,16 @@ class EventController @Autowired constructor(
 
     @GetMapping
     fun getEvents(
+        request: HttpServletRequest,
         @RequestParam(required = false) title: String?,
         @PageableDefault(size = 10, sort = ["date", "id"]) pageable: Pageable
-    ): ResponseEntity<Page<Event>> {
+    ): ResponseEntity<SuccessResponseDTO> {
         val response = eventService.getEvents(title, pageable)
-        // val response: List<EventResponse> = events.map {
-        //     EventResponse(
-        //         id = it.id!!,
-        //         title = it.title,
-        //         date = it.date,
-        //         reservationStartTime = it.reservationStartTime,
-        //         reservationEndTime = it.reservationEndTime,
-        //         maxAttendees = it.maxAttendees
-        //     )
-        // }
-        return if (response.isEmpty()) {
-            ResponseEntity.status(HttpStatus.NO_CONTENT).body(response)
-        } else {
-            ResponseEntity.status(HttpStatus.OK).body(response)
-        }
+        val responseDto = SuccessResponseDTO(
+            data = response,
+            path = request.requestURI
+        )
+
+        return ResponseEntity(responseDto, HttpStatus.OK)
     }
 }

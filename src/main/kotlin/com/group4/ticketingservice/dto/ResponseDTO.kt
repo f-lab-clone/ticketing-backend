@@ -4,7 +4,7 @@ import java.time.OffsetDateTime
 
 data class SuccessResponseDTO(
     val timestamp: OffsetDateTime = OffsetDateTime.now(),
-    val message: String,
+    val message: String = "success",
     val data: Any,
     val path: String
 
