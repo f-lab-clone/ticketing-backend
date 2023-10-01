@@ -74,6 +74,7 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus")
+    implementation("io.github.kdprog:cxf-micrometer-metrics:1.0.0")
 }
 
 tasks.withType<KotlinCompile> {
