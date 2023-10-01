@@ -445,6 +445,7 @@ components:
       - message
       - path
       - timestamp
+      - totalElements
       type: object
       properties:
         timestamp:
@@ -456,3 +457,6 @@ components:
           type: object
         path:
           type: string
+        totalElements:
+          type: integer
+          format: int64
