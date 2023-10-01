@@ -6,8 +6,8 @@ data class SuccessResponseDTO(
     val timestamp: OffsetDateTime = OffsetDateTime.now(),
     val message: String = "success",
     val data: Any,
-    val path: String
-
+    val path: String,
+    val totalElements: Long = 0
 )
 
 data class ErrorResponseDTO(

@@ -3,10 +3,12 @@ package com.group4.ticketingservice.controller
 import com.group4.ticketingservice.dto.EventCreateRequest
 import com.group4.ticketingservice.dto.EventResponse
 import com.group4.ticketingservice.dto.SuccessResponseDTO
+import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.service.EventService
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
@@ -73,10 +75,11 @@ class EventController @Autowired constructor(
         @RequestParam(required = false) title: String?,
         @PageableDefault(size = 10, sort = ["date", "id"]) pageable: Pageable
     ): ResponseEntity<SuccessResponseDTO> {
-        val response = eventService.getEvents(title, pageable)
+        val response: Page<Event> = eventService.getEvents(title, pageable)
         val responseDto = SuccessResponseDTO(
-            data = response,
-            path = request.requestURI
+            data = response.content,
+            path = request.requestURI,
+            totalElements = response.totalElements
         )
 
         return ResponseEntity(responseDto, HttpStatus.OK)
