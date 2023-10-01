@@ -28,7 +28,7 @@ export default {
     ------------------------DASHBOARD----------------------------
     HTML   : ${htmlPath}
 
-    K6     : ${config.GRAFANA_HOST}/d/01npcT44k/official-k6-test-result?${query}
+    K6     : ${config.GRAFANA_HOST}/d/01npcT44k/official-k6-test-result?${query}&var-DS_PROMETHEUS=prometheus&var-testid=${__ENV.ENTRYPOINT}&var-scenario=All&var-url=All&var-metrics=k6_http_req_duration_seconds
 
     CLUSTER: ${config.GRAFANA_HOST}/d/85a562078cdf77779eaa1add43ccec1e/kubernetes-compute-resources-namespace-pods?${query}&var-datasource=default&var-cluster=&var-namespace=default
 
