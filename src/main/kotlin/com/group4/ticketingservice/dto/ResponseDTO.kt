@@ -5,9 +5,9 @@ import java.time.OffsetDateTime
 data class SuccessResponseDTO(
     val timestamp: OffsetDateTime = OffsetDateTime.now(),
     val message: String = "success",
-    val data: Any,
-    val path: String,
-    val totalElements: Long = 0
+    var data: Any,
+    val path: String? = null,
+    val totalElements: Long? = null
 )
 
 data class ErrorResponseDTO(

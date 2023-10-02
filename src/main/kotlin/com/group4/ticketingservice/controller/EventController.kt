@@ -2,7 +2,6 @@ package com.group4.ticketingservice.controller
 
 import com.group4.ticketingservice.dto.EventCreateRequest
 import com.group4.ticketingservice.dto.EventResponse
-import com.group4.ticketingservice.dto.SuccessResponseDTO
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.service.EventService
 import jakarta.servlet.http.HttpServletRequest
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -52,10 +52,12 @@ class EventController @Autowired constructor(
     }
 
     @GetMapping("/{id}")
-    fun getEvent(@PathVariable id: Int): ResponseEntity<EventResponse?> {
-        return eventService.getEvent(id)?.let {
-            ResponseEntity.status(HttpStatus.OK).body(
-                EventResponse(
+    fun getEvent(
+        request: HttpServletRequest,
+        @PathVariable id: Int
+    ): ResponseEntity<EventResponse?> {
+        val foundEvent = eventService.getEvent(id)?.let {
+            EventResponse(
                     id = it.id!!,
                     title = it.title,
                     date = it.date,
@@ -63,10 +65,14 @@ class EventController @Autowired constructor(
                     reservationEndTime = it.reservationEndTime,
                     maxAttendees = it.maxAttendees
                 )
-            )
         } ?: kotlin.run {
-            ResponseEntity.status(HttpStatus.OK).body(null)
+            null
         }
+
+        val headers = HttpHeaders()
+        headers.set("Content-Location", request.requestURI)
+
+        return ResponseEntity(foundEvent, headers, HttpStatus.OK)
     }
 
     @GetMapping
@@ -74,14 +80,12 @@ class EventController @Autowired constructor(
         request: HttpServletRequest,
         @RequestParam(required = false) title: String?,
         @PageableDefault(size = 10, sort = ["date", "id"]) pageable: Pageable
-    ): ResponseEntity<SuccessResponseDTO> {
-        val response: Page<Event> = eventService.getEvents(title, pageable)
-        val responseDto = SuccessResponseDTO(
-            data = response.content,
-            path = request.requestURI,
-            totalElements = response.totalElements
-        )
+    ): ResponseEntity<Page<Event>> {
+        val page = eventService.getEvents(title, pageable)
 
-        return ResponseEntity(responseDto, HttpStatus.OK)
+        val headers = HttpHeaders()
+        headers.set("Content-Location", request.requestURI)
+
+        return ResponseEntity(page, headers, HttpStatus.OK)
     }
 }
