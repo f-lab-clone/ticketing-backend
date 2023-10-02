@@ -2,7 +2,7 @@
 name: Performance Test Report
 about: Spike Test, Average Load Test...
 title: ''
-labels: 'document, performanceTest'
+labels: 'documentation, performanceTest'
 assignees: ''
 
 ---
