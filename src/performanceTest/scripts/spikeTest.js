@@ -2,7 +2,7 @@ import { check } from "k6";
 import Request from "./lib/request.js";
 import generator from "./lib/generator.js";
 import hooks from "./lib/hooks.js";
-import { isSuccess, getOneFromList } from "./lib/helpers.js";
+import { isSuccess, getOneFromList, randomInt } from "./lib/helpers.js";
 
 export const setup = hooks.setup
 export const handleSummary = hooks.handleSummary
@@ -22,8 +22,9 @@ export const options = {
   },
   scenarios: {
     contacts: {
+      startTime: '15s',
       executor: 'per-vu-iterations',
-      vus: 20,
+      vus: 200,
       iterations: 1,
       maxDuration: '1m', 
     },
@@ -40,7 +41,7 @@ export default function () {
 
   const getAvaliableReservation = () => {
     let count = 0
-    while (count < 10) {
+    while (count < randomInt(3, 5)) {
       req.getEvents()
       count++
     }
