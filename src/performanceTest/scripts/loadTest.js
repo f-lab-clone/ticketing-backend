@@ -21,7 +21,7 @@ export const options = {
     }
   },
   stages: [
-    { duration: '3m', target: 20 }, // traffic ramp-up from 1 to ${n} users over ${n} minutes.
+    { duration: '3m', target: 200 }, // traffic ramp-up from 1 to ${n} users over ${n} minutes.
     { duration: '30s', target: 0 }, // ramp-down to 0 users
   ],
   
