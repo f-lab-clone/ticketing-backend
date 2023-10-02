@@ -15,10 +15,10 @@ export default {
     handleSummary: function(data) {
         console.log(`end: ${new Date().toISOString()}`)
 
-        const ONE_MINUTE = 1000 * 60
+        const DELAY = 1000 * 30
         const htmlPath = `${config.OUTPUT_HTML_DIR}/result.html`
-        const START = data.setup_data.START - ONE_MINUTE
-        const END = new Date().valueOf() + (ONE_MINUTE * 3)
+        const START = data.setup_data.START - DELAY
+        const END = new Date().valueOf() + DELAY
 
         let Dahboard = ''
         if (config.GRAFANA_HOST) {
@@ -26,17 +26,24 @@ export default {
             const query = `&orgId=1&refresh=10s&${timeRange}`
             Dahboard = `
     ------------------------DASHBOARD----------------------------
-    HTML   : ${htmlPath}
 
-    K6     : ${config.GRAFANA_HOST}/d/01npcT44k/official-k6-test-result?${query}&var-DS_PROMETHEUS=prometheus&var-testid=${__ENV.ENTRYPOINT}&var-scenario=All&var-url=All&var-metrics=k6_http_req_duration_seconds
+    [K6]
+    HTML                         : ${htmlPath}
+    K6 (Native Histogram)        : ${config.GRAFANA_HOST}/d/a3b2aaa8-bb66-4008-a1d8-16c49afedbf0/k6-prometheus-native-histograms?${query}&var-DS_PROMETHEUS=prometheus&var-testid=${__ENV.ENTRYPOINT}&var-scenario=All&var-url=All&var-metrics=k6_http_req_duration_seconds
 
-    CLUSTER: ${config.GRAFANA_HOST}/d/85a562078cdf77779eaa1add43ccec1e/kubernetes-compute-resources-namespace-pods?${query}&var-datasource=default&var-cluster=&var-namespace=default
+    [Cluster Resources]
+    CLUSTER                      : ${config.GRAFANA_HOST}/d/85a562078cdf77779eaa1add43ccec1e/kubernetes-compute-resources-namespace-pods?${query}&var-datasource=default&var-cluster=&var-namespace=default
 
-    NGINX  : ${config.GRAFANA_HOST}/d/k8s-nginx-ingress-prometheus-ng/kubernetes-nginx-ingress-prometheus-nextgen?${query}
+    [Nginx]
+    Official NGINX               : ${config.GRAFANA_HOST}/d/nginx/nginx-ingress-controller?${query}
+    Request Handling Performance : ${config.GRAFANA_HOST}/d/4GFbkOsZk/request-handling-performance?${query}
 
-    SPRING : ${config.GRAFANA_HOST}/d/OS7-NUiGz/spring-boot-statistics?${query}
+    [Spring]
+    Official SPRING              : ${config.GRAFANA_HOST}/d/OS7-NUiGz/spring-boot-statistics?${query}
+    Spring Http                  : ${config.GRAFANA_HOST}/d/hKW8gvD4z/spring-http?${query}
 
-    MYSQL  : ${config.GRAFANA_HOST}/d/549c2bf8936f7767ea6ac47c47b00f2a/mysql-exporter?${query}
+    [MySQL]
+    MYSQL                        : ${config.GRAFANA_HOST}/d/549c2bf8936f7767ea6ac47c47b00f2a/mysql-exporter?${query}
     -------------------------------------------------------------
 
 

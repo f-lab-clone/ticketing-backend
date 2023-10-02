@@ -20,14 +20,10 @@ export const options = {
       ]
     }
   },
-  scenarios: {
-    contacts: {
-      executor: 'per-vu-iterations',
-      vus: 20,
-      iterations: 1,
-      maxDuration: '1m', 
-    },
-  },
+  stages: [
+    { duration: '2m', target: 100 }, // traffic ramp-up from 1 to ${n} users over ${n} minutes.
+    { duration: '30s', target: 0 }, // ramp-down to 0 users
+  ],
   
   thresholds: {
     http_req_failed: ['rate<0.01'], // http errors should be less than 1%
@@ -39,11 +35,6 @@ export default function () {
   const req = new Request()
 
   const getAvaliableReservation = () => {
-    let count = 0
-    while (count < 10) {
-      req.getEvents()
-      count++
-    }
     const events = req.getEvents()
     return getOneFromList(events.json())
     

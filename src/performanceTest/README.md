@@ -37,6 +37,7 @@ K6_OUT= #experimental-prometheus-rw
 K6_PROMETHEUS_RW_SERVER_URL=
 K6_PROMETHEUS_RW_USERNAME=
 K6_PROMETHEUS_RW_PASSWORD=
+K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM= #true
 ```
 
 ### 4. Run the following commands
