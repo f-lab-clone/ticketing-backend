@@ -14,7 +14,7 @@ const generateData = (table, count) => {
         for (const filed of table.fields) {
             let value = filed.generate()
             if (value instanceof Date) {
-                value = value.toISOString()
+                value = value.toISOString().replace('T', ' ').replace('Z', '')
             }
             row[filed.name] = value
         }
@@ -38,7 +38,11 @@ const writeFileBufferSync = (sqlString) => {
     fs.appendFileSync(SQL_FILE_NAME, sqlString);
 }
 
-fs.unlinkSync(SQL_FILE_NAME)
+try {
+    fs.unlinkSync(SQL_FILE_NAME)
+} catch (e) {
+
+}
 
 writeFileBufferSync(`USE ticketingdb;`)
 for (const table of tables) {
