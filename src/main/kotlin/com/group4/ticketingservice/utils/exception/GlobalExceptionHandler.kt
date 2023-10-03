@@ -51,7 +51,7 @@ class GlobalExceptionHandler {
             message = exception.javaClass.name,
             path = request.requestURI
         )
-        log.warn(exception.message)
+        log.error(exception.toString(), exception)
         return ResponseEntity(errorDto, errorCode.status)
     }
 

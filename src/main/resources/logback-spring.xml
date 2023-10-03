@@ -5,7 +5,7 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 
         <encoder>
-            <pattern>%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p){green} %clr(${PID}){magenta} --- %clr([%t]){faint} %clr(%-40.40logger{39}){cyan} [%clr(%X{requestId}){red}, %clr(%X{userId}){yellow}] :  %m%n</pattern>
+            <pattern>%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p){green} %clr(${PID}){magenta} --- %clr([%t]){faint} %clr(%-40.40logger{39}){cyan} [%clr(%X{requestId}){red}] :  %m%n</pattern>
 
         </encoder>
     </appender>
