@@ -8,6 +8,8 @@ import com.group4.ticketingservice.repository.BookmarkRepository
 import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -17,14 +19,14 @@ class BookmarkService @Autowired constructor(
     val bookmarkRepository: BookmarkRepository
 ) {
 
-    fun create(userId: Int, bookmarkFormDto: BookmarkFromdto): Int? {
+    fun create(userId: Int, bookmarkFormDto: BookmarkFromdto): Bookmark {
         val user: User = userRepository.getReferenceById(userId)
 
         val event: Event = eventRepository.getReferenceById(bookmarkFormDto.event_id!!)
 
         val bookmark = Bookmark(user = user, event = event)
 
-        return bookmarkRepository.save(bookmark).id
+        return bookmarkRepository.save(bookmark)
     }
 
     fun get(userId: Int, id: Int): Bookmark? {
@@ -35,7 +37,7 @@ class BookmarkService @Autowired constructor(
         bookmarkRepository.deleteByIdAndUserId(id, userId)
     }
 
-    fun getList(userId: Int): List<Bookmark> {
-        return bookmarkRepository.findByUserId(userId)
+    fun getBookmarks(userId: Int, pageable: Pageable): Page<Bookmark> {
+        return bookmarkRepository.findByUserId(userId, pageable)
     }
 }

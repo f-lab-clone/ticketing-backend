@@ -1,7 +1,9 @@
 package com.group4.ticketingservice.utils
 
+import com.group4.ticketingservice.dto.ErrorResponseDTO
 import com.group4.ticketingservice.dto.EventResponse
 import com.group4.ticketingservice.dto.SuccessResponseDTO
+import com.group4.ticketingservice.entity.Event
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.MethodParameter
 import org.springframework.data.domain.Page
@@ -14,7 +16,6 @@ import org.springframework.http.server.ServerHttpResponse
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice
 import org.springframework.web.util.UriComponentsBuilder
-import com.group4.ticketingservice.entity.Event
 
 @RestControllerAdvice
 class ResponseAdvice<T>(
@@ -37,6 +38,10 @@ class ResponseAdvice<T>(
         request: ServerHttpRequest,
         response: ServerHttpResponse
     ): T? {
+        if (body is ErrorResponseDTO) {
+            return body
+        }
+
         if (body !is Page<*>) {
             return SuccessResponseDTO(
                 data = body as Any,

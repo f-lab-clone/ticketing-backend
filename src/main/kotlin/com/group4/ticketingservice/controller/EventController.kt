@@ -40,6 +40,7 @@ class EventController @Autowired constructor(
             request.reservationEndTime!!,
             request.maxAttendees!!
         )
+
         val response = EventResponse(
             id = event.id!!,
             title = event.title,
@@ -48,7 +49,11 @@ class EventController @Autowired constructor(
             reservationEndTime = event.reservationEndTime,
             maxAttendees = event.maxAttendees
         )
-        return ResponseEntity.status(HttpStatus.OK).body(response)
+
+        val headers = HttpHeaders()
+        headers.set("Content-Location", "/events/%d".format(event.id!!))
+
+        return ResponseEntity(response, headers, HttpStatus.CREATED)
     }
 
     @GetMapping("/{id}")
@@ -58,13 +63,13 @@ class EventController @Autowired constructor(
     ): ResponseEntity<EventResponse?> {
         val foundEvent = eventService.getEvent(id)?.let {
             EventResponse(
-                    id = it.id!!,
-                    title = it.title,
-                    date = it.date,
-                    reservationStartTime = it.reservationStartTime,
-                    reservationEndTime = it.reservationEndTime,
-                    maxAttendees = it.maxAttendees
-                )
+                id = it.id!!,
+                title = it.title,
+                date = it.date,
+                reservationStartTime = it.reservationStartTime,
+                reservationEndTime = it.reservationEndTime,
+                maxAttendees = it.maxAttendees
+            )
         } ?: kotlin.run {
             null
         }
