@@ -6,19 +6,23 @@
   "image": "mcr.microsoft.com/devcontainers/base:jammy",
   "features": {
     "ghcr.io/devcontainers/features/java:1": {
-      "version": "17",
-      "jdkDistro": "ms",
-      "gradleVersion": "latest",
-      "mavenVersion": "latest",
-      "antVersion": "latest"
-    },
+		"installGradle": true,
+		"version": "17",
+		"jdkDistro": "ms",
+		"gradleVersion": "latest",
+		"mavenVersion": "latest",
+		"antVersion": "latest"
+	},
     "ghcr.io/devcontainers/features/docker-in-docker:2": {
-      "moby": true,
-      "azureDnsAutoDetection": true,
-      "installDockerBuildx": true,
-      "version": "20.10",
-      "dockerDashComposeVersion": "v1"
-    }
+		"moby": true,
+		"azureDnsAutoDetection": true,
+		"installDockerBuildx": true,
+		"version": "20.10",
+		"dockerDashComposeVersion": "v1"
+	},
+	"ghcr.io/devcontainers-contrib/features/node-asdf:0": {
+		"version": "latest"
+	}
   },
   // Features to add to the dev container. More info: https://containers.dev/features.
   // "features": {},
