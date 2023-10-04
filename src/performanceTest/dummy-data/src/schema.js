@@ -23,5 +23,5 @@ module.exports = [
         new Field('reservation_end_time', faker.date.future),
         new Field('max_attendees', () => faker.number.int(1000)),
         new Field('current_reservation_count', defaultValue(0)),
-    ])
+    ]),
 ]
