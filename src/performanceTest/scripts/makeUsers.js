@@ -1,8 +1,7 @@
 import { check } from "k6";
 import Request from "./lib/request.js";
-import generator from "./lib/generator.js";
 import hooks from "./lib/hooks.js";
-import { isSuccess, getOneFromList, randomInt } from "./lib/helpers.js";
+import { isSuccess } from "./lib/helpers.js";
 import exec from 'k6/execution';
 
 export const setup = hooks.setup

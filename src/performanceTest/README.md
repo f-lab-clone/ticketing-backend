@@ -31,6 +31,10 @@ BASTION_USERNAME=
 
 HOST=
 
+# No sign up Test
+JWT_RAW_SECRET=
+JWT_ISSUER=
+
 # Monitoring Configuration (Optional)
 GRAFANA_HOST=
 K6_OUT= #experimental-prometheus-rw
