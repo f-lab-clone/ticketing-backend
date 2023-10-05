@@ -188,9 +188,9 @@ class BookmarkControllerTest(
 
         // then
         resultActions.andExpect(status().isOk)
-            .andExpect(jsonPath("$.id").value(sampleBookmark.id))
-            .andExpect(jsonPath("$.user.id").value(sampleBookmark.user.id))
-            .andExpect(jsonPath("$.event.id").value(sampleBookmark.event.id))
+            .andExpect(jsonPath("$.data.id").value(sampleBookmark.id))
+            .andExpect(jsonPath("$.data.user.id").value(sampleBookmark.user.id))
+            .andExpect(jsonPath("$.data.event.id").value(sampleBookmark.event.id))
     }
 
     @Test

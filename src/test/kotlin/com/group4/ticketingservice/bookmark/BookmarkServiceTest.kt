@@ -14,6 +14,10 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.modelmapper.ModelMapper
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import java.time.OffsetDateTime
 
 class BookmarkServiceTest() {
@@ -50,30 +54,34 @@ class BookmarkServiceTest() {
         event_id = 1
     )
 
+    val pageable: Pageable = PageRequest.of(1, 10)
+    val content = mutableListOf(sampleBookmark)
+    val page: Page<Bookmark> = PageImpl(content, pageable, content.size.toLong())
+
     @Test
     fun `bookmarkService_getList() invoke repository_findByUser`() {
         // given
 
-        every { repository.findByUserId(sampleUserId) } returns listOf(sampleBookmark)
+        every { repository.findByUserId(sampleUserId, pageable) } returns page
 
         // when
-        bookmarkService.getList(sampleUserId)
+        bookmarkService.getBookmarks(sampleUserId, pageable)
 
         // then
-        verify(exactly = 1) { repository.findByUserId(sampleUserId) }
+        verify(exactly = 1) { repository.findByUserId(sampleUserId, pageable) }
     }
 
     @Test
     fun `bookmarkService_getList() should return emptyList`() {
         // given
-        every { repository.findByUserId(sampleUserId) } returns listOf()
+        every { repository.findByUserId(sampleUserId, pageable) } returns page
 
         // when
-        val result: List<Bookmark> = bookmarkService.getList(sampleUserId)
+        val result = bookmarkService.getBookmarks(sampleUserId, pageable)
 
         // then
-        verify(exactly = 1) { repository.findByUserId(sampleUserId) }
-        assert(result == listOf<Bookmark>())
+        verify(exactly = 1) { repository.findByUserId(sampleUserId, pageable) }
+        assert(result == page)
     }
 
     @Test

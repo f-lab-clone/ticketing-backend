@@ -96,11 +96,11 @@ class ReservationControllerTest(
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Gson().toJson(sampleReservationCreateRequest))
         )
-            .andExpect(status().isOk)
+            .andExpect(status().isCreated)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(sampleReservation.id))
-            .andExpect(jsonPath("$.userId").value(sampleReservation.user.id))
-            .andExpect(jsonPath("$.eventId").value(sampleReservation.event.id))
+            .andExpect(jsonPath("$.data.id").value(sampleReservation.id))
+            .andExpect(jsonPath("$.data.userId").value(sampleReservation.user.id))
+            .andExpect(jsonPath("$.data.eventId").value(sampleReservation.event.id))
     }
 
     @Test
@@ -114,9 +114,9 @@ class ReservationControllerTest(
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(sampleReservation.id))
-            .andExpect(jsonPath("$.userId").value(sampleReservation.user.id))
-            .andExpect(jsonPath("$.eventId").value(sampleReservation.event.id))
+            .andExpect(jsonPath("$.data.id").value(sampleReservation.id))
+            .andExpect(jsonPath("$.data.userId").value(sampleReservation.user.id))
+            .andExpect(jsonPath("$.data.eventId").value(sampleReservation.event.id))
     }
 
     @Test
@@ -147,9 +147,9 @@ class ReservationControllerTest(
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(updatedReservation.id))
-            .andExpect(jsonPath("$.userId").value(updatedReservation.user.id))
-            .andExpect(jsonPath("$.eventId").value(updatedReservation.event.id))
+            .andExpect(jsonPath("$.data.id").value(updatedReservation.id))
+            .andExpect(jsonPath("$.data.userId").value(updatedReservation.user.id))
+            .andExpect(jsonPath("$.data.eventId").value(updatedReservation.event.id))
     }
 
     @Test

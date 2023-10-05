@@ -2,8 +2,10 @@ package com.group4.ticketingservice.utils
 
 import com.group4.ticketingservice.dto.ErrorResponseDTO
 import com.group4.ticketingservice.dto.EventResponse
+import com.group4.ticketingservice.dto.ReservationResponse
 import com.group4.ticketingservice.dto.SuccessResponseDTO
 import com.group4.ticketingservice.entity.Event
+import com.group4.ticketingservice.entity.Reservation
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.MethodParameter
 import org.springframework.data.domain.Page
@@ -84,6 +86,16 @@ class ResponseAdvice<T>(
                     reservationStartTime = it.reservationStartTime,
                     reservationEndTime = it.reservationEndTime,
                     maxAttendees = it.maxAttendees
+                )
+            }
+        }
+        if (data[0] is Reservation) {
+            data = (page.content as List<Reservation>).map {
+                ReservationResponse(
+                    id = it.id!!,
+                    eventId = it.event.id!!,
+                    userId = it.user.id!!,
+                    bookedAt = it.bookedAt
                 )
             }
         }
