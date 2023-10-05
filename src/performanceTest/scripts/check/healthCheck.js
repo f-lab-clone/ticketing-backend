@@ -1,6 +1,6 @@
 import { check } from "k6";
-import Request from "./lib/request.js";
-import hooks from "./lib/hooks.js";
+import Request from "../lib/request.js";
+import hooks from "../lib/hooks.js";
 
 export const setup = hooks.setup
 export const handleSummary = hooks.handleSummary

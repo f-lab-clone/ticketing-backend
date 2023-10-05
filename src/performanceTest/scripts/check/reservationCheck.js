@@ -1,8 +1,8 @@
 import { check } from "k6";
-import Request from "./lib/request.js";
-import generator from "./lib/generator.js";
-import hooks from "./lib/hooks.js";
-import { getOneFromList } from "./lib/helpers.js";
+import Request from "../lib/request.js";
+import generator from "../lib/generator.js";
+import hooks from "../lib/hooks.js";
+import { getOneFromList } from "../lib/helpers.js";
 
 export const setup = hooks.setup
 export const handleSummary = hooks.handleSummary

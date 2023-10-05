@@ -1,5 +1,8 @@
 .DS_Store
 
+src/performanceTest/dummy-data/*.sql
+node_modules/
+
 .env
 *.pem
 

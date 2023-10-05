@@ -1,0 +1,21 @@
+import { check } from "k6";
+import Request from "../lib/request.js";
+import generator from "../lib/generator.js";
+import hooks from "../lib/hooks.js";
+
+export const setup = hooks.setup
+export const handleSummary = hooks.handleSummary
+
+export default function () {
+   const req = new Request()
+
+   const user = generator.User()
+   
+   req.signup(user)
+   req.signin(user)
+   
+   const res = req.access_token_info()
+
+   check(res, { "status == 200": (r) => r.status == 200 });
+   check(res, { "res has userId key": (r) => r.json().userId > 0 });
+}
