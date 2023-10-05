@@ -24,6 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
 import org.springframework.test.web.servlet.MockMvc
@@ -34,10 +38,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.OffsetDateTime
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.PageImpl
 
 @ExtendWith(MockKExtension::class)
 @WebMvcTest(
@@ -140,7 +140,7 @@ class BookmarkControllerTest(
     @Test
     @WithAuthUser(email = testUserName, id = testUserId)
     fun `GET_api_bookmarks should invoke service_getList`() {
-        // given 
+        // given
         every { service.getBookmarks(testUserId, pageable) } returns page
 
         // when
