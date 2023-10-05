@@ -2,6 +2,7 @@ import http from "k6/http";
 import { sleep } from "k6";
 import config from "./config.js";
 
+
 export default class Request {
     constructor(baseURL = config.HOST) {
         this.baseURL = baseURL
@@ -18,7 +19,7 @@ export default class Request {
     }
 
     setToken(token) {
-        if (token.substring(0, 7) === 'Bearer '){
+        if (token.substring(0, 7) === 'Bearer ') {
             // set this.token = token without 'Bearer '
             this.Token = token.substring(7);
         }
@@ -40,9 +41,10 @@ export default class Request {
         return headers
     }
 
-    getParams() {
+    getParams(tags = null) {
         return {
             headers: this.getHeaders(),
+            tags,
         }
     }
 
@@ -60,6 +62,12 @@ export default class Request {
         this.afterHook()
         return res
     }
+    getEvent(id) {
+        this.beforeHook()
+        const res =  http.get(`${this.baseURL}/events/${id}`);
+        this.afterHook()
+        return res
+    }
     signup(body) {
         this.beforeHook()
         const res =  http.post(`${this.baseURL}/users/signup`, JSON.stringify(body), this.getParams());
@@ -69,7 +77,9 @@ export default class Request {
     signin(body) {
         this.beforeHook()
         const res =  http.post(`${this.baseURL}/users/signin`, JSON.stringify({ email: body.email, password: body.password }), this.getParams());
-        this.setToken(res.json()['Authorization'])
+        if (res.body) {
+            this.setToken(res.json()['Authorization'])
+        }
         this.afterHook()
         return res
     }
