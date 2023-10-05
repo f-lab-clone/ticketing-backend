@@ -28,7 +28,7 @@ const event = new Table('event', [
 const generateRaw = (table, index) => {
     const row = {}
     for (const filed of table.fields) {
-        let value = filed.generator(index)
+        let value = filed.generator()
         
         if (value instanceof Date) {
             value = value.toISOString().replace('T', ' ').replace('Z', '')

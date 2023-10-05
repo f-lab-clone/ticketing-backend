@@ -1,7 +1,7 @@
 const path = require('path')
 
 const GENERATE_COUNT = process.argv[2]
-const GENERATE_PER_LOOP = 3
+const GENERATE_PER_LOOP = 1000000
 
 if (GENERATE_COUNT == null) {
     console.error('Please input generate count')
