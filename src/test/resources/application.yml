@@ -1,0 +1,11 @@
+spring:
+  security:
+    user:
+      name: user
+      password: '1234'
+
+ticketing:
+  jwt:
+    secret: d2VhcmVuYXZ5c3dkZXZlbG9wZXJzLmFuZGlhbW1pbmp1bjMwMjE=
+    expiration-hours: '24'
+    issuer: minjun
