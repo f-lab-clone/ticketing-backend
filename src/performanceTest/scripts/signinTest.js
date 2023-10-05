@@ -2,12 +2,12 @@ import { check } from "k6";
 import Request from "./lib/request.js";
 import generator from "./lib/generator.js";
 import hooks from "./lib/hooks.js";
-import { isSuccess } from "./lib/helpers.js";
-import exec from 'k6/execution';
+import { getUserIDFromExec, isSuccess } from "./lib/helpers.js";
 
 export const setup = hooks.setup
 export const handleSummary = hooks.handleSummary
 
+const VU_COUNT = 20
 export const options = {
   tags: {
     testid: `${__ENV.ENTRYPOINT}`
@@ -24,7 +24,7 @@ export const options = {
   scenarios: {
     contacts: {
       executor: 'per-vu-iterations',
-      vus: 20,
+      vus: VU_COUNT,
       iterations: 1,
       maxDuration: '1m', 
     },
@@ -39,7 +39,7 @@ export const options = {
 export default function () {
   const req = new Request()
 
-  const ID = exec.vu.idInTest
+  const ID = getUserIDFromExec(VU_COUNT)
   const user = generator.User(ID)
   const res = req.signin(user)
   check(res, {"Success SignIn": (r) => isSuccess(r) && r.json().Authorization});

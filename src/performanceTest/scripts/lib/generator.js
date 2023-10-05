@@ -13,9 +13,9 @@ const getPrefix = () => {
 const User = (ID) => {
     if (ID) {
         return {
-            name: `K6-${ID}-name`,
+            name: `${ID}`,
             email: `K6-${ID}@email.com`,
-            password: `K6-${ID}-password`,
+            password: `K6-${Number(ID) % 1000}-password`,
         }
     } else {
         return {
