@@ -82,20 +82,6 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/UserDto'
-  /test:
-    post:
-      tags:
-      - test-controller
-      operationId: test
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SampleDTO'
-        required: true
-      responses:
-        "200":
-          description: OK
   /reservations:
     post:
       tags:
@@ -114,24 +100,6 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ReservationResponse'
-  /events:
-    post:
-      tags:
-      - event-controller
-      operationId: createEvent
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/EventCreateRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/EventResponse'
   /bookmarks:
     get:
       tags:
@@ -175,18 +143,6 @@ paths:
                 type: object
                 additionalProperties:
                   type: object
-  /test500:
-    get:
-      tags:
-      - test-controller
-      operationId: throwError
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: string
   /health:
     get:
       tags:
@@ -341,13 +297,6 @@ components:
         createdAt:
           type: string
           format: date-time
-    SampleDTO:
-      required:
-      - text
-      type: object
-      properties:
-        text:
-          type: string
     ReservationCreateRequest:
       required:
       - eventId
@@ -356,29 +305,12 @@ components:
         eventId:
           type: integer
           format: int32
-    EventCreateRequest:
+    BookmarkFromdto:
       required:
-      - date
-      - maxAttendees
-      - reservationEndTime
-      - reservationStartTime
-      - title
+      - event_id
       type: object
       properties:
-        title:
-          maxLength: 255
-          minLength: 1
-          type: string
-        date:
-          type: string
-          format: date-time
-        reservationStartTime:
-          type: string
-          format: date-time
-        reservationEndTime:
-          type: string
-          format: date-time
-        maxAttendees:
+        event_id:
           type: integer
           format: int32
     EventResponse:
@@ -406,13 +338,5 @@ components:
           type: string
           format: date-time
         maxAttendees:
-          type: integer
-          format: int32
-    BookmarkFromdto:
-      required:
-      - event_id
-      type: object
-      properties:
-        event_id:
           type: integer
           format: int32
