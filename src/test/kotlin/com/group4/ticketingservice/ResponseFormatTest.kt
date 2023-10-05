@@ -7,10 +7,12 @@ import com.group4.ticketingservice.utils.exception.ErrorCodes
 import com.group4.ticketingservice.utils.exception.GlobalExceptionHandler
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
+@ActiveProfiles("test")
 class ResponseFormatTest {
     val mockMvc = MockMvcBuilders.standaloneSetup(TestController())
         .setControllerAdvice(GlobalExceptionHandler())
