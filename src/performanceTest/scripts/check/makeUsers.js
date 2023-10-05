@@ -1,9 +1,9 @@
 import { check } from "k6";
-import Request from "./lib/request.js";
-import hooks from "./lib/hooks.js";
-import { isSuccess } from "./lib/helpers.js";
+import Request from "../lib/request.js";
+import hooks from "../lib/hooks.js";
+import { isSuccess } from "../lib/helpers.js";
 import exec from 'k6/execution';
-import generator from "./lib/generator.js";
+import generator from "../lib/generator.js";
 
 export const setup = hooks.setup
 export const handleSummary = hooks.handleSummary

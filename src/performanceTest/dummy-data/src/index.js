@@ -12,7 +12,6 @@ try {
 
 fs.appendFileSync(config.SQL_FILE_NAME, `
 USE ticketingdb;
-SET autocommit=0;
 SET unique_checks=0;
 SET foreign_key_checks=0;
 `)
@@ -25,5 +24,4 @@ fs.appendFileSync(config.SQL_FILE_NAME, `
 \n
 SET unique_checks=1;
 SET foreign_key_checks=1;
-commit;
 `)
