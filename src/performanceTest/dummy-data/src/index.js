@@ -2,6 +2,7 @@ const tables = require('./schema.js')
 const fs = require('fs')
 
 const GENERATE_COUNT = process.argv[2]
+const GENERATE_PER_LOOP = 1000000
 if (GENERATE_COUNT == null) {
     console.error('Please input generate count')
     process.exit(1)
@@ -27,7 +28,7 @@ const generateSQL = (table, data) => {
     const sql = []
     for (const row of data) {
         const keys = Object.keys(row)
-        const values = Object.values(row).map(v => `'${v}'`)
+        const values = Object.values(row).map(v => `"${v}"`)
         const sqlRow = `INSERT INTO ${table.name} (${keys.join(', ')}) VALUES (${values.join(', ')});`
         sql.push(sqlRow)
     }
@@ -47,9 +48,27 @@ try {
 writeFileBufferSync(`USE ticketingdb;`)
 for (const table of tables) {
     console.log(`Generating ${table.name}...`)
-    const data = generateData(table, GENERATE_COUNT)
-    const sqls = generateSQL(table, data)
     writeFileBufferSync(`\n\n-- ${table.name}`)
-    writeFileBufferSync(`\n${sqls.join('\n')}`)
-    console.log(`Finisehd ${table.name}! raws: ${data.length}`)
+
+    // loop GENERATE_COUNT / 100000 times
+    // generate 100000 rows each time
+    let count = GENERATE_COUNT - GENERATE_PER_LOOP
+    let total = 0
+    while (count >= 0) {
+        const data = generateData(table, GENERATE_PER_LOOP)
+        const sqls = generateSQL(table, data)
+        writeFileBufferSync(`\n${sqls.join('\n')}`)
+        console.log(`Make ${table.name}! raws: ${data.length}`)
+        total += data.length
+        count -= GENERATE_PER_LOOP
+    }
+    count += GENERATE_PER_LOOP
+    if (count > 0) {
+        const data = generateData(table, count)
+        const sqls = generateSQL(table, data)
+        writeFileBufferSync(`\n${sqls.join('\n')}`)
+        console.log(`Make ${table.name}! raws: ${data.length}`)
+        total += data.length
+    }
+    console.log(`Finisehd ${table.name}! total: ${total}`)
 }
