@@ -3,6 +3,7 @@ package com.group4.ticketingservice.controller
 import com.group4.ticketingservice.dto.EventCreateRequest
 import com.group4.ticketingservice.dto.EventResponse
 import com.group4.ticketingservice.service.EventService
+import io.swagger.v3.oas.annotations.Hidden
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -21,6 +22,7 @@ class EventController @Autowired constructor(
 ) {
 
     // TimeE2ETest를 위한 임시 EndPoint입니다.
+    @Hidden
     @PostMapping
     fun createEvent(
         @RequestBody @Valid
