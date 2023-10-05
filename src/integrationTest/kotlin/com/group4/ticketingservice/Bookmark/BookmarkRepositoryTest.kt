@@ -12,6 +12,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.transaction.annotation.Transactional
 import java.time.OffsetDateTime
@@ -93,12 +96,13 @@ class BookmarkRepositoryTest(
         val savedUser = userRepository.save(sampleUser)
         val savedEvent = eventRepository.save(sampleEvent)
         bookmarkRepository.save(Bookmark(user = savedUser, event = savedEvent))
+        val pageable: Pageable = PageRequest.of(1, 10)
 
         // when
-        val listofBookmarks = bookmarkRepository.findByUserId(savedUser.id!!)
+        val listofBookmarks = bookmarkRepository.findByUserId(savedUser.id!!, pageable)
 
         // then
-        assertInstanceOf(ArrayList::class.java, listofBookmarks)
-        assertInstanceOf(Bookmark::class.java, listofBookmarks[0])
+        assertInstanceOf(Page::class.java, listofBookmarks)
+        assertInstanceOf(Bookmark::class.java, listofBookmarks.content[0])
     }
 }

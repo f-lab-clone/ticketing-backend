@@ -34,6 +34,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.OffsetDateTime
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.PageImpl
 
 @ExtendWith(MockKExtension::class)
 @WebMvcTest(
@@ -78,11 +82,15 @@ class BookmarkControllerTest(
         event_id = 1
     )
 
+    val pageable: Pageable = PageRequest.of(1, 10)
+    val content = mutableListOf(sampleBookmark)
+    val page: Page<Bookmark> = PageImpl(content, pageable, content.size.toLong())
+
     @Test
     @WithAuthUser(email = testUserName, id = testUserId)
     fun `POST_api_bookmark should invoke service_create`() {
         // given
-        every { service.create(testUserId, sampleBookmarkDto) } returns 1
+        every { service.create(testUserId, sampleBookmarkDto) } returns sampleBookmark
 
         // when
         mockMvc.perform(
@@ -99,7 +107,7 @@ class BookmarkControllerTest(
     @WithAuthUser(email = testUserName, id = testUserId)
     fun `POST_api_bookmark should return saved bookmark id with HTTP 201 Created`() {
         // given
-        every { service.create(testUserId, sampleBookmarkDto) } returns 1
+        every { service.create(testUserId, sampleBookmarkDto) } returns sampleBookmark
 
         // when
         val resultActions: ResultActions = mockMvc.perform(
@@ -117,7 +125,7 @@ class BookmarkControllerTest(
     @WithAuthUser(email = testUserName, id = testUserId)
     fun `POST_api_bookmark should return HTTP ERROR 400 for invalid parameter`() {
         // given
-        every { service.create(testUserId, sampleBookmarkDto) } returns 1
+        every { service.create(testUserId, sampleBookmarkDto) } returns sampleBookmark
 
         // when
         val resultActions: ResultActions = mockMvc.perform(
@@ -132,28 +140,28 @@ class BookmarkControllerTest(
     @Test
     @WithAuthUser(email = testUserName, id = testUserId)
     fun `GET_api_bookmarks should invoke service_getList`() {
-        // given
-        every { service.getList(testUserId) } returns mutableListOf(sampleBookmark)
+        // given 
+        every { service.getBookmarks(testUserId, pageable) } returns page
 
         // when
         mockMvc.perform(MockMvcRequestBuilders.get("/bookmarks"))
 
         // then
-        verify(exactly = 1) { service.getList(testUserId) }
+        verify(exactly = 1) { service.getBookmarks(testUserId, pageable) }
     }
 
     @Test
     @WithAuthUser(email = testUserName, id = testUserId)
     fun `GET_api_bookmarks should return list of bookmarks with HTTP 200 OK`() {
         // given
-        every { service.getList(testUserId) } returns mutableListOf(sampleBookmark)
+        every { service.getBookmarks(testUserId, pageable) } returns page
 
         // when
         val resultActions: ResultActions = mockMvc.perform(MockMvcRequestBuilders.get("/bookmarks"))
 
         // then
         resultActions.andExpect(status().isOk)
-            .andExpect(jsonPath("$[0].id").value(1))
+            .andExpect(jsonPath("$[0].data.id").value(1))
     }
 
     @Test

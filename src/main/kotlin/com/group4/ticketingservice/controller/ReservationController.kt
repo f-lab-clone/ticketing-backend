@@ -55,21 +55,19 @@ class ReservationController(val reservationService: ReservationService) {
         request: HttpServletRequest,
         @PathVariable id: Int
     ): ResponseEntity<ReservationResponse> {
-        val foundReservation = reservationService.getReservation(id)?.let {
-            ReservationResponse(
-                id = it.id!!,
-                eventId = it.event.id!!,
-                userId = it.user.id!!,
-                bookedAt = it.bookedAt
-            )
-        } ?: kotlin.run {
-            null
-        }
+        val foundReservation = reservationService.getReservation(id)
+
+        val response = ReservationResponse(
+            id = foundReservation.id!!,
+            eventId = foundReservation.event.id!!,
+            userId = foundReservation.user.id!!,
+            bookedAt = foundReservation.bookedAt
+        )
 
         val headers = HttpHeaders()
         headers.set("Content-Location", request.requestURI)
 
-        return ResponseEntity(foundReservation, headers, HttpStatus.OK)
+        return ResponseEntity(response, headers, HttpStatus.OK)
     }
 
     @PutMapping("/{id}")
