@@ -15,6 +15,7 @@ chmod 600 /bastion.pem
 ssh -i bastion.pem -CNf -L $TUNNELING_PORT:$MYSQL_HOST:$MYSQL_PORT $BASTION_USERNAME@$BASTION_HOST -o StrictHostKeyChecking=no
 
 mysql -h 127.0.0.1 -P $TUNNELING_PORT -u $MYSQL_USERNAME -p$MYSQL_PASSWORD -D $MYSQL_SCHEMA < /sqls/cleanup.sql
+mysql -h 127.0.0.1 -P $TUNNELING_PORT -u $MYSQL_USERNAME -p$MYSQL_PASSWORD -D $MYSQL_SCHEMA < /sqls/customdata.sql
 mysql -h 127.0.0.1 -P $TUNNELING_PORT -u $MYSQL_USERNAME -p$MYSQL_PASSWORD -D $MYSQL_SCHEMA < /sqls/initdata.sql
 
 echo "Sleeping for 15 seconds..."

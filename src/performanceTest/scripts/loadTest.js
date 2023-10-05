@@ -51,7 +51,7 @@ export default function () {
   const user = generator.User()
   req.signup(user)
   req.signin(user)
-  check(req.access_token_info(), {"Success Login": isSuccess});
+  check(req.access_token_info(), {"Success SignIn": isSuccess});
 
   const event = getAvaliableReservation()
   if (event) {

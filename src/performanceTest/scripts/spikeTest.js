@@ -1,8 +1,9 @@
 import { check } from "k6";
 import Request from "./lib/request.js";
-import generator from "./lib/generator.js";
+import { encode } from "./lib/jwt.js";
 import hooks from "./lib/hooks.js";
 import { isSuccess, getOneFromList, randomInt } from "./lib/helpers.js";
+import exec from 'k6/execution';
 
 export const setup = hooks.setup
 export const handleSummary = hooks.handleSummary
@@ -22,7 +23,6 @@ export const options = {
   },
   scenarios: {
     contacts: {
-      startTime: '15s',
       executor: 'per-vu-iterations',
       vus: 200,
       iterations: 1,
@@ -41,27 +41,15 @@ export default function () {
 
   const getAvaliableReservation = () => {
     let count = 0
-    while (count < randomInt(3, 5)) {
+    while (count < 10) {
       req.getEvents()
       count++
     }
     const events = req.getEvents()
     return getOneFromList(events.json())
-    
-    
-    // for (const event of events) {
-    //   if (event.currentReservationCount < event.maxAttendees) {
-    //     return event.id
-    //   }
-    // }
-
-    // return null
   }
 
-  const user = generator.User()
-  req.signup(user)
-  req.signin(user)
-  check(req.access_token_info(), {"Success Login": isSuccess});
+  req.setToken(encode(exec.vu.idInTest))
 
   const event = getAvaliableReservation()
   if (event) {

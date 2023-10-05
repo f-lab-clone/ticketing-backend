@@ -10,11 +10,21 @@ const getPrefix = () => {
     return `K6-${uuid().substring(0, 10)}`;
 }
 
-const User = () => ({
-    name: `${getPrefix()}-name`,
-    email: `${getPrefix()}@email.com`,
-    password: `${getPrefix()}-password`,
-});
+const User = (ID) => {
+    if (ID) {
+        return {
+            name: `K6-${ID}-name`,
+            email: `K6-${ID}@email.com`,
+            password: `K6-${ID}-password`,
+        }
+    } else {
+        return {
+            name: `${getPrefix()}-name`,
+            email: `${getPrefix()}@email.com`,
+            password: `${getPrefix()}-password`,
+        }
+    }
+}
 
 export default {
     User
