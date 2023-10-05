@@ -40,11 +40,6 @@ class BookmarkRepositoryTest(
         maxAttendees = 10
     )
 
-    private val sampleBookmark = Bookmark(
-        user = sampleUser,
-        event = sampleEvent
-    )
-
     @Test
     fun `bookmarkRepository_save should return savedBookmark`() {
         // given
@@ -70,7 +65,7 @@ class BookmarkRepositoryTest(
         val foundBookmark = bookmarkRepository.findByIdAndUserId(savedBookmark.id!!, savedUser.id!!)
 
         // then
-        assert(savedBookmark.id == foundBookmark.id)
+        assert(savedBookmark.id == foundBookmark?.id)
     }
 
     @Test
@@ -96,7 +91,7 @@ class BookmarkRepositoryTest(
         val savedUser = userRepository.save(sampleUser)
         val savedEvent = eventRepository.save(sampleEvent)
         bookmarkRepository.save(Bookmark(user = savedUser, event = savedEvent))
-        val pageable: Pageable = PageRequest.of(1, 10)
+        val pageable: Pageable = PageRequest.of(0, 10)
 
         // when
         val listofBookmarks = bookmarkRepository.findByUserId(savedUser.id!!, pageable)

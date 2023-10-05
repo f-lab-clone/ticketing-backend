@@ -2,6 +2,7 @@ package com.group4.ticketingservice.reservation
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.group4.ticketingservice.config.GsonConfig
 import com.group4.ticketingservice.config.SecurityConfig
 import com.group4.ticketingservice.controller.ReservationController
 import com.group4.ticketingservice.dto.ReservationCreateRequest
@@ -16,6 +17,7 @@ import com.group4.ticketingservice.reservation.ReservationControllerTest.testFie
 import com.group4.ticketingservice.service.ReservationService
 import com.group4.ticketingservice.user.WithAuthUser
 import com.group4.ticketingservice.utils.Authority
+import com.group4.ticketingservice.utils.OffsetDateTimeAdapter
 import com.group4.ticketingservice.utils.TokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
@@ -38,7 +40,7 @@ import java.time.OffsetDateTime
 @WebMvcTest(
     ReservationController::class,
     includeFilters = arrayOf(
-        ComponentScan.Filter(value = [ (SecurityConfig::class), (TokenProvider::class), (JwtAuthorizationEntryPoint::class)], type = FilterType.ASSIGNABLE_TYPE)
+        ComponentScan.Filter(value = [ (SecurityConfig::class), (TokenProvider::class), (GsonConfig::class), (OffsetDateTimeAdapter::class), (JwtAuthorizationEntryPoint::class)], type = FilterType.ASSIGNABLE_TYPE)
     )
 
 )
@@ -161,6 +163,6 @@ class ReservationControllerTest(
             delete("/reservations/${sampleReservationDeleteRequest.id}")
                 .contentType(MediaType.APPLICATION_JSON)
         )
-            .andExpect(status().isNoContent)
+            .andExpect(status().isOk)
     }
 }

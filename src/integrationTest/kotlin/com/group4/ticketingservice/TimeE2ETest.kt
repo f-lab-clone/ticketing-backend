@@ -69,10 +69,10 @@ class TimeE2ETest @Autowired constructor(
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(eventCreateRequest)
         )
-            .andExpect(status().isOk)
+            .andExpect(status().isCreated)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.date").value("2044-02-04T12:00:00.001Z"))
-            .andExpect(jsonPath("$.reservationStartTime").value("2044-01-01T13:00:00.001Z"))
-            .andExpect(jsonPath("$.reservationEndTime").value("2044-01-01T14:00:00.001Z"))
+            .andExpect(jsonPath("$.data.date").value("2044-02-04T12:00:00.001Z"))
+            .andExpect(jsonPath("$.data.reservationStartTime").value("2044-01-01T13:00:00.001Z"))
+            .andExpect(jsonPath("$.data.reservationEndTime").value("2044-01-01T14:00:00.001Z"))
     }
 }

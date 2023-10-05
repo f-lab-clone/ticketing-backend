@@ -1,8 +1,10 @@
 package com.group4.ticketingservice.health
 
+import com.group4.ticketingservice.config.GsonConfig
 import com.group4.ticketingservice.config.SecurityConfig
 import com.group4.ticketingservice.controller.HealthController
 import com.group4.ticketingservice.filter.JwtAuthorizationEntryPoint
+import com.group4.ticketingservice.utils.OffsetDateTimeAdapter
 import com.group4.ticketingservice.utils.TokenProvider
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 @WebMvcTest(
     controllers = [HealthController::class],
-    includeFilters = [ComponentScan.Filter(value = [(SecurityConfig::class), (JwtAuthorizationEntryPoint::class), (TokenProvider::class)], type = FilterType.ASSIGNABLE_TYPE)]
+    includeFilters = [ComponentScan.Filter(value = [(SecurityConfig::class), (GsonConfig::class), (OffsetDateTimeAdapter::class), (JwtAuthorizationEntryPoint::class), (TokenProvider::class)], type = FilterType.ASSIGNABLE_TYPE)]
 )
 class HealthControllerTest(@Autowired val mockMvc: MockMvc) {
 

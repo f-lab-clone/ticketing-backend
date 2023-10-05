@@ -1,5 +1,6 @@
 package com.group4.ticketingservice.utils
 
+import com.group4.ticketingservice.controller.HealthController
 import com.group4.ticketingservice.dto.ErrorResponseDTO
 import com.group4.ticketingservice.dto.EventResponse
 import com.group4.ticketingservice.dto.ReservationResponse
@@ -16,6 +17,8 @@ import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.server.ServerHttpRequest
 import org.springframework.http.server.ServerHttpResponse
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.web.context.request.ServletRequestAttributes
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice
 import org.springframework.web.util.UriComponentsBuilder
 
@@ -29,6 +32,11 @@ class ResponseAdvice<T>(
         returnType: MethodParameter,
         converterType: Class<out HttpMessageConverter<*>>
     ): Boolean {
+        if (returnType.declaringClass == HealthController::class.java) return false
+
+        val path = (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request.servletPath
+        if (path.startsWith("/error"))return false
+
         return true
     }
 
@@ -40,6 +48,13 @@ class ResponseAdvice<T>(
         request: ServerHttpRequest,
         response: ServerHttpResponse
     ): T? {
+        if (body == null) {
+            return SuccessResponseDTO(
+                data = null,
+                path = response.headers.getFirst("Content-Location")
+            ) as T?
+        }
+
         if (body is ErrorResponseDTO) {
             return body
         }
@@ -77,7 +92,9 @@ class ResponseAdvice<T>(
 
         var data = page.content
 
-        if (data[0] is Event) {
+        if (data.isEmpty()) {
+            data = listOf()
+        } else if (data[0] is Event) {
             data = (page.content as List<Event>).map {
                 EventResponse(
                     id = it.id!!,
@@ -88,8 +105,7 @@ class ResponseAdvice<T>(
                     maxAttendees = it.maxAttendees
                 )
             }
-        }
-        if (data[0] is Reservation) {
+        } else if (data[0] is Reservation) {
             data = (page.content as List<Reservation>).map {
                 ReservationResponse(
                     id = it.id!!,

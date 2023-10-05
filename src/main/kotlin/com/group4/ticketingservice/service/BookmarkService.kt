@@ -7,10 +7,13 @@ import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.BookmarkRepository
 import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.UserRepository
+import com.group4.ticketingservice.utils.exception.CustomException
+import com.group4.ticketingservice.utils.exception.ErrorCodes
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class BookmarkService @Autowired constructor(
@@ -30,9 +33,10 @@ class BookmarkService @Autowired constructor(
     }
 
     fun get(userId: Int, id: Int): Bookmark? {
-        return bookmarkRepository.findByIdAndUserId(id, userId)
+        return bookmarkRepository.findByIdAndUserId(id, userId) ?: throw CustomException(ErrorCodes.END_POINT_NOT_FOUND)
     }
 
+    @Transactional
     fun delete(userId: Int, id: Int) {
         bookmarkRepository.deleteByIdAndUserId(id, userId)
     }

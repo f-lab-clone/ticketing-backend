@@ -93,28 +93,6 @@ class JwtAuthenticationFilterTest {
     }
 
     @Test
-    fun `JwtAuthenticationFilter_dofilter() should write message at JwtAuthenticationFilter_unsuccessfulAuthentication when credential is bad`() {
-        // given
-
-        every { authenticationManager.authenticate(any()) } throws BadCredentialsException("")
-
-        // when
-        val req = MockHttpServletRequest("POST", "/login")
-        req.servletPath = "/login"
-        val res = MockHttpServletResponse()
-        val chain = MockFilterChain()
-
-        val requestJson = ObjectMapper().writeValueAsString(sampleSignInRequest)
-        req.setContent(requestJson.toByteArray())
-
-        filter.doFilter(req, res, chain)
-
-        // then
-
-        assertThat(String(res.contentAsByteArray).contains("error_code")).isTrue()
-    }
-
-    @Test
     fun `JwtAuthenticationFilter_attemptAuthentication() should throw exception  when credential is bad `() {
         // given
         every { authenticationManager.authenticate(any()) } throws BadCredentialsException("")

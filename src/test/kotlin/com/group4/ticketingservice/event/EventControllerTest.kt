@@ -78,11 +78,11 @@ class EventControllerTest(
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(eventCreateRequest)
         )
-            .andExpect(status().isOk)
+            .andExpect(status().isCreated)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(sampleEvent.id))
-            .andExpect(jsonPath("$.title").value(sampleEvent.title))
-            .andExpect(jsonPath("$.maxAttendees").value(sampleEvent.maxAttendees))
+            .andExpect(jsonPath("$.data.id").value(sampleEvent.id))
+            .andExpect(jsonPath("$.data.title").value(sampleEvent.title))
+            .andExpect(jsonPath("$.data.maxAttendees").value(sampleEvent.maxAttendees))
     }
 
     @Test
@@ -94,7 +94,7 @@ class EventControllerTest(
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(sampleEvent.id))
+            .andExpect(jsonPath("$.data.id").value(sampleEvent.id))
     }
 
     @Test

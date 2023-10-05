@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface BookmarkRepository : JpaRepository<Bookmark, Int> {
-    fun findByIdAndUserId(id: Int, userId: Int): Bookmark
+    fun findByIdAndUserId(id: Int, userId: Int): Bookmark?
     fun deleteByIdAndUserId(id: Int, userId: Int)
     fun findByUserId(userId: Int, pageable: Pageable): Page<Bookmark>
 }

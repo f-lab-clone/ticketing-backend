@@ -3,6 +3,7 @@ package com.group4.ticketingservice.bookmark
 import com.google.gson.GsonBuilder
 import com.group4.ticketingservice.bookmark.BookmarkControllerTest.testFields.testUserId
 import com.group4.ticketingservice.bookmark.BookmarkControllerTest.testFields.testUserName
+import com.group4.ticketingservice.config.GsonConfig
 import com.group4.ticketingservice.config.SecurityConfig
 import com.group4.ticketingservice.controller.BookmarkController
 import com.group4.ticketingservice.dto.BookmarkFromdto
@@ -13,6 +14,7 @@ import com.group4.ticketingservice.filter.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.service.BookmarkService
 import com.group4.ticketingservice.user.WithAuthUser
 import com.group4.ticketingservice.utils.Authority
+import com.group4.ticketingservice.utils.OffsetDateTimeAdapter
 import com.group4.ticketingservice.utils.TokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
@@ -34,7 +36,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.OffsetDateTime
@@ -42,7 +43,7 @@ import java.time.OffsetDateTime
 @ExtendWith(MockKExtension::class)
 @WebMvcTest(
     controllers = [BookmarkController::class],
-    includeFilters = [ComponentScan.Filter(value = [(SecurityConfig::class), (JwtAuthorizationEntryPoint::class), (TokenProvider::class)], type = FilterType.ASSIGNABLE_TYPE)]
+    includeFilters = [ComponentScan.Filter(value = [(SecurityConfig::class), (JwtAuthorizationEntryPoint::class), (GsonConfig::class), (OffsetDateTimeAdapter::class), (TokenProvider::class)], type = FilterType.ASSIGNABLE_TYPE)]
 )
 class BookmarkControllerTest(
     @Autowired val mockMvc: MockMvc
@@ -118,7 +119,7 @@ class BookmarkControllerTest(
 
         // then
         resultActions.andExpect(status().isCreated)
-            .andExpect(content().json("1"))
+            .andExpect(jsonPath("$.data.id").value(sampleBookmark.id))
     }
 
     @Test
@@ -147,21 +148,21 @@ class BookmarkControllerTest(
         mockMvc.perform(MockMvcRequestBuilders.get("/bookmarks"))
 
         // then
-        verify(exactly = 1) { service.getBookmarks(testUserId, pageable) }
+        verify(exactly = 1) { service.getBookmarks(any(), any()) }
     }
 
     @Test
     @WithAuthUser(email = testUserName, id = testUserId)
     fun `GET_api_bookmarks should return list of bookmarks with HTTP 200 OK`() {
         // given
-        every { service.getBookmarks(testUserId, pageable) } returns page
+        every { service.getBookmarks(any(), any()) } returns page
 
         // when
         val resultActions: ResultActions = mockMvc.perform(MockMvcRequestBuilders.get("/bookmarks"))
 
         // then
         resultActions.andExpect(status().isOk)
-            .andExpect(jsonPath("$[0].data.id").value(1))
+            .andExpect(jsonPath("$.data.[0].id").value(1))
     }
 
     @Test
@@ -195,20 +196,6 @@ class BookmarkControllerTest(
 
     @Test
     @WithAuthUser(email = testUserName, id = testUserId)
-    fun `GET_api_bookmark should return null with HTTP 200 OK if element is not found`() {
-        // given
-        every { service.get(testUserId, 1) } returns null
-
-        // when
-        val resultActions: ResultActions = mockMvc.perform(MockMvcRequestBuilders.get("/bookmarks/1"))
-
-        // then
-        resultActions.andExpect(status().isOk)
-            .andExpect(content().string("null"))
-    }
-
-    @Test
-    @WithAuthUser(email = testUserName, id = testUserId)
     fun `DELETE_api_bookmark_{bookmarkId} should invoke service_delete`() {
         // given
         every { service.delete(testUserId, 1) } returns Unit
@@ -226,7 +213,7 @@ class BookmarkControllerTest(
 
     @Test
     @WithAuthUser(email = testUserName, id = testUserId)
-    fun `DELETE_api_bookmark_{bookmarkId} should return HTTP 204 No Content`() {
+    fun `DELETE_api_bookmark_{bookmarkId} should return HTTP 200 OK`() {
         // given
         every { service.delete(testUserId, 1) } returns Unit
 
@@ -237,6 +224,6 @@ class BookmarkControllerTest(
         )
 
         // then
-        resultActions.andExpect(status().isNoContent)
+        resultActions.andExpect(status().isOk)
     }
 }

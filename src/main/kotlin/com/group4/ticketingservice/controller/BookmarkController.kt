@@ -45,7 +45,7 @@ class BookmarkController @Autowired constructor(val bookmarkService: BookmarkSer
         @AuthenticationPrincipal userId: Int,
         @PathVariable id: Int
     ): ResponseEntity<out Any?> {
-        val foundBookmark = bookmarkService.get(userId, id) ?: "null"
+        val foundBookmark = bookmarkService.get(userId, id)
 
         val headers = HttpHeaders()
         headers.set("Content-Location", request.requestURI)

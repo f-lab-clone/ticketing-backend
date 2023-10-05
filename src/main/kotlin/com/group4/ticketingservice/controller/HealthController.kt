@@ -16,7 +16,7 @@ class HealthController {
         val headers = HttpHeaders()
         headers.set("Content-Location", "/health")
 
-        return ResponseEntity(null, headers, HttpStatus.OK)
+        return ResponseEntity("OK", headers, HttpStatus.OK)
     }
 
     @GetMapping("/health")
@@ -24,6 +24,6 @@ class HealthController {
         val headers = HttpHeaders()
         headers.set("Content-Location", "/health")
 
-        return ResponseEntity(null, headers, HttpStatus.OK)
+        return ResponseEntity("OK", headers, HttpStatus.OK)
     }
 }
