@@ -17,6 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -63,6 +67,11 @@ class EventControllerTest(
 
     )
 
+    val pageable: Pageable = PageRequest.of(1, 10)
+    val content = mutableListOf(sampleEvent)
+    val page: Page<Event> = PageImpl(content, pageable, content.size.toLong())
+    val emptyPage: Page<Event> = PageImpl(listOf(), pageable, listOf<Event>().size.toLong())
+
     @Test
     fun `POST events should return created event`() {
         every { eventService.createEvent(any(), any(), any(), any(), any()) } returns sampleEvent
@@ -107,27 +116,27 @@ class EventControllerTest(
             .andExpect(status().isOk)
     }
 
-    // @Test
-    // fun `GET List of events should return list of events`() {
-    //     every { eventService.getEvents() } returns listOf(sampleEvent)
-    //     mockMvc.perform(
-    //         get("/events/")
-    //             .contentType(MediaType.APPLICATION_JSON)
-    //     )
-    //         .andExpect(status().isOk)
-    //         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-    //         .andExpect(jsonPath("$[0].id").value(sampleEvent.id))
-    // }
+    @Test
+    fun `GET List of events should return list of events`() {
+        every { eventService.getEvents(any(), any()) } returns page
+        mockMvc.perform(
+            get("/events")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.data.[0].id").value(sampleEvent.id))
+    }
 
-    // @Test
-    // fun `GET List of events should return empty list`() {
-    //     every { eventService.getEvents() } returns listOf()
-    //     mockMvc.perform(
-    //         get("/events/")
-    //             .contentType(MediaType.APPLICATION_JSON)
-    //     )
-    //         .andExpect(status().isNoContent)
-    //         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-    //         .andExpect(jsonPath("$").isEmpty)
-    // }
+    @Test
+    fun `GET List of events should return empty list`() {
+        every { eventService.getEvents(any(), any()) } returns emptyPage
+        mockMvc.perform(
+            get("/events")
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.data").isEmpty)
+    }
 }

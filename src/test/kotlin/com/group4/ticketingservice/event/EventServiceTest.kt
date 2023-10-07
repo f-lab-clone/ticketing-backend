@@ -1,5 +1,6 @@
 package com.group4.ticketingservice.event
 
+import com.group4.ticketingservice.dto.EventSpecifications
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.EventRepository
@@ -10,6 +11,10 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import java.time.OffsetDateTime
 import java.util.Optional
 
@@ -36,6 +41,11 @@ class EventServiceTest {
         maxAttendees = 10
 
     )
+    val pageable: Pageable = PageRequest.of(1, 10)
+    val title = "title"
+    val content = mutableListOf(sampleEvent)
+    val specification = EventSpecifications.withTitle(title)
+    val page: Page<Event> = PageImpl(content, pageable, content.size.toLong())
 
     @Test
     fun `EventService_createEvent invoke EventRepository_findById`() {
@@ -58,10 +68,10 @@ class EventServiceTest {
         verify(exactly = 1) { eventRepository.findById(any()) }
     }
 
-    // @Test
-    // fun `EventService_getEvents invoke EventRepository_findAll`() {
-    //     every { eventRepository.findAll() } returns listOf(sampleEvent)
-    //     eventService.getEvents()
-    //     verify(exactly = 1) { eventRepository.findAll() }
-    // }
+    @Test
+    fun `EventService_getEvents invoke EventRepository_findAll`() {
+        every { eventRepository.findAll(any(), pageable) } returns page
+        eventService.getEvents(title, pageable)
+        verify(exactly = 1) { eventRepository.findAll(any(), pageable) }
+    }
 }
