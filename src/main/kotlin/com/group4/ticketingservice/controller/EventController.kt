@@ -37,7 +37,8 @@ class EventController @Autowired constructor(
         val response = EventResponse(
             id = event.id!!,
             title = event.title,
-            date = event.startDate,
+            startDate = event.startDate,
+            endDate = event.endDate,
             reservationStartTime = event.reservationStartTime,
             reservationEndTime = event.reservationEndTime,
             maxAttendees = event.maxAttendees
@@ -52,7 +53,8 @@ class EventController @Autowired constructor(
                 EventResponse(
                     id = it.id!!,
                     title = it.title,
-                    date = it.startDate,
+                    startDate = it.startDate,
+                    endDate = it.endDate,
                     reservationStartTime = it.reservationStartTime,
                     reservationEndTime = it.reservationEndTime,
                     maxAttendees = it.maxAttendees
@@ -70,7 +72,8 @@ class EventController @Autowired constructor(
             EventResponse(
                 id = it.id!!,
                 title = it.title,
-                date = it.startDate,
+                startDate = it.startDate,
+                endDate = it.endDate,
                 reservationStartTime = it.reservationStartTime,
                 reservationEndTime = it.reservationEndTime,
                 maxAttendees = it.maxAttendees

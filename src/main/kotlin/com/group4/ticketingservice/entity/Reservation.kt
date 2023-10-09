@@ -24,8 +24,8 @@ class Reservation(
 
 ) : BaseTimeEntity() {
 
-    val name: String = ""
-    val phoneNumber: String = ""
-    val postCode: Int = 0
-    val address: String = ""
+    var name: String = ""
+    var phoneNumber: String = ""
+    var postCode: Int = 0
+    var address: String = ""
 }

@@ -28,13 +28,21 @@ class ReservationController(val reservationService: ReservationService) {
     ): ResponseEntity<ReservationResponse> {
         val reservation: Reservation = reservationService.createReservation(
             request.eventId!!,
-            userId
+            userId,
+            request.name!!,
+            request.phoneNumber!!,
+            request.postCode!!,
+            request.address!!
         )
         val response = ReservationResponse(
             id = reservation.id!!,
             eventId = reservation.event.id!!,
             userId = reservation.user.id!!,
-            createdAt = reservation.createdAt
+            createdAt = reservation.createdAt,
+            name = reservation.name,
+            phoneNumber = reservation.phoneNumber,
+            address = reservation.address,
+            postCode = reservation.postCode
         )
         return ResponseEntity.ok(response)
     }
@@ -46,7 +54,11 @@ class ReservationController(val reservationService: ReservationService) {
             id = reservation.id!!,
             eventId = reservation.event.id!!,
             userId = reservation.user.id!!,
-            createdAt = reservation.createdAt
+            createdAt = reservation.createdAt,
+            name = reservation.name,
+            phoneNumber = reservation.phoneNumber,
+            address = reservation.address,
+            postCode = reservation.postCode
         )
         return ResponseEntity.ok(response)
     }
@@ -62,7 +74,11 @@ class ReservationController(val reservationService: ReservationService) {
             id = reservation.id!!,
             eventId = reservation.event.id!!,
             userId = reservation.user.id!!,
-            createdAt = reservation.createdAt
+            createdAt = reservation.createdAt,
+            name = reservation.name,
+            phoneNumber = reservation.phoneNumber,
+            address = reservation.address,
+            postCode = reservation.postCode
         )
         return ResponseEntity.ok(response)
     }

@@ -38,7 +38,8 @@ data class EventDeleteRequest(
 data class EventResponse(
     val id: Int,
     val title: String,
-    val date: OffsetDateTime,
+    val startDate: OffsetDateTime,
+    val endDate: OffsetDateTime,
     val reservationStartTime: OffsetDateTime,
     val reservationEndTime: OffsetDateTime,
     val maxAttendees: Int
