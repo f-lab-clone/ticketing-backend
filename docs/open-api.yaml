@@ -293,9 +293,13 @@ components:
           format: int32
     ReservationResponse:
       required:
-      - bookedAt
+      - address
+      - createdAt
       - eventId
       - id
+      - name
+      - phoneNumber
+      - postCode
       - userId
       type: object
       properties:
@@ -308,15 +312,24 @@ components:
         userId:
           type: integer
           format: int32
-        bookedAt:
+        createdAt:
           type: string
           format: date-time
+        name:
+          type: string
+        phoneNumber:
+          type: string
+        postCode:
+          type: integer
+          format: int32
+        address:
+          type: string
     SignUpRequest:
       required:
       - email
       - name
       - password
-      - phone
+      - phoneNumber
       type: object
       properties:
         email:
@@ -329,8 +342,8 @@ components:
           maxLength: 128
           minLength: 9
           type: string
-        phone:
-          pattern: "^01(?:0|1|[6-9])[.-]?(\\d{3}|\\d{4})[.-]?(\\d{4})$"
+        phoneNumber:
+          pattern: "^01(?:0|1|[6-9])[.-](\\d{3}|\\d{4})[.-](\\d{4})$"
           type: string
     UserDto:
       required:
@@ -354,12 +367,26 @@ components:
           type: string
     ReservationCreateRequest:
       required:
+      - address
       - eventId
+      - name
+      - phoneNumber
+      - postCode
       type: object
       properties:
         eventId:
           type: integer
           format: int32
+        name:
+          type: string
+        phoneNumber:
+          pattern: "^01(?:0|1|[6-9])[.-](\\d{3}|\\d{4})[.-](\\d{4})$"
+          type: string
+        postCode:
+          type: integer
+          format: int32
+        address:
+          type: string
     EventCreateRequest:
       required:
       - endDate
@@ -391,11 +418,12 @@ components:
           format: int32
     EventResponse:
       required:
-      - date
+      - endDate
       - id
       - maxAttendees
       - reservationEndTime
       - reservationStartTime
+      - startDate
       - title
       type: object
       properties:
@@ -404,7 +432,10 @@ components:
           format: int32
         title:
           type: string
-        date:
+        startDate:
+          type: string
+          format: date-time
+        endDate:
           type: string
           format: date-time
         reservationStartTime:
