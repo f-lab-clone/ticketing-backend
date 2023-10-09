@@ -75,7 +75,7 @@ class ReservationTest @Autowired constructor(
         for (i in 0 until threadCount) {
             executorService.submit {
                 try {
-                    reservationService.createReservation(1, 1)
+                    reservationService.createReservation(1, 1, "", "", 1, "")
                 } finally {
                     countDownLatch.countDown()
                 }

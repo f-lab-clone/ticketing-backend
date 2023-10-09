@@ -64,7 +64,11 @@ class ReservationControllerTest(
     )
 
     private val sampleReservationCreateRequest = ReservationCreateRequest(
-        eventId = 1
+        eventId = 1,
+        name = "asdf",
+        phoneNumber = "010-1234-5678",
+        postCode = 1,
+        address = "qwer"
     )
     private val sampleReservationDeleteRequest = ReservationDeleteRequest(
         id = 1
@@ -90,7 +94,7 @@ class ReservationControllerTest(
     @Test
     @WithAuthUser(email = testUserName, id = testUserId)
     fun `POST reservations should return created reservation`() {
-        every { reservationService.createReservation(1, 1) } returns sampleReservation
+        every { reservationService.createReservation(1, 1, any(), any(), any(), any()) } returns sampleReservation
 
         mockMvc.perform(
             post("/reservations")

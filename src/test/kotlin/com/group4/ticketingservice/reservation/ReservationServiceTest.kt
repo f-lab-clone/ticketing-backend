@@ -72,7 +72,7 @@ class ReservationServiceTest() {
 
         every { eventRepository.saveAndFlush(any()) } returns sampleEvent
         every { reservationRepository.saveAndFlush(any()) } returns sampleReservation
-        reservationService.createReservation(1, 1)
+        reservationService.createReservation(1, 1, "김해군", "010-1234-5678", 1, "서울")
         verify(exactly = 1) { reservationRepository.saveAndFlush(any()) }
     }
 
@@ -84,7 +84,7 @@ class ReservationServiceTest() {
         every { eventRepository.saveAndFlush(any()) } returns sampleEvent
         every { reservationRepository.saveAndFlush(any()) } returns sampleReservation
 
-        assertThrows<CustomException> { reservationService.createReservation(1, 1) }
+        assertThrows<CustomException> { reservationService.createReservation(1, 1, "김해군", "010-1234-5678", 1, "서울") }
     }
 
     @Test
