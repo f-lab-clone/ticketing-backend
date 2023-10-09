@@ -67,9 +67,43 @@ class EventControllerTest(
 
     )
 
-    val pageable: Pageable = PageRequest.of(1, 10)
-    val content = mutableListOf(sampleEvent)
-    val page: Page<Event> = PageImpl(content, pageable, content.size.toLong())
+    val pageable: Pageable = PageRequest.of(0, 4)
+    val content = mutableListOf(
+        Event(
+            id = 2,
+            title = "민준이의 전국군가잘함",
+            date = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now(),
+            reservationStartTime = OffsetDateTime.now(),
+            maxAttendees = 10
+        ),
+        Event(
+            id = 1,
+            title = "정섭이의 코딩쇼",
+            date = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now(),
+            reservationStartTime = OffsetDateTime.now(),
+            maxAttendees = 10
+        ),
+        Event(
+            id = 4,
+            title = "준하의 스파르타 코딩 동아리 설명회",
+            date = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now(),
+            reservationStartTime = OffsetDateTime.now(),
+            maxAttendees = 10
+        ),
+        Event(
+            id = 3,
+            title = "하영이의 신작도서 팬싸인회",
+            date = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now(),
+            reservationStartTime = OffsetDateTime.now(),
+            maxAttendees = 10
+        )
+    )
+    val totalElements: Long = 100
+    val page: Page<Event> = PageImpl(content, pageable, totalElements)
     val emptyPage: Page<Event> = PageImpl(listOf(), pageable, listOf<Event>().size.toLong())
 
     @Test
@@ -118,14 +152,41 @@ class EventControllerTest(
 
     @Test
     fun `GET List of events should return list of events`() {
+        // Given
         every { eventService.getEvents(any(), any()) } returns page
-        mockMvc.perform(
+
+        // When
+        val result = mockMvc.perform(
             get("/events")
                 .contentType(MediaType.APPLICATION_JSON)
         )
+
+        // Then
+        result
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.data.[0].id").value(sampleEvent.id))
+            .andExpect(jsonPath("$.data.[0].id").value(content[0].id))
+    }
+
+    @Test
+    fun `GET List of events should return list of events with pagination and sorting`() {
+        // Given
+        every { eventService.getEvents(any(), any()) } returns page
+
+        // When
+        val result = mockMvc.perform(
+            get("/events")
+                .param("page", "1")
+                .param("size", "4")
+                .param("sort", "title")
+        )
+
+        // Then
+        result
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.totalElements").value(totalElements))
+            .andExpect(jsonPath("$.data.[0].id").value(2))
+            .andExpect(jsonPath("$.data.[1].id").value(1))
     }
 
     @Test

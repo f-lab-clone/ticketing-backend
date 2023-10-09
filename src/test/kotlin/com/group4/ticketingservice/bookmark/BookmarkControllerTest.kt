@@ -35,7 +35,9 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.OffsetDateTime
@@ -83,9 +85,59 @@ class BookmarkControllerTest(
         event_id = 1
     )
 
-    val pageable: Pageable = PageRequest.of(1, 10)
-    val content = mutableListOf(sampleBookmark)
-    val page: Page<Bookmark> = PageImpl(content, pageable, content.size.toLong())
+    val pageable: Pageable = PageRequest.of(0, 4)
+    val content = mutableListOf(
+        Bookmark(
+            id = 11,
+            user = sampleUser,
+            event = Event(
+                id = 1,
+                title = "정섭이의 코딩쇼",
+                date = OffsetDateTime.now(),
+                reservationEndTime = OffsetDateTime.now(),
+                reservationStartTime = OffsetDateTime.now(),
+                maxAttendees = 10
+            )
+        ),
+        Bookmark(
+            id = 12,
+            user = sampleUser,
+            event = Event(
+                id = 2,
+                title = "민준이의 전국군가잘함",
+                date = OffsetDateTime.now(),
+                reservationEndTime = OffsetDateTime.now(),
+                reservationStartTime = OffsetDateTime.now(),
+                maxAttendees = 10
+            )
+        ),
+        Bookmark(
+            id = 13,
+            user = sampleUser,
+            event = Event(
+                id = 3,
+                title = "하영이의 신작도서 팬싸인회",
+                date = OffsetDateTime.now(),
+                reservationEndTime = OffsetDateTime.now(),
+                reservationStartTime = OffsetDateTime.now(),
+                maxAttendees = 10
+            )
+        ),
+        Bookmark(
+            id = 14,
+            user = sampleUser,
+            event = Event(
+                id = 4,
+                title = "준하의 스파르타 코딩 동아리 설명회",
+                date = OffsetDateTime.now(),
+                reservationEndTime = OffsetDateTime.now(),
+                reservationStartTime = OffsetDateTime.now(),
+                maxAttendees = 10
+            )
+        )
+    )
+    val totalElements: Long = 100
+    val page: Page<Bookmark> = PageImpl(content, pageable, totalElements)
 
     @Test
     @WithAuthUser(email = testUserName, id = testUserId)
@@ -162,7 +214,28 @@ class BookmarkControllerTest(
 
         // then
         resultActions.andExpect(status().isOk)
-            .andExpect(jsonPath("$.data.[0].id").value(1))
+            .andExpect(jsonPath("$.data.[0].id").value(11))
+    }
+
+    @Test
+    @WithAuthUser(email = testUserName, id = testUserId)
+    fun `GET_api_bookmarks should return page of bookmarks with pagination`() {
+        // given
+        every { service.getBookmarks(any(), any()) } returns page
+
+        // when
+        val result = mockMvc.perform(
+            get("/bookmarks")
+                .param("page", "1")
+                .param("size", "4")
+        )
+
+        // then
+        result
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.totalElements").value(totalElements))
+            .andExpect(jsonPath("$.data.[0].id").value(11))
+            .andExpect(jsonPath("$.data.[1].id").value(12))
     }
 
     @Test

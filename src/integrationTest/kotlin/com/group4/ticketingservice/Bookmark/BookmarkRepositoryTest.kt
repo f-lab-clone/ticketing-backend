@@ -9,6 +9,7 @@ import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.utils.Authority
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -39,6 +40,49 @@ class BookmarkRepositoryTest(
         reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 10
     )
+
+    val sampleEvents = mutableListOf(
+        Event(
+            title = "정섭이의 코딩쇼",
+            date = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now(),
+            reservationStartTime = OffsetDateTime.now(),
+            maxAttendees = 10
+        ),
+        Event(
+            title = "민준이의 전국군가잘함",
+            date = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now(),
+            reservationStartTime = OffsetDateTime.now(),
+            maxAttendees = 10
+        ),
+        Event(
+            title = "하영이의 신작도서 팬싸인회",
+            date = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now(),
+            reservationStartTime = OffsetDateTime.now(),
+            maxAttendees = 10
+        ),
+        Event(
+            title = "준하의 스파르타 코딩 동아리 설명회",
+            date = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now(),
+            reservationStartTime = OffsetDateTime.now(),
+            maxAttendees = 10
+        ),
+        Event(
+            title = "군대에서 코딩 직군으로 복무하기 설명회",
+            date = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now(),
+            reservationStartTime = OffsetDateTime.now(),
+            maxAttendees = 10
+        )
+    )
+
+    @AfterEach
+    fun removeBookmark() {
+        bookmarkRepository.deleteAll()
+    }
 
     @Test
     fun `bookmarkRepository_save should return savedBookmark`() {
@@ -99,5 +143,27 @@ class BookmarkRepositoryTest(
         // then
         assertInstanceOf(Page::class.java, listofBookmarks)
         assertInstanceOf(Bookmark::class.java, listofBookmarks.content[0])
+    }
+
+    @Test
+    fun `bookmarkRepository_findByUser should return page of bookmarks`() {
+        // given
+        val savedUser = userRepository.save(sampleUser)
+        bookmarkRepository.deleteAll()
+        sampleEvents.forEach {
+            val savedEvent = eventRepository.save(it)
+            bookmarkRepository.save(Bookmark(user = savedUser, event = savedEvent))
+        }
+        val pageSize = 2
+        val pageable: Pageable = PageRequest.of(0, pageSize)
+
+        // when
+        val result = bookmarkRepository.findByUserId(savedUser.id!!, pageable)
+
+        // then
+        assertThat(result.totalElements).isEqualTo(sampleEvents.size.toLong())
+        assertThat(result.pageable.pageSize).isEqualTo(pageSize)
+        assertThat(result.numberOfElements).isEqualTo(pageSize)
+        assertThat(result.content.size).isEqualTo(pageSize)
     }
 }
