@@ -169,17 +169,18 @@ class EventRepositoryTest @Autowired constructor(
         // given
         val pageSize = 10
         val pageable: Pageable = PageRequest.of(0, pageSize, Sort.by("title").ascending())
+        val sortedItemIndexs = mutableListOf(4, 1, 0, 3, 2)
 
         // when
         val result = eventRepository.findAll(pageable)
 
         // then
         assertThat(result.totalElements).isEqualTo(sampleEvents.size.toLong())
-        assertThat(result.content[0].title).isEqualTo(sampleEvents[4].title)
-        assertThat(result.content[1].title).isEqualTo(sampleEvents[1].title)
-        assertThat(result.content[2].title).isEqualTo(sampleEvents[0].title)
-        assertThat(result.content[3].title).isEqualTo(sampleEvents[3].title)
-        assertThat(result.content[4].title).isEqualTo(sampleEvents[2].title)
+        assertThat(result.content[0].title).isEqualTo(sampleEvents[sortedItemIndexs[0]].title)
+        assertThat(result.content[1].title).isEqualTo(sampleEvents[sortedItemIndexs[1]].title)
+        assertThat(result.content[2].title).isEqualTo(sampleEvents[sortedItemIndexs[2]].title)
+        assertThat(result.content[3].title).isEqualTo(sampleEvents[sortedItemIndexs[3]].title)
+        assertThat(result.content[4].title).isEqualTo(sampleEvents[sortedItemIndexs[4]].title)
     }
 
     @Test
