@@ -26,12 +26,15 @@ class BookmarkRepositoryTest(
         name = "james",
         email = "james@example.com",
         password = "12345678",
-        authority = Authority.USER
+        authority = Authority.USER,
+        phone = "010-1234-5678"
     )
 
     private val sampleEvent: Event = Event(
         title = "test title",
-        date = OffsetDateTime.now(),
+        startDate = OffsetDateTime.now(),
+        endDate = OffsetDateTime.now(),
+
         reservationEndTime = OffsetDateTime.now(),
         reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 10

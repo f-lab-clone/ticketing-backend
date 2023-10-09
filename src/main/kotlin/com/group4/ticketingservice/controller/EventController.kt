@@ -28,7 +28,8 @@ class EventController @Autowired constructor(
     ): ResponseEntity<EventResponse> {
         val event = eventService.createEvent(
             request.title!!,
-            request.date!!,
+            request.startDate!!,
+            request.endDate!!,
             request.reservationStartTime!!,
             request.reservationEndTime!!,
             request.maxAttendees!!
@@ -36,7 +37,7 @@ class EventController @Autowired constructor(
         val response = EventResponse(
             id = event.id!!,
             title = event.title,
-            date = event.date,
+            date = event.startDate,
             reservationStartTime = event.reservationStartTime,
             reservationEndTime = event.reservationEndTime,
             maxAttendees = event.maxAttendees
@@ -51,7 +52,7 @@ class EventController @Autowired constructor(
                 EventResponse(
                     id = it.id!!,
                     title = it.title,
-                    date = it.date,
+                    date = it.startDate,
                     reservationStartTime = it.reservationStartTime,
                     reservationEndTime = it.reservationEndTime,
                     maxAttendees = it.maxAttendees
@@ -69,7 +70,7 @@ class EventController @Autowired constructor(
             EventResponse(
                 id = it.id!!,
                 title = it.title,
-                date = it.date,
+                date = it.startDate,
                 reservationStartTime = it.reservationStartTime,
                 reservationEndTime = it.reservationEndTime,
                 maxAttendees = it.maxAttendees

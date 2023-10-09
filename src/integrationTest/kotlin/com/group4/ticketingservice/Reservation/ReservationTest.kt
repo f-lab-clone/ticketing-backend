@@ -37,12 +37,14 @@ class ReservationTest @Autowired constructor(
         name = testFields.testName,
         email = testFields.testUserName,
         password = BCryptPasswordEncoder().encode(testFields.password),
-        authority = Authority.USER
+        authority = Authority.USER,
+        phone = "010-1234-5678"
     )
 
     private val sampleEvent = Event(
         title = "test title",
-        date = OffsetDateTime.now(),
+        startDate = OffsetDateTime.now(),
+        endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),
         reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 100
@@ -53,7 +55,7 @@ class ReservationTest @Autowired constructor(
         eventRepository.save(sampleEvent)
 
         val event = eventRepository.findById(1).get()
-        event.currentReservationCount = 0
+        event.totalAttendees = 0
 
         eventRepository.save(event)
     }

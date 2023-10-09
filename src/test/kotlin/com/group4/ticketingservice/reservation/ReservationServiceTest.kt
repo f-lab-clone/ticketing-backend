@@ -35,13 +35,15 @@ class ReservationServiceTest() {
         email = "minjun",
         password = "1234",
         authority = Authority.USER,
-        id = sampleUserId
+        id = sampleUserId,
+        phone = "010-1234-5678"
     )
 
     private val sampleEvent: Event = Event(
         id = 1,
         title = "test title",
-        date = OffsetDateTime.now(),
+        startDate = OffsetDateTime.now(),
+        endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),
         reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 10
@@ -49,8 +51,7 @@ class ReservationServiceTest() {
 
     private val sampleReservation: Reservation = Reservation(
         user = sampleUser,
-        event = sampleEvent,
-        bookedAt = OffsetDateTime.now()
+        event = sampleEvent
     )
 
     @Test

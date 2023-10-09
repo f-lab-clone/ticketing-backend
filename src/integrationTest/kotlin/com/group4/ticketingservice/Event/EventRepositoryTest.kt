@@ -16,7 +16,6 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.time.Duration.ofHours
 import java.time.OffsetDateTime
-import java.time.ZoneOffset
 
 class EventRepositoryTest @Autowired constructor(
     @Autowired val eventRepository: EventRepository,
@@ -27,7 +26,8 @@ class EventRepositoryTest @Autowired constructor(
         name = ReservationTest.testFields.testName,
         email = ReservationTest.testFields.testUserName,
         password = BCryptPasswordEncoder().encode(ReservationTest.testFields.password),
-        authority = Authority.USER
+        authority = Authority.USER,
+        phone = "010-1234-5678"
     )
 
     @BeforeEach fun saveUser() {
@@ -40,7 +40,8 @@ class EventRepositoryTest @Autowired constructor(
         val now = OffsetDateTime.now()
         val sampleEvent = Event(
             title = "test title",
-            date = now,
+            startDate = now + ofHours(3),
+            endDate = now + ofHours(4),
             reservationEndTime = now + ofHours(2),
             reservationStartTime = now + ofHours(1),
             maxAttendees = 10
@@ -57,10 +58,11 @@ class EventRepositoryTest @Autowired constructor(
     @Test
     fun `EventRepository_findByIdOrNull should return event`() {
         // given
-        val now = OffsetDateTime.now(ZoneOffset.UTC)
+        val now = OffsetDateTime.now()
         val sampleEvent = Event(
             title = "test title",
-            date = now,
+            startDate = now + ofHours(3),
+            endDate = now + ofHours(4),
             reservationEndTime = now + ofHours(2),
             reservationStartTime = now + ofHours(1),
             maxAttendees = 10
@@ -80,10 +82,11 @@ class EventRepositoryTest @Autowired constructor(
     @Test
     fun `EventRepository_findAll should return list of events`() {
         // given
-        val now = OffsetDateTime.now(ZoneOffset.UTC)
+        val now = OffsetDateTime.now()
         val sampleEvent = Event(
             title = "test title",
-            date = now,
+            startDate = now + ofHours(3),
+            endDate = now + ofHours(4),
             reservationEndTime = now + ofHours(2),
             reservationStartTime = now + ofHours(1),
             maxAttendees = 10
@@ -102,10 +105,11 @@ class EventRepositoryTest @Autowired constructor(
     @Test
     fun `EventRepository_delete should delete event`() {
         // given
-        val now = OffsetDateTime.now(ZoneOffset.UTC)
+        val now = OffsetDateTime.now()
         val sampleEvent = Event(
             title = "test title",
-            date = now,
+            startDate = now + ofHours(3),
+            endDate = now + ofHours(4),
             reservationEndTime = now + ofHours(2),
             reservationStartTime = now + ofHours(1),
             maxAttendees = 10

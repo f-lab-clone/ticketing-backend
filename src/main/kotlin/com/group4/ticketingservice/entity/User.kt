@@ -17,7 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails
 
 @Entity
 @Table(name = "user")
-class User(name: String, email: String, password: String, authority: Authority, id: Int? = null) : BaseTimeEntity(), UserDetails {
+class User(name: String, email: String, password: String, authority: Authority, id: Int? = null, phone: String) : BaseTimeEntity(), UserDetails {
     companion object {
         fun toDto(user: User) = UserDto(
             name = user.name,
@@ -44,6 +44,11 @@ class User(name: String, email: String, password: String, authority: Authority, 
     @Column(nullable = false)
     @NotNull
     var pw: String = password
+        protected set
+
+    @Column(nullable = false)
+    @NotNull
+    var phoneNumber: String = phone
         protected set
 
     @Column(nullable = false)

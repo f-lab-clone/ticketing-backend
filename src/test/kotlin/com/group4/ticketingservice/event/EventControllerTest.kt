@@ -51,12 +51,14 @@ class EventControllerTest(
         name = "james",
         email = "james@example.com",
         password = "12345678",
-        authority = Authority.USER
+        authority = Authority.USER,
+        phone = "010-1234-5678"
     )
     private val sampleEvent: Event = Event(
         id = 1,
         title = "test title",
-        date = OffsetDateTime.now(),
+        startDate = OffsetDateTime.now(),
+        endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),
         reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 10
@@ -65,10 +67,11 @@ class EventControllerTest(
 
     @Test
     fun `POST events should return created event`() {
-        every { eventService.createEvent(any(), any(), any(), any(), any()) } returns sampleEvent
+        every { eventService.createEvent(any(), any(), any(), any(), any(), any()) } returns sampleEvent
 
         val eventCreateRequest = "{\"title\":\"test title\"," +
-            "\"date\":\"2044-02-04T21:00:00.001+09:00\"," +
+            "\"startDate\":\"2044-02-04T21:00:00.001+09:00\"," +
+            "\"endDate\":\"2044-02-04T21:00:00.001+09:00\"," +
             "\"reservationStartTime\":\"2044-01-01T22:00:00.001+09:00\"," +
             "\"reservationEndTime\":\"2044-01-01T23:00:00.001+09:00\"," +
             "\"maxAttendees\":10}"

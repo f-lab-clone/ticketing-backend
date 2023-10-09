@@ -59,7 +59,8 @@ class ReservationControllerTest(
         name = testFields.testName,
         email = testFields.testUserName,
         password = testFields.password,
-        authority = Authority.USER
+        authority = Authority.USER,
+        phone = "010-1234-5678"
     )
 
     private val sampleReservationCreateRequest = ReservationCreateRequest(
@@ -72,7 +73,8 @@ class ReservationControllerTest(
     private val sampleEvent: Event = Event(
         id = 1,
         title = "test title",
-        date = OffsetDateTime.now(),
+        startDate = OffsetDateTime.now(),
+        endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),
         reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 10
@@ -80,8 +82,7 @@ class ReservationControllerTest(
     private val sampleReservation: Reservation = Reservation(
         id = 1,
         user = sampleUser.apply { id = 1 },
-        event = sampleEvent,
-        bookedAt = OffsetDateTime.now()
+        event = sampleEvent
     )
 
     private val gson: Gson = GsonBuilder().create()
@@ -131,12 +132,13 @@ class ReservationControllerTest(
             event = Event(
                 id = 2,
                 title = "test title 2",
-                date = OffsetDateTime.now(),
+                startDate = OffsetDateTime.now(),
+                endDate = OffsetDateTime.now(),
                 reservationEndTime = OffsetDateTime.now(),
                 reservationStartTime = OffsetDateTime.now(),
                 maxAttendees = 10
-            ),
-            bookedAt = OffsetDateTime.now()
+            )
+
         )
         every { reservationService.updateReservation(1, 2) } returns updatedReservation
 

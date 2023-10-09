@@ -14,7 +14,10 @@ data class EventCreateRequest(
     val title: String?,
     @field:NotNull
     @field:Future
-    val date: OffsetDateTime?,
+    val startDate: OffsetDateTime?,
+    @field:NotNull
+    @field:Future
+    val endDate: OffsetDateTime?,
     @field:NotNull
     @field:FutureOrPresent
     val reservationStartTime: OffsetDateTime?,

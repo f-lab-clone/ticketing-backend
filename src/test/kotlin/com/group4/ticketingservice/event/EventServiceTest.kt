@@ -25,12 +25,14 @@ class EventServiceTest {
         name = "james",
         email = "james@example.com",
         password = "12345678",
-        authority = Authority.USER
+        authority = Authority.USER,
+        phone = "010-1234-5678"
     )
     private val sampleEvent: Event = Event(
         id = 1,
         title = "test title",
-        date = OffsetDateTime.now(),
+        startDate = OffsetDateTime.now(),
+        endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),
         reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 10
@@ -42,7 +44,8 @@ class EventServiceTest {
         every { eventRepository.save(any()) } returns sampleEvent
         eventService.createEvent(
             title = sampleEvent.title,
-            date = sampleEvent.date,
+            startDate = sampleEvent.startDate,
+            endDate = sampleEvent.startDate,
             reservationStartTime = sampleEvent.reservationStartTime,
             reservationEndTime = sampleEvent.reservationEndTime,
             maxAttendees = sampleEvent.maxAttendees

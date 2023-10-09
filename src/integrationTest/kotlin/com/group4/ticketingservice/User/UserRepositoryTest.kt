@@ -25,7 +25,8 @@ class UserRepositoryTest(
         name = testFields.testName,
         email = testFields.testUserName,
         password = BCryptPasswordEncoder().encode(testFields.password),
-        authority = Authority.USER
+        authority = Authority.USER,
+        phone = "010-1234-5678"
     )
 
     @AfterEach fun removeUser() {

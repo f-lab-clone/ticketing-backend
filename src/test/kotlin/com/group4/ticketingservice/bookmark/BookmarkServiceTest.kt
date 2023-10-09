@@ -27,7 +27,8 @@ class BookmarkServiceTest() {
         name = "james",
         email = "james@example.com",
         password = "12345678",
-        authority = Authority.USER
+        authority = Authority.USER,
+        phone = "010-1234-5678"
     )
 
     val sampleUserId = 1
@@ -35,7 +36,8 @@ class BookmarkServiceTest() {
     private val sampleEvent: Event = Event(
         id = 1,
         title = "test title",
-        date = OffsetDateTime.now(),
+        startDate = OffsetDateTime.now(),
+        endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),
         reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 10

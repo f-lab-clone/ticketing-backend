@@ -2,6 +2,7 @@ package com.group4.ticketingservice.dto
 
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 
 /**
@@ -20,7 +21,11 @@ data class SignUpRequest(
     val name: String?,
     @field:NotNull
     @field:Size(min = 9, max = 128)
-    val password: String?
+    val password: String?,
+    @field:NotNull
+    @field:Pattern(regexp = "^01(?:0|1|[6-9])[.-]?(\\d{3}|\\d{4})[.-]?(\\d{4})$", message = "10 ~ 11 자리의 숫자만 입력 가능 합니다.")
+    val phone: String?
+
 )
 
 class SignInRequest {
