@@ -316,6 +316,7 @@ components:
       - email
       - name
       - password
+      - phone
       type: object
       properties:
         email:
@@ -327,6 +328,9 @@ components:
         password:
           maxLength: 128
           minLength: 9
+          type: string
+        phone:
+          pattern: "^01(?:0|1|[6-9])[.-]?(\\d{3}|\\d{4})[.-]?(\\d{4})$"
           type: string
     UserDto:
       required:
@@ -358,10 +362,11 @@ components:
           format: int32
     EventCreateRequest:
       required:
-      - date
+      - endDate
       - maxAttendees
       - reservationEndTime
       - reservationStartTime
+      - startDate
       - title
       type: object
       properties:
@@ -369,7 +374,10 @@ components:
           maxLength: 255
           minLength: 1
           type: string
-        date:
+        startDate:
+          type: string
+          format: date-time
+        endDate:
           type: string
           format: date-time
         reservationStartTime:
