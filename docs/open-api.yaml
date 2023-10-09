@@ -530,13 +530,14 @@ components:
       required:
       - bookmarks
       - createdAt
-      - currentReservationCount
-      - date
+      - endDate
       - maxAttendees
       - reservationEndTime
       - reservationStartTime
       - reservations
+      - startDate
       - title
+      - totalAttendees
       - updatedAt
       type: object
       properties:
@@ -545,7 +546,10 @@ components:
           format: int32
         title:
           type: string
-        date:
+        startDate:
+          type: string
+          format: date-time
+        endDate:
           type: string
           format: date-time
         reservationStartTime:
@@ -557,7 +561,7 @@ components:
         maxAttendees:
           type: integer
           format: int32
-        currentReservationCount:
+        totalAttendees:
           type: integer
           format: int32
         createdAt:
@@ -631,8 +635,13 @@ components:
           type: boolean
     Reservation:
       required:
-      - bookedAt
+      - address
+      - createdAt
       - event
+      - name
+      - phoneNumber
+      - postCode
+      - updatedAt
       - user
       type: object
       properties:
@@ -643,9 +652,21 @@ components:
           $ref: '#/components/schemas/User'
         event:
           $ref: '#/components/schemas/Event'
-        bookedAt:
+        createdAt:
           type: string
           format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        name:
+          type: string
+        phoneNumber:
+          type: string
+        postCode:
+          type: integer
+          format: int32
+        address:
+          type: string
     SortObject:
       type: object
       properties:
@@ -666,6 +687,7 @@ components:
       - isEnabled
       - name
       - password
+      - phoneNumber
       - pw
       - role
       - updatedAt
@@ -686,6 +708,9 @@ components:
         id:
           type: integer
           format: int32
+        phone:
+          type: string
+          writeOnly: true
         createdAt:
           type: string
           format: date-time
@@ -693,6 +718,8 @@ components:
           type: string
           format: date-time
         pw:
+          type: string
+        phoneNumber:
           type: string
         role:
           type: string
