@@ -64,6 +64,10 @@ paths:
       responses:
         "200":
           description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
   /users/signup:
     post:
       tags:
@@ -97,6 +101,23 @@ paths:
         "200":
           description: OK
   /reservations:
+    get:
+      tags:
+      - reservation-controller
+      operationId: getReservations
+      parameters:
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/Pageable'
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageReservation'
     post:
       tags:
       - reservation-controller
@@ -136,7 +157,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/SuccessResponseDTO'
+                $ref: '#/components/schemas/PageEvent'
     post:
       tags:
       - event-controller
@@ -159,13 +180,19 @@ paths:
       tags:
       - bookmark-controller
       operationId: getBookmarks
+      parameters:
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/Pageable'
       responses:
         "200":
           description: OK
           content:
             '*/*':
               schema:
-                type: object
+                $ref: '#/components/schemas/PageBookmark'
     post:
       tags:
       - bookmark-controller
@@ -439,24 +466,274 @@ components:
           type: array
           items:
             type: string
-    SuccessResponseDTO:
+    Bookmark:
       required:
-      - data
-      - message
-      - path
-      - timestamp
-      - totalElements
+      - createdAt
+      - event
+      - updatedAt
+      - user
       type: object
       properties:
-        timestamp:
+        id:
+          type: integer
+          format: int32
+        user:
+          $ref: '#/components/schemas/User'
+        event:
+          $ref: '#/components/schemas/Event'
+        createdAt:
           type: string
           format: date-time
-        message:
+        updatedAt:
           type: string
-        data:
-          type: object
-        path:
+          format: date-time
+    Event:
+      required:
+      - bookmarks
+      - createdAt
+      - currentReservationCount
+      - date
+      - maxAttendees
+      - reservationEndTime
+      - reservationStartTime
+      - reservations
+      - title
+      - updatedAt
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        title:
           type: string
+        date:
+          type: string
+          format: date-time
+        reservationStartTime:
+          type: string
+          format: date-time
+        reservationEndTime:
+          type: string
+          format: date-time
+        maxAttendees:
+          type: integer
+          format: int32
+        currentReservationCount:
+          type: integer
+          format: int32
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        bookmarks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bookmark'
+        reservations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reservation'
+    GrantedAuthority:
+      type: object
+      properties:
+        authority:
+          type: string
+    PageReservation:
+      type: object
+      properties:
         totalElements:
           type: integer
           format: int64
+        totalPages:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reservation'
+        number:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
+    PageableObject:
+      type: object
+      properties:
+        offset:
+          type: integer
+          format: int64
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        paged:
+          type: boolean
+        unpaged:
+          type: boolean
+    Reservation:
+      required:
+      - bookedAt
+      - event
+      - user
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        user:
+          $ref: '#/components/schemas/User'
+        event:
+          $ref: '#/components/schemas/Event'
+        bookedAt:
+          type: string
+          format: date-time
+    SortObject:
+      type: object
+      properties:
+        empty:
+          type: boolean
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean
+    User:
+      required:
+      - authorities
+      - createdAt
+      - email
+      - isAccountNonExpired
+      - isAccountNonLocked
+      - isCredentialsNonExpired
+      - isEnabled
+      - name
+      - password
+      - pw
+      - role
+      - updatedAt
+      - username
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        authority:
+          type: string
+          writeOnly: true
+          enum:
+          - USER
+        id:
+          type: integer
+          format: int32
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        pw:
+          type: string
+        role:
+          type: string
+          enum:
+          - USER
+        isEnabled:
+          type: boolean
+        authorities:
+          type: array
+          items:
+            $ref: '#/components/schemas/GrantedAuthority'
+        username:
+          type: string
+        isAccountNonExpired:
+          type: boolean
+        isAccountNonLocked:
+          type: boolean
+        isCredentialsNonExpired:
+          type: boolean
+    PageEvent:
+      type: object
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        number:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
+    PageBookmark:
+      type: object
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bookmark'
+        number:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
