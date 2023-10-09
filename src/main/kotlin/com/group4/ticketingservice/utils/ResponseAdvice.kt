@@ -37,6 +37,7 @@ class ResponseAdvice<T>(
         val path = (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request.servletPath
         if (path.startsWith("/error"))return false
         if (path.startsWith("/actuator"))return false
+        if (path.startsWith("/api-docs.yaml"))return false
 
         return true
     }
