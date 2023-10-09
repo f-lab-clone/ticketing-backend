@@ -18,6 +18,6 @@ class ActuatorTest : AbstractIntegrationTest() {
         mockMvc.perform(
             MockMvcRequestBuilders.get("/actuator")
         ).andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$._links").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data._links").exists())
     }
 }

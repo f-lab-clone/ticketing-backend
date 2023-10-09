@@ -7,6 +7,8 @@ import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.utils.exception.CustomException
 import com.group4.ticketingservice.utils.exception.ErrorCodes
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -66,5 +68,9 @@ class ReservationService @Autowired constructor(
         val reservation = reservationRepository.findByIdOrNull(id) ?: throw CustomException(ErrorCodes.ENTITY_NOT_FOUND)
         if (reservation.user.id != userId) throw CustomException(ErrorCodes.FORBIDDEN)
         reservationRepository.delete(reservation)
+    }
+
+    fun getReservations(userId: Int, pageable: Pageable): Page<Reservation> {
+        return reservationRepository.findByUserId(userId, pageable)
     }
 }

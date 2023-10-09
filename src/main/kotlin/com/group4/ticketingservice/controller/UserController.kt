@@ -4,7 +4,9 @@ import com.group4.ticketingservice.dto.SignUpRequest
 import com.group4.ticketingservice.dto.UserDto
 import com.group4.ticketingservice.service.UserService
 import com.group4.ticketingservice.utils.TokenProvider
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -43,13 +45,20 @@ class UserController(
      * @author MinJun Kim
      */
     @GetMapping("/access_token_info")
-    fun getAccessTokenInfo(@AuthenticationPrincipal userId: Int): ResponseEntity<Map<String, Any>> {
+    fun getAccessTokenInfo(
+        request: HttpServletRequest,
+        @AuthenticationPrincipal userId: Int
+    ): ResponseEntity<Map<String, Any>> {
         val jwt = SecurityContextHolder.getContext().authentication.credentials.toString()
         val expiresInMillis = tokenProvider.parseTokenExpirationTime(jwt)
         val map = mapOf(
             "userId" to userId,
             "expires_in" to expiresInMillis
         )
-        return ResponseEntity.ok(map)
+
+        val headers = HttpHeaders()
+        headers.set("Content-Location", request.requestURI)
+
+        return ResponseEntity(map, headers, HttpStatus.OK)
     }
 }

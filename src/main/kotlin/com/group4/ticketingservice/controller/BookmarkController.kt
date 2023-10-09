@@ -1,14 +1,18 @@
 package com.group4.ticketingservice.controller
 
 import com.group4.ticketingservice.dto.BookmarkFromdto
+import com.group4.ticketingservice.entity.Bookmark
 import com.group4.ticketingservice.service.BookmarkService
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -21,41 +25,54 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("bookmarks")
 class BookmarkController @Autowired constructor(val bookmarkService: BookmarkService) {
 
-    // 북마크 등록
     @PostMapping
     fun addBookmark(
         @AuthenticationPrincipal userId: Int,
         @RequestBody @Valid
         boardFormDto: BookmarkFromdto
     ): ResponseEntity<Any> {
-        val savedBookmarkId = bookmarkService.create(userId, boardFormDto)
+        val savedBookmark: Bookmark = bookmarkService.create(userId, boardFormDto)
+
         val headers = HttpHeaders()
-        headers.set("Content-Location", "/bookmark/%d".format(savedBookmarkId))
-        return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(savedBookmarkId)
+        headers.set("Content-Location", "/bookmarks/%d".format(savedBookmark.id!!))
+
+        return ResponseEntity(savedBookmark, headers, HttpStatus.CREATED)
     }
 
-    // 특정 북마크 조회하기
     @GetMapping("/{id}")
-    fun getBookmark(@AuthenticationPrincipal userId: Int, @PathVariable id: Int): ResponseEntity<out Any?> {
-        try {
-            val foundBookmark = bookmarkService.get(userId, id)
-            return ResponseEntity.status(HttpStatus.OK).body(foundBookmark ?: "null")
-        } catch (e: MethodArgumentNotValidException) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
-        }
+    fun getBookmark(
+        request: HttpServletRequest,
+        @AuthenticationPrincipal userId: Int,
+        @PathVariable id: Int
+    ): ResponseEntity<out Any?> {
+        val foundBookmark = bookmarkService.get(userId, id)
+
+        val headers = HttpHeaders()
+        headers.set("Content-Location", request.requestURI)
+
+        return ResponseEntity(foundBookmark, headers, HttpStatus.OK)
     }
 
-    // 북마크 삭제
     @DeleteMapping("/{id}")
-    fun deleteBookmark(@AuthenticationPrincipal userId: Int, @PathVariable id: Int): ResponseEntity<Any> {
+    fun deleteBookmark(
+        @AuthenticationPrincipal userId: Int,
+        @PathVariable id: Int
+    ): ResponseEntity<Any> {
         bookmarkService.delete(userId, id)
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+        return ResponseEntity(null, HttpStatus.OK)
     }
 
-    // 로그인한 사용자의 북마크 목록
-    @GetMapping()
-    fun getBookmarks(@AuthenticationPrincipal userId: Int): ResponseEntity<Any> {
-        val bookmarks = bookmarkService.getList(userId)
-        return ResponseEntity.status(HttpStatus.OK).body(bookmarks)
+    @GetMapping
+    fun getBookmarks(
+        request: HttpServletRequest,
+        @AuthenticationPrincipal userId: Int,
+        @PageableDefault(size = 10) pageable: Pageable
+    ): ResponseEntity<Page<Bookmark>> {
+        val page = bookmarkService.getBookmarks(userId, pageable)
+
+        val headers = HttpHeaders()
+        headers.set("Content-Location", request.requestURI)
+
+        return ResponseEntity(page, headers, HttpStatus.OK)
     }
 }

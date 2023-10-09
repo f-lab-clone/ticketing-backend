@@ -2,9 +2,15 @@ package com.group4.ticketingservice.controller
 
 import com.group4.ticketingservice.dto.EventCreateRequest
 import com.group4.ticketingservice.dto.EventResponse
+import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.service.EventService
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -12,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -43,32 +50,16 @@ class EventController @Autowired constructor(
             reservationEndTime = event.reservationEndTime,
             maxAttendees = event.maxAttendees
         )
-        return ResponseEntity.status(HttpStatus.OK).body(response)
+
+        val headers = HttpHeaders()
+        headers.set("Content-Location", "/events/%d".format(event.id!!))
+
+        return ResponseEntity(response, headers, HttpStatus.CREATED)
     }
 
     @GetMapping("/{id}")
-    fun getEvent(@PathVariable id: Int): ResponseEntity<EventResponse?> {
-        return eventService.getEvent(id)?.let {
-            ResponseEntity.status(HttpStatus.OK).body(
-                EventResponse(
-                    id = it.id!!,
-                    title = it.title,
-                    startDate = it.startDate,
-                    endDate = it.endDate,
-                    reservationStartTime = it.reservationStartTime,
-                    reservationEndTime = it.reservationEndTime,
-                    maxAttendees = it.maxAttendees
-                )
-            )
-        } ?: kotlin.run {
-            ResponseEntity.status(HttpStatus.OK).body(null)
-        }
-    }
-
-    @GetMapping("/")
-    fun getEvents(): ResponseEntity<List<EventResponse>> {
-        val events = eventService.getEvents()
-        val response: List<EventResponse> = events.map {
+    fun getEvent(request: HttpServletRequest, @PathVariable id: Int): ResponseEntity<EventResponse?> {
+        val foundEvent = eventService.getEvent(id)?.let {
             EventResponse(
                 id = it.id!!,
                 title = it.title,
@@ -78,11 +69,26 @@ class EventController @Autowired constructor(
                 reservationEndTime = it.reservationEndTime,
                 maxAttendees = it.maxAttendees
             )
+        } ?: kotlin.run {
+            null
         }
-        return if (events.isEmpty()) {
-            ResponseEntity.status(HttpStatus.NO_CONTENT).body(response)
-        } else {
-            ResponseEntity.status(HttpStatus.OK).body(response)
-        }
+        val headers = HttpHeaders()
+        headers.set("Content-Location", request.requestURI)
+
+        return ResponseEntity(foundEvent, headers, HttpStatus.OK)
+    }
+
+    @GetMapping
+    fun getEvents(
+        request: HttpServletRequest,
+        @RequestParam(required = false) title: String?,
+        @PageableDefault(size = 10, sort = ["startDate", "id"]) pageable: Pageable
+    ): ResponseEntity<Page<Event>> {
+        val page = eventService.getEvents(title, pageable)
+
+        val headers = HttpHeaders()
+        headers.set("Content-Location", request.requestURI)
+
+        return ResponseEntity(page, headers, HttpStatus.OK)
     }
 }

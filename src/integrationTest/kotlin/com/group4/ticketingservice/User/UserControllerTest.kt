@@ -123,8 +123,8 @@ class UserControllerTest : AbstractIntegrationTest() {
                     .header("Authorization", jwt)
             )
         resultActions.andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.expires_in").exists())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.userId").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.expires_in").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.userId").exists())
     }
 
     @Test
