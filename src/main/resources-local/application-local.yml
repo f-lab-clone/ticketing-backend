@@ -1,0 +1,30 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  jpa:
+    properties:
+      hibernate:
+        highlight_sql: 'true'
+
+  datasource:
+    password: ${MYSQL_PASSWORD}
+    username: ${MYSQL_USERNAME}
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_SCHEMA}?createDatabaseIfNotExist=true&serverTimezone=UTC&characterEncoding=UTF-8&useLegacyDatetimeCode=false
+
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+
+server:
+  port: 8081
+
+ticketing:
+  jwt:
+    secret: 7ZSE64+Z7ZSE64+Z7Yq567OE6rO87KCV7IOB67OR6rmA66+87KSA
+    expiration-hours: 24
+    issuer: kmj

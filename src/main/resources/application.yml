@@ -1,26 +1,3 @@
-server:
-  port: ${PORT}
-
-springdoc:
-  api-docs:
-    path: /api-docs
-
-
-ticketing:
-  jwt:
-    secret: ${JWT_SECRET}
-    expiration-hours: ${JWT_EXPIRATION_HOURS}
-    issuer: ${JWT_ISSUER}
-
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: prometheus
-    prometheus:
-      enabled: 'true'
-
 spring:
   jpa:
     properties:
@@ -40,14 +17,26 @@ spring:
     resources:
       add-mappings: 'false'
 
-  datasource:
-    password: ${MYSQL_PASSWORD}
-    username: ${MYSQL_USERNAME}
-    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_SCHEMA}?createDatabaseIfNotExist=true&serverTimezone=UTC&characterEncoding=UTF-8&useLegacyDatetimeCode=false
 
   mvc:
     log-resolved-exception: 'false'
     throw-exception-if-no-handler-found: 'true'
+
+
+
+springdoc:
+  api-docs:
+    path: /api-docs
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+    prometheus:
+      enabled: 'true'
+
 
 
 #ticketing.jwt.secret=d2VhcmVuYXZ5c3dkZXZlbG9wZXJzLmFuZGlhbW1pbmp1bjMwMjE=
