@@ -9,18 +9,19 @@ import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.utils.Authority
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import java.time.Duration.ofHours
 import java.time.OffsetDateTime
-import java.time.ZoneOffset
 
 class EventRepositoryTest @Autowired constructor(
     @Autowired val eventRepository: EventRepository,
@@ -32,6 +33,14 @@ class EventRepositoryTest @Autowired constructor(
         email = ReservationTest.testFields.testUserName,
         password = BCryptPasswordEncoder().encode(ReservationTest.testFields.password),
         authority = Authority.USER
+    )
+
+    val sampleEvent = Event(
+        title = "test title",
+        date = OffsetDateTime.now(),
+        reservationEndTime = OffsetDateTime.now() + ofHours(2),
+        reservationStartTime = OffsetDateTime.now() + ofHours(1),
+        maxAttendees = 10
     )
 
     val sampleEvents = mutableListOf(
@@ -72,22 +81,23 @@ class EventRepositoryTest @Autowired constructor(
         )
     )
 
-    @BeforeEach fun saveUser() {
+    @BeforeEach
+    fun addData() {
         userRepository.save(sampleUser)
+        sampleEvents.forEach {
+            eventRepository.save(it)
+        }
+    }
+
+    @AfterEach
+    fun removeData() {
+        userRepository.deleteAll()
+        eventRepository.deleteAll()
     }
 
     @Test
     fun `EventRepository_save should return savedEvent`() {
         // given
-        val now = OffsetDateTime.now()
-        val sampleEvent = Event(
-            title = "test title",
-            date = now,
-            reservationEndTime = now + ofHours(2),
-            reservationStartTime = now + ofHours(1),
-            maxAttendees = 10
-
-        )
 
         // when
         val savedEvent = eventRepository.save(sampleEvent)
@@ -99,15 +109,6 @@ class EventRepositoryTest @Autowired constructor(
     @Test
     fun `EventRepository_findByIdOrNull should return event`() {
         // given
-        val now = OffsetDateTime.now(ZoneOffset.UTC)
-        val sampleEvent = Event(
-            title = "test title",
-            date = now,
-            reservationEndTime = now + ofHours(2),
-            reservationStartTime = now + ofHours(1),
-            maxAttendees = 10
-
-        )
         val savedEvent = eventRepository.save(sampleEvent)
 
         // when
@@ -122,16 +123,6 @@ class EventRepositoryTest @Autowired constructor(
     @Test
     fun `EventRepository_findAll should return list of events`() {
         // given
-        val now = OffsetDateTime.now(ZoneOffset.UTC)
-        val sampleEvent = Event(
-            title = "test title",
-            date = now,
-            reservationEndTime = now + ofHours(2),
-            reservationStartTime = now + ofHours(1),
-            maxAttendees = 10
-
-        )
-        eventRepository.save(sampleEvent)
 
         // when
         val events = eventRepository.findAll()
@@ -142,13 +133,9 @@ class EventRepositoryTest @Autowired constructor(
     }
 
     @Test
-    fun `EventRepository_findAll should return page of events`() {
+    fun `EventRepository_findAll should return page of events with searching`() {
         // given
-        eventRepository.deleteAll()
-        sampleEvents.forEach {
-            eventRepository.save(it)
-        }
-        val pageSize = 2
+        val pageSize = 10
         val pageable: Pageable = PageRequest.of(0, pageSize)
         val title = "코딩"
         val specification = EventSpecifications.withTitle(title)
@@ -159,23 +146,45 @@ class EventRepositoryTest @Autowired constructor(
 
         // then
         assertThat(result.totalElements).isEqualTo(`totalElementsTitleLike코딩`)
+    }
+
+    @Test
+    fun `EventRepository_findAll should return page of events with pagination`() {
+        // given
+        val pageSize = 2
+        val pageable: Pageable = PageRequest.of(0, pageSize)
+
+        // when
+        val result = eventRepository.findAll(pageable)
+
+        // then
+        assertThat(result.totalElements).isEqualTo(sampleEvents.size.toLong())
         assertThat(result.pageable.pageSize).isEqualTo(pageSize)
         assertThat(result.numberOfElements).isEqualTo(pageSize)
         assertThat(result.content.size).isEqualTo(pageSize)
     }
 
     @Test
+    fun `EventRepository_findAll should return page of events with sorting`() {
+        // given
+        val pageSize = 10
+        val pageable: Pageable = PageRequest.of(0, pageSize, Sort.by("title").ascending())
+
+        // when
+        val result = eventRepository.findAll(pageable)
+
+        // then
+        assertThat(result.totalElements).isEqualTo(sampleEvents.size.toLong())
+        assertThat(result.content[0].title).isEqualTo(sampleEvents[4].title)
+        assertThat(result.content[1].title).isEqualTo(sampleEvents[1].title)
+        assertThat(result.content[2].title).isEqualTo(sampleEvents[0].title)
+        assertThat(result.content[3].title).isEqualTo(sampleEvents[3].title)
+        assertThat(result.content[4].title).isEqualTo(sampleEvents[2].title)
+    }
+
+    @Test
     fun `EventRepository_delete should delete event`() {
         // given
-        val now = OffsetDateTime.now(ZoneOffset.UTC)
-        val sampleEvent = Event(
-            title = "test title",
-            date = now,
-            reservationEndTime = now + ofHours(2),
-            reservationStartTime = now + ofHours(1),
-            maxAttendees = 10
-
-        )
         val savedEvent = eventRepository.save(sampleEvent)
 
         // when

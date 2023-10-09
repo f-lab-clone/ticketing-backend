@@ -146,7 +146,7 @@ class BookmarkRepositoryTest(
     }
 
     @Test
-    fun `bookmarkRepository_findByUser should return page of bookmarks`() {
+    fun `bookmarkRepository_findByUser should return page of bookmarks with pagination`() {
         // given
         val savedUser = userRepository.save(sampleUser)
         bookmarkRepository.deleteAll()

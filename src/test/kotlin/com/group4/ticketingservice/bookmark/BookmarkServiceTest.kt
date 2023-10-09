@@ -123,7 +123,7 @@ class BookmarkServiceTest() {
     }
 
     @Test
-    fun `bookmarkService_getBookmarks() return page`() {
+    fun `bookmarkService_getBookmarks() return page with pagination`() {
         // given
         every { repository.findByUserId(sampleUserId, pageable) } returns page
 

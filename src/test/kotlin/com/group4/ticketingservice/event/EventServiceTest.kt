@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import java.time.OffsetDateTime
 import java.util.Optional
 
@@ -42,7 +43,7 @@ class EventServiceTest {
         maxAttendees = 10
     )
 
-    val pageable: Pageable = PageRequest.of(0, 4)
+    val pageable: Pageable = PageRequest.of(0, 4, Sort.by("title").ascending())
     val content = mutableListOf(
         Event(
             id = 2,
@@ -113,7 +114,7 @@ class EventServiceTest {
     }
 
     @Test
-    fun `EventService_getEvents return page`() {
+    fun `EventService_getEvents return page with pagination and sorting`() {
         // Given
         every { eventRepository.findAll(any(), pageable) } returns page
 
