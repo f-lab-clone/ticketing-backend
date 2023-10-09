@@ -40,10 +40,10 @@ class EventRepositoryTest @Autowired constructor(
         val now = OffsetDateTime.now()
         val sampleEvent = Event(
             title = "test title",
-            startDate = now + ofHours(3),
-            endDate = now + ofHours(4),
+            startDate = now,
+            endDate = now,
             reservationEndTime = now + ofHours(2),
-            reservationStartTime = now + ofHours(1),
+            reservationStartTime = now - ofHours(1),
             maxAttendees = 10
 
         )
@@ -61,10 +61,10 @@ class EventRepositoryTest @Autowired constructor(
         val now = OffsetDateTime.now()
         val sampleEvent = Event(
             title = "test title",
-            startDate = now + ofHours(3),
-            endDate = now + ofHours(4),
+            startDate = now,
+            endDate = now,
             reservationEndTime = now + ofHours(2),
-            reservationStartTime = now + ofHours(1),
+            reservationStartTime = now - ofHours(2),
             maxAttendees = 10
 
         )
@@ -85,10 +85,10 @@ class EventRepositoryTest @Autowired constructor(
         val now = OffsetDateTime.now()
         val sampleEvent = Event(
             title = "test title",
-            startDate = now + ofHours(3),
-            endDate = now + ofHours(4),
+            startDate = now,
+            endDate = now,
             reservationEndTime = now + ofHours(2),
-            reservationStartTime = now + ofHours(1),
+            reservationStartTime = now - ofHours(2),
             maxAttendees = 10
 
         )
@@ -108,10 +108,10 @@ class EventRepositoryTest @Autowired constructor(
         val now = OffsetDateTime.now()
         val sampleEvent = Event(
             title = "test title",
-            startDate = now + ofHours(3),
-            endDate = now + ofHours(4),
+            startDate = now,
+            endDate = now,
             reservationEndTime = now + ofHours(2),
-            reservationStartTime = now + ofHours(1),
+            reservationStartTime = now - ofHours(2),
             maxAttendees = 10
 
         )

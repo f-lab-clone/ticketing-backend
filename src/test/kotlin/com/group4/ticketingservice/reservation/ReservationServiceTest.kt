@@ -15,6 +15,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.time.Duration.ofHours
 import java.time.OffsetDateTime
 import java.util.Optional
 
@@ -44,6 +45,15 @@ class ReservationServiceTest() {
         title = "test title",
         startDate = OffsetDateTime.now(),
         endDate = OffsetDateTime.now(),
+        reservationEndTime = OffsetDateTime.now() + ofHours(2),
+        reservationStartTime = OffsetDateTime.now() - ofHours(2),
+        maxAttendees = 10
+    )
+    private val sampleWrongEvent: Event = Event(
+        id = 1,
+        title = "test title",
+        startDate = OffsetDateTime.now(),
+        endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),
         reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 10
@@ -64,6 +74,17 @@ class ReservationServiceTest() {
         every { reservationRepository.saveAndFlush(any()) } returns sampleReservation
         reservationService.createReservation(1, 1)
         verify(exactly = 1) { reservationRepository.saveAndFlush(any()) }
+    }
+
+    @Test
+    fun `ReservationService_createReservation throw custom exception when time not allowed`() {
+        every { userRepository.getReferenceById(any()) } returns sampleUser
+        every { eventRepository.findByIdWithPesimisticLock(any()) } returns sampleWrongEvent
+
+        every { eventRepository.saveAndFlush(any()) } returns sampleEvent
+        every { reservationRepository.saveAndFlush(any()) } returns sampleReservation
+
+        assertThrows<CustomException> { reservationService.createReservation(1, 1) }
     }
 
     @Test

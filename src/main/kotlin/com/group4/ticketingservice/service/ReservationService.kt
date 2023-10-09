@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.OffsetDateTime
 
 @Service
 class ReservationService @Autowired constructor(
@@ -22,8 +23,10 @@ class ReservationService @Autowired constructor(
         val user = userRepository.getReferenceById(userId)
         val event = eventRepository.findByIdWithPesimisticLock(eventId) ?: throw CustomException(ErrorCodes.ENTITY_NOT_FOUND)
 
-        val reservation = Reservation(user = user, event = event)
+        val now = OffsetDateTime.now()
+        if (now.isBefore(event.reservationStartTime) || now.isAfter(event.reservationEndTime)) throw CustomException(ErrorCodes.DATE_NOT_ALLOWED)
 
+        val reservation = Reservation(user = user, event = event)
         if (event.maxAttendees > event.totalAttendees) {
             event.totalAttendees += 1
             eventRepository.saveAndFlush(event)

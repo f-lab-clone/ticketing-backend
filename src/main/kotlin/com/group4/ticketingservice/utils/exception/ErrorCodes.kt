@@ -6,6 +6,7 @@ enum class ErrorCodes(val status: HttpStatus, val message: String, val errorCode
     // 400  Bad Request
     VALIDATION_FAILED(HttpStatus.BAD_REQUEST, "유효성 검증에 실패하였습니다.", 10001),
     MESSAGE_NOT_READABLE(HttpStatus.BAD_REQUEST, "올바른 형식의 요청이 아닙니다", 10002),
+    DATE_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "예약 가능한 시간이 아닙니다.", 10003),
 
     // 401  Unauthorized
     LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "로그인에 실패했습니다", 20000),

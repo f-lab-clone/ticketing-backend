@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.test.context.TestPropertySource
+import java.time.Duration.ofHours
 import java.time.OffsetDateTime
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
@@ -45,8 +46,8 @@ class ReservationTest @Autowired constructor(
         title = "test title",
         startDate = OffsetDateTime.now(),
         endDate = OffsetDateTime.now(),
-        reservationEndTime = OffsetDateTime.now(),
-        reservationStartTime = OffsetDateTime.now(),
+        reservationEndTime = OffsetDateTime.now() + ofHours(2),
+        reservationStartTime = OffsetDateTime.now() - ofHours(2),
         maxAttendees = 100
     )
 
