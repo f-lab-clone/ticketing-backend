@@ -26,5 +26,5 @@ data class ReservationResponse(
     val id: Int,
     val eventId: Int,
     val userId: Int,
-    val bookedAt: OffsetDateTime
+    val createdAt: OffsetDateTime
 )

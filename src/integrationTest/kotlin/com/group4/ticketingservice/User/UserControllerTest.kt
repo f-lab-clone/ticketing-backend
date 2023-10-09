@@ -48,7 +48,7 @@ class UserControllerTest : AbstractIntegrationTest() {
         email = testFields.testUserName,
         name = testFields.testName,
         password = testFields.password,
-        phone = "010-1234-5678"
+        phoneNumber = "010-1234-5678"
     )
 
     val sampleSignInRequest = SignInRequest().apply {

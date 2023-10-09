@@ -34,7 +34,7 @@ class ReservationController(val reservationService: ReservationService) {
             id = reservation.id!!,
             eventId = reservation.event.id!!,
             userId = reservation.user.id!!,
-            bookedAt = reservation.createdAt
+            createdAt = reservation.createdAt
         )
         return ResponseEntity.ok(response)
     }
@@ -46,7 +46,7 @@ class ReservationController(val reservationService: ReservationService) {
             id = reservation.id!!,
             eventId = reservation.event.id!!,
             userId = reservation.user.id!!,
-            bookedAt = reservation.createdAt
+            createdAt = reservation.createdAt
         )
         return ResponseEntity.ok(response)
     }
@@ -62,7 +62,7 @@ class ReservationController(val reservationService: ReservationService) {
             id = reservation.id!!,
             eventId = reservation.event.id!!,
             userId = reservation.user.id!!,
-            bookedAt = reservation.createdAt
+            createdAt = reservation.createdAt
         )
         return ResponseEntity.ok(response)
     }

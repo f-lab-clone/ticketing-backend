@@ -27,7 +27,7 @@ class UserServiceTest {
         email = "minjun3021@qwer.com",
         name = "minjun",
         password = "1234",
-        phone = "010-1234-5678"
+        phoneNumber = "010-1234-5678"
     )
     val sampleUserDTO = UserDto(
         name = "minjun3021@qwer.com",

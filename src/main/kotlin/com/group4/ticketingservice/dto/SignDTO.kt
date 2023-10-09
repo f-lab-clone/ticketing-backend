@@ -24,7 +24,7 @@ data class SignUpRequest(
     val password: String?,
     @field:NotNull
     @field:Pattern(regexp = "^01(?:0|1|[6-9])[.-]?(\\d{3}|\\d{4})[.-]?(\\d{4})$", message = "10 ~ 11 자리의 숫자만 입력 가능 합니다.")
-    val phone: String?
+    val phoneNumber: String?
 
 )
 

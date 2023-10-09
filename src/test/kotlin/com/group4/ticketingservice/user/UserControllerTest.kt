@@ -53,7 +53,7 @@ class UserControllerTest(
         email = testUserName,
         name = testName,
         password = password,
-        phone = "010-1234-5678"
+        phoneNumber = "010-1234-5678"
     )
     val sampleUserDTO = UserDto(
         name = testName,
@@ -65,7 +65,7 @@ class UserControllerTest(
         email = "a",
         name = "a",
         password = "1234",
-        phone = "010-1234-5678"
+        phoneNumber = "010-1234-5678"
     )
 
     /**
