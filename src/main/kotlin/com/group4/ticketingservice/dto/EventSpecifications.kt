@@ -9,12 +9,12 @@ import org.springframework.data.jpa.domain.Specification
 
 class EventSpecifications {
     companion object {
-        fun withTitle(title: String?): Specification<Event> {
+        fun withName(name: String?): Specification<Event> {
             return Specification { root: Root<Event>, query: CriteriaQuery<*>, criteriaBuilder: CriteriaBuilder ->
                 val predicates = mutableListOf<Predicate>()
 
-                if (!title.isNullOrBlank()) {
-                    predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%${title.toLowerCase()}%"))
+                if (!name.isNullOrBlank()) {
+                    predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%${name.toLowerCase()}%"))
                 }
 
                 criteriaBuilder.and(*predicates.toTypedArray())

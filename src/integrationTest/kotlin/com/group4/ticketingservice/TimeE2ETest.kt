@@ -58,7 +58,7 @@ class TimeE2ETest @Autowired constructor(
 
     @Test
     fun `All API only returns OffsetDateTime in UTC without any offset info`() {
-        val eventCreateRequest = "{\"title\":\"test title\"," +
+        val eventCreateRequest = "{\"name\":\"test title\"," +
             "\"startDate\":\"2044-02-04T21:00:00.001+09:00\"," +
             "\"endDate\":\"2044-02-04T21:00:00.001+09:00\"," +
             "\"reservationStartTime\":\"2044-01-01T22:00:00.001+09:00\"," +

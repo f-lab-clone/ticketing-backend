@@ -45,7 +45,7 @@ class EventServiceTest {
         maxAttendees = 10
     )
 
-    val pageable: Pageable = PageRequest.of(0, 4, Sort.by("title").ascending())
+    val pageable: Pageable = PageRequest.of(0, 4, Sort.by("name").ascending())
     val content = mutableListOf(
         Event(
             id = 2,
@@ -88,14 +88,14 @@ class EventServiceTest {
     val page: Page<Event> = PageImpl(content, pageable, totalElements)
     val emptyPage: Page<Event> = PageImpl(listOf(), pageable, listOf<Event>().size.toLong())
 
-    val title = "코딩"
-    val specification = EventSpecifications.withTitle(title)
+    val name = "코딩"
+    val specification = EventSpecifications.withName(name)
 
     @Test
     fun `EventService_createEvent invoke EventRepository_findById`() {
         every { eventRepository.save(any()) } returns sampleEvent
         eventService.createEvent(
-            title = sampleEvent.name,
+            name = sampleEvent.name,
             startDate = sampleEvent.startDate,
             endDate = sampleEvent.startDate,
             reservationStartTime = sampleEvent.reservationStartTime,
@@ -116,7 +116,7 @@ class EventServiceTest {
     @Test
     fun `EventService_getEvents invoke EventRepository_findAll`() {
         every { eventRepository.findAll(any(), pageable) } returns page
-        eventService.getEvents(title, pageable)
+        eventService.getEvents(name, pageable)
         verify(exactly = 1) { eventRepository.findAll(any(), pageable) }
     }
 

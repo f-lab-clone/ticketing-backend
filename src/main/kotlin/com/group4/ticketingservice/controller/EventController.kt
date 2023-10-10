@@ -34,7 +34,7 @@ class EventController @Autowired constructor(
         request: EventCreateRequest
     ): ResponseEntity<EventResponse> {
         val event = eventService.createEvent(
-            request.title!!,
+            request.name!!,
             request.startDate!!,
             request.endDate!!,
             request.reservationStartTime!!,
@@ -43,7 +43,7 @@ class EventController @Autowired constructor(
         )
         val response = EventResponse(
             id = event.id!!,
-            title = event.name,
+            name = event.name,
             startDate = event.startDate,
             endDate = event.endDate,
             reservationStartTime = event.reservationStartTime,
@@ -62,7 +62,7 @@ class EventController @Autowired constructor(
         val foundEvent = eventService.getEvent(id)?.let {
             EventResponse(
                 id = it.id!!,
-                title = it.name,
+                name = it.name,
                 startDate = it.startDate,
                 endDate = it.endDate,
                 reservationStartTime = it.reservationStartTime,
@@ -81,10 +81,10 @@ class EventController @Autowired constructor(
     @GetMapping
     fun getEvents(
         request: HttpServletRequest,
-        @RequestParam(required = false) title: String?,
+        @RequestParam(required = false) name: String?,
         @PageableDefault(size = 10, sort = ["startDate", "id"]) pageable: Pageable
     ): ResponseEntity<Page<Event>> {
-        val page = eventService.getEvents(title, pageable)
+        val page = eventService.getEvents(name, pageable)
 
         val headers = HttpHeaders()
         headers.set("Content-Location", request.requestURI)

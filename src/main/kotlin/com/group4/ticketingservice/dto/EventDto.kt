@@ -11,7 +11,7 @@ import java.time.OffsetDateTime
 data class EventCreateRequest(
     @field:NotNull
     @field:Size(min = 1, max = 255)
-    val title: String?,
+    val name: String?,
     @field:NotNull
     @field:Future
     val startDate: OffsetDateTime?,
@@ -37,7 +37,7 @@ data class EventDeleteRequest(
 
 data class EventResponse(
     val id: Int,
-    val title: String,
+    val name: String,
     val startDate: OffsetDateTime,
     val endDate: OffsetDateTime,
     val reservationStartTime: OffsetDateTime,

@@ -141,7 +141,7 @@ paths:
       - event-controller
       operationId: getEvents
       parameters:
-      - name: title
+      - name: name
         in: query
         required: false
         schema:

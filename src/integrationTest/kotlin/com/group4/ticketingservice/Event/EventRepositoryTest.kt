@@ -173,8 +173,8 @@ class EventRepositoryTest @Autowired constructor(
         // given
         val pageSize = 10
         val pageable: Pageable = PageRequest.of(0, pageSize)
-        val title = "코딩"
-        val specification = EventSpecifications.withTitle(title)
+        val name = "코딩"
+        val specification = EventSpecifications.withName(name)
         val `totalElementsTitleLike코딩`: Long = 3
 
         // when

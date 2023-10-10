@@ -13,7 +13,7 @@ class EventService(
     private val eventRepository: EventRepository
 ) {
     fun createEvent(
-        title: String,
+        name: String,
         startDate: OffsetDateTime,
         endDate: OffsetDateTime,
         reservationStartTime: OffsetDateTime,
@@ -21,7 +21,7 @@ class EventService(
         maxAttendees: Int
     ): Event {
         val event = Event(
-            name = title,
+            name = name,
             startDate = startDate,
             endDate = endDate,
             reservationStartTime = reservationStartTime,
@@ -35,8 +35,8 @@ class EventService(
         return eventRepository.findById(id).orElse(null)
     }
 
-    fun getEvents(title: String?, pageable: Pageable): Page<Event> {
-        val specification = EventSpecifications.withTitle(title)
+    fun getEvents(name: String?, pageable: Pageable): Page<Event> {
+        val specification = EventSpecifications.withName(name)
         return eventRepository.findAll(specification, pageable)
     }
 }
