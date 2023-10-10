@@ -7,7 +7,6 @@ import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.ReservationRepository
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.service.ReservationService
-import com.group4.ticketingservice.utils.Authority
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -38,12 +37,12 @@ class ReservationTest @Autowired constructor(
         name = testFields.testName,
         email = testFields.testUserName,
         password = BCryptPasswordEncoder().encode(testFields.password),
-        authority = Authority.USER,
+
         phone = "010-1234-5678"
     )
 
     private val sampleEvent = Event(
-        title = "test title",
+        name = "test title",
         startDate = OffsetDateTime.now(),
         endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now() + ofHours(2),

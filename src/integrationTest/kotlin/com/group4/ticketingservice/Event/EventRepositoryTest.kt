@@ -7,7 +7,6 @@ import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.UserRepository
-import com.group4.ticketingservice.utils.Authority
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertInstanceOf
@@ -31,12 +30,12 @@ class EventRepositoryTest @Autowired constructor(
         name = ReservationTest.testFields.testName,
         email = ReservationTest.testFields.testUserName,
         password = BCryptPasswordEncoder().encode(ReservationTest.testFields.password),
-        authority = Authority.USER,
+
         phone = "010-1234-5678"
     )
 
     val sampleEvent = Event(
-        title = "test title",
+        name = "test title",
         startDate = OffsetDateTime.now(),
         endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now() + ofHours(2),
@@ -46,7 +45,7 @@ class EventRepositoryTest @Autowired constructor(
 
     val sampleEvents = mutableListOf(
         Event(
-            title = "정섭이의 코딩쇼",
+            name = "정섭이의 코딩쇼",
             startDate = OffsetDateTime.now(),
             endDate = OffsetDateTime.now(),
             reservationEndTime = OffsetDateTime.now() + ofHours(2),
@@ -54,7 +53,7 @@ class EventRepositoryTest @Autowired constructor(
             maxAttendees = 10
         ),
         Event(
-            title = "민준이의 전국군가잘함",
+            name = "민준이의 전국군가잘함",
             startDate = OffsetDateTime.now(),
             endDate = OffsetDateTime.now(),
             reservationEndTime = OffsetDateTime.now() + ofHours(2),
@@ -62,7 +61,7 @@ class EventRepositoryTest @Autowired constructor(
             maxAttendees = 10
         ),
         Event(
-            title = "하영이의 신작도서 팬싸인회",
+            name = "하영이의 신작도서 팬싸인회",
             startDate = OffsetDateTime.now(),
             endDate = OffsetDateTime.now(),
             reservationEndTime = OffsetDateTime.now() + ofHours(2),
@@ -70,7 +69,7 @@ class EventRepositoryTest @Autowired constructor(
             maxAttendees = 10
         ),
         Event(
-            title = "준하의 스파르타 코딩 동아리 설명회",
+            name = "준하의 스파르타 코딩 동아리 설명회",
             startDate = OffsetDateTime.now(),
             endDate = OffsetDateTime.now(),
             reservationEndTime = OffsetDateTime.now() + ofHours(2),
@@ -78,7 +77,7 @@ class EventRepositoryTest @Autowired constructor(
             maxAttendees = 10
         ),
         Event(
-            title = "군대에서 코딩 직군으로 복무하기 설명회",
+            name = "군대에서 코딩 직군으로 복무하기 설명회",
             startDate = OffsetDateTime.now(),
             endDate = OffsetDateTime.now(),
             reservationEndTime = OffsetDateTime.now() + ofHours(2),
@@ -106,7 +105,7 @@ class EventRepositoryTest @Autowired constructor(
         // given
         val now = OffsetDateTime.now()
         val sampleEvent = Event(
-            title = "test title",
+            name = "test title",
             startDate = now,
             endDate = now,
             reservationEndTime = now + ofHours(2),
@@ -127,7 +126,7 @@ class EventRepositoryTest @Autowired constructor(
         // given
         val now = OffsetDateTime.now()
         val sampleEvent = Event(
-            title = "test title",
+            name = "test title",
             startDate = now,
             endDate = now,
             reservationEndTime = now + ofHours(2),
@@ -151,7 +150,7 @@ class EventRepositoryTest @Autowired constructor(
         // given
         val now = OffsetDateTime.now()
         val sampleEvent = Event(
-            title = "test title",
+            name = "test title",
             startDate = now,
             endDate = now,
             reservationEndTime = now + ofHours(2),
@@ -205,7 +204,7 @@ class EventRepositoryTest @Autowired constructor(
     fun `EventRepository_findAll should return page of events with sorting`() {
         // given
         val pageSize = 10
-        val pageable: Pageable = PageRequest.of(0, pageSize, Sort.by("title").ascending())
+        val pageable: Pageable = PageRequest.of(0, pageSize, Sort.by("name").ascending())
         val sortedItemIndexs = mutableListOf(4, 1, 0, 3, 2)
 
         // when
@@ -213,11 +212,11 @@ class EventRepositoryTest @Autowired constructor(
 
         // then
         assertThat(result.totalElements).isEqualTo(sampleEvents.size.toLong())
-        assertThat(result.content[0].title).isEqualTo(sampleEvents[sortedItemIndexs[0]].title)
-        assertThat(result.content[1].title).isEqualTo(sampleEvents[sortedItemIndexs[1]].title)
-        assertThat(result.content[2].title).isEqualTo(sampleEvents[sortedItemIndexs[2]].title)
-        assertThat(result.content[3].title).isEqualTo(sampleEvents[sortedItemIndexs[3]].title)
-        assertThat(result.content[4].title).isEqualTo(sampleEvents[sortedItemIndexs[4]].title)
+        assertThat(result.content[0].name).isEqualTo(sampleEvents[sortedItemIndexs[0]].name)
+        assertThat(result.content[1].name).isEqualTo(sampleEvents[sortedItemIndexs[1]].name)
+        assertThat(result.content[2].name).isEqualTo(sampleEvents[sortedItemIndexs[2]].name)
+        assertThat(result.content[3].name).isEqualTo(sampleEvents[sortedItemIndexs[3]].name)
+        assertThat(result.content[4].name).isEqualTo(sampleEvents[sortedItemIndexs[4]].name)
     }
 
     @Test
@@ -225,7 +224,7 @@ class EventRepositoryTest @Autowired constructor(
         // given
         val now = OffsetDateTime.now()
         val sampleEvent = Event(
-            title = "test title",
+            name = "test title",
             startDate = now,
             endDate = now,
             reservationEndTime = now + ofHours(2),

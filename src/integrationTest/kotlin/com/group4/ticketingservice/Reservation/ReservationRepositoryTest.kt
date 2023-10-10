@@ -7,7 +7,6 @@ import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.ReservationRepository
 import com.group4.ticketingservice.repository.UserRepository
-import com.group4.ticketingservice.utils.Authority
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,11 +28,11 @@ class ReservationRepositoryTest @Autowired constructor(
         name = testFields.testName,
         email = testFields.testUserName,
         password = BCryptPasswordEncoder().encode(testFields.password),
-        authority = Authority.USER,
+
         phone = "010-1234-5678"
     )
     private val sampleEvent = Event(
-        title = "test title",
+        name = "test title",
         startDate = OffsetDateTime.now(),
         endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),
@@ -50,7 +49,7 @@ class ReservationRepositoryTest @Autowired constructor(
     fun `ReservationRepository_save without mocked clock and OffsetDateTime should return savedReservation`() {
         // given
         val sampleEvent = Event(
-            title = "test title 2",
+            name = "test title 2",
             startDate = OffsetDateTime.now(),
             endDate = OffsetDateTime.now(),
             reservationEndTime = OffsetDateTime.now(),

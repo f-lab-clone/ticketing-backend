@@ -6,7 +6,6 @@ import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.filter.JwtAuthorizationEntryPoint
 import com.group4.ticketingservice.service.EventService
-import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.TokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
@@ -56,12 +55,12 @@ class EventControllerTest(
         name = "james",
         email = "james@example.com",
         password = "12345678",
-        authority = Authority.USER,
+
         phone = "010-1234-5678"
     )
     private val sampleEvent: Event = Event(
         id = 1,
-        title = "test title",
+        name = "test title",
         startDate = OffsetDateTime.now(),
         endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),
@@ -74,7 +73,7 @@ class EventControllerTest(
     val content = mutableListOf(
         Event(
             id = 2,
-            title = "민준이의 전국군가잘함",
+            name = "민준이의 전국군가잘함",
             startDate = OffsetDateTime.now(),
             endDate = OffsetDateTime.now(),
             reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
@@ -83,7 +82,7 @@ class EventControllerTest(
         ),
         Event(
             id = 1,
-            title = "정섭이의 코딩쇼",
+            name = "정섭이의 코딩쇼",
             startDate = OffsetDateTime.now(),
             endDate = OffsetDateTime.now(),
             reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
@@ -92,7 +91,7 @@ class EventControllerTest(
         ),
         Event(
             id = 4,
-            title = "준하의 스파르타 코딩 동아리 설명회",
+            name = "준하의 스파르타 코딩 동아리 설명회",
             startDate = OffsetDateTime.now(),
             endDate = OffsetDateTime.now(),
             reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
@@ -101,7 +100,7 @@ class EventControllerTest(
         ),
         Event(
             id = 3,
-            title = "하영이의 신작도서 팬싸인회",
+            name = "하영이의 신작도서 팬싸인회",
             startDate = OffsetDateTime.now(),
             endDate = OffsetDateTime.now(),
             reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
@@ -132,7 +131,7 @@ class EventControllerTest(
             .andExpect(status().isCreated)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.data.id").value(sampleEvent.id))
-            .andExpect(jsonPath("$.data.title").value(sampleEvent.title))
+            .andExpect(jsonPath("$.data.title").value(sampleEvent.name))
             .andExpect(jsonPath("$.data.maxAttendees").value(sampleEvent.maxAttendees))
     }
 

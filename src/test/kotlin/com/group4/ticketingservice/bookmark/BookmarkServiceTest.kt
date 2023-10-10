@@ -8,7 +8,6 @@ import com.group4.ticketingservice.repository.BookmarkRepository
 import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.service.BookmarkService
-import com.group4.ticketingservice.utils.Authority
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -33,7 +32,7 @@ class BookmarkServiceTest() {
         name = "james",
         email = "james@example.com",
         password = "12345678",
-        authority = Authority.USER,
+
         phone = "010-1234-5678"
     )
 
@@ -41,7 +40,7 @@ class BookmarkServiceTest() {
 
     private val sampleEvent: Event = Event(
         id = 1,
-        title = "test title",
+        name = "test title",
         startDate = OffsetDateTime.now(),
         endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),
@@ -65,7 +64,7 @@ class BookmarkServiceTest() {
             user = sampleUser,
             event = Event(
                 id = 1,
-                title = "정섭이의 코딩쇼",
+                name = "정섭이의 코딩쇼",
                 startDate = OffsetDateTime.now(),
                 endDate = OffsetDateTime.now(),
                 reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
@@ -78,7 +77,7 @@ class BookmarkServiceTest() {
             user = sampleUser,
             event = Event(
                 id = 2,
-                title = "민준이의 전국군가잘함",
+                name = "민준이의 전국군가잘함",
                 startDate = OffsetDateTime.now(),
                 endDate = OffsetDateTime.now(),
                 reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
@@ -91,7 +90,7 @@ class BookmarkServiceTest() {
             user = sampleUser,
             event = Event(
                 id = 3,
-                title = "하영이의 신작도서 팬싸인회",
+                name = "하영이의 신작도서 팬싸인회",
                 startDate = OffsetDateTime.now(),
                 endDate = OffsetDateTime.now(),
                 reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
@@ -104,7 +103,7 @@ class BookmarkServiceTest() {
             user = sampleUser,
             event = Event(
                 id = 4,
-                title = "준하의 스파르타 코딩 동아리 설명회",
+                name = "준하의 스파르타 코딩 동아리 설명회",
                 startDate = OffsetDateTime.now(),
                 endDate = OffsetDateTime.now(),
                 reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),

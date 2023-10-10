@@ -7,7 +7,6 @@ import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.ReservationRepository
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.service.ReservationService
-import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.exception.CustomException
 import com.group4.ticketingservice.utils.exception.ErrorCodes
 import io.mockk.every
@@ -35,14 +34,14 @@ class ReservationServiceTest() {
         name = "minjun3021@qwer.com",
         email = "minjun",
         password = "1234",
-        authority = Authority.USER,
+
         id = sampleUserId,
         phone = "010-1234-5678"
     )
 
     private val sampleEvent: Event = Event(
         id = 1,
-        title = "test title",
+        name = "test title",
         startDate = OffsetDateTime.now(),
         endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now() + ofHours(2),
@@ -51,7 +50,7 @@ class ReservationServiceTest() {
     )
     private val sampleWrongEvent: Event = Event(
         id = 1,
-        title = "test title",
+        name = "test title",
         startDate = OffsetDateTime.now(),
         endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),

@@ -100,7 +100,7 @@ class ResponseAdvice<T>(
             data = (page.content as List<Event>).map {
                 EventResponse(
                     id = it.id!!,
-                    title = it.title,
+                    title = it.name,
                     startDate = it.startDate,
                     endDate = it.endDate,
                     reservationStartTime = it.reservationStartTime,

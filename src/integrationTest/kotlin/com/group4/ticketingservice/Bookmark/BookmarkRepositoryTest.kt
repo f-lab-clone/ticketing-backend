@@ -7,7 +7,6 @@ import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.BookmarkRepository
 import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.UserRepository
-import com.group4.ticketingservice.utils.Authority
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertInstanceOf
@@ -31,12 +30,12 @@ class BookmarkRepositoryTest(
         name = "james",
         email = "james@example.com",
         password = "12345678",
-        authority = Authority.USER,
+
         phone = "010-1234-5678"
     )
 
     private val sampleEvent: Event = Event(
-        title = "test title",
+        name = "test title",
         startDate = OffsetDateTime.now(),
         endDate = OffsetDateTime.now(),
 
@@ -47,7 +46,7 @@ class BookmarkRepositoryTest(
 
     val sampleEvents = mutableListOf(
         Event(
-            title = "정섭이의 코딩쇼",
+            name = "정섭이의 코딩쇼",
             startDate = OffsetDateTime.now(),
             endDate = OffsetDateTime.now(),
             reservationEndTime = OffsetDateTime.now() + ofHours(2),
@@ -55,7 +54,7 @@ class BookmarkRepositoryTest(
             maxAttendees = 10
         ),
         Event(
-            title = "민준이의 전국군가잘함",
+            name = "민준이의 전국군가잘함",
             startDate = OffsetDateTime.now(),
             endDate = OffsetDateTime.now(),
             reservationEndTime = OffsetDateTime.now() + ofHours(2),
@@ -63,7 +62,7 @@ class BookmarkRepositoryTest(
             maxAttendees = 10
         ),
         Event(
-            title = "하영이의 신작도서 팬싸인회",
+            name = "하영이의 신작도서 팬싸인회",
             startDate = OffsetDateTime.now(),
             endDate = OffsetDateTime.now(),
             reservationEndTime = OffsetDateTime.now() + ofHours(2),
@@ -71,7 +70,7 @@ class BookmarkRepositoryTest(
             maxAttendees = 10
         ),
         Event(
-            title = "준하의 스파르타 코딩 동아리 설명회",
+            name = "준하의 스파르타 코딩 동아리 설명회",
             startDate = OffsetDateTime.now(),
             endDate = OffsetDateTime.now(),
             reservationEndTime = OffsetDateTime.now() + ofHours(2),
@@ -79,7 +78,7 @@ class BookmarkRepositoryTest(
             maxAttendees = 10
         ),
         Event(
-            title = "군대에서 코딩 직군으로 복무하기 설명회",
+            name = "군대에서 코딩 직군으로 복무하기 설명회",
             startDate = OffsetDateTime.now(),
             endDate = OffsetDateTime.now(),
             reservationEndTime = OffsetDateTime.now() + ofHours(2),

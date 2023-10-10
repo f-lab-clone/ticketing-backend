@@ -43,7 +43,7 @@ class EventController @Autowired constructor(
         )
         val response = EventResponse(
             id = event.id!!,
-            title = event.title,
+            title = event.name,
             startDate = event.startDate,
             endDate = event.endDate,
             reservationStartTime = event.reservationStartTime,
@@ -62,7 +62,7 @@ class EventController @Autowired constructor(
         val foundEvent = eventService.getEvent(id)?.let {
             EventResponse(
                 id = it.id!!,
-                title = it.title,
+                title = it.name,
                 startDate = it.startDate,
                 endDate = it.endDate,
                 reservationStartTime = it.reservationStartTime,

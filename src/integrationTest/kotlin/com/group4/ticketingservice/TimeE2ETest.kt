@@ -8,7 +8,6 @@ import com.group4.ticketingservice.config.WebConfig
 import com.group4.ticketingservice.dto.SignInRequest
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.UserRepository
-import com.group4.ticketingservice.utils.Authority
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -43,7 +42,7 @@ class TimeE2ETest @Autowired constructor(
         name = testName,
         email = testUserName,
         password = password,
-        authority = Authority.USER,
+
         phone = "010-1234-5678"
     )
 
