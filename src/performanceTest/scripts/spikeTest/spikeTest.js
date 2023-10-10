@@ -49,7 +49,8 @@ export default function () {
     return getOneFromList(events.json())
   }
 
-  req.setToken(encode(exec.vu.idInTest))
+  const ID = randomInt(1, 1000000)
+  req.setToken(encode(ID))
 
   const event = getAvaliableReservation()
   if (event) {
