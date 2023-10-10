@@ -58,7 +58,7 @@ export default class Request {
 
     getEvents() {
         this.beforeHook()
-        const res =  http.get(`${this.baseURL}/events/`);
+        const res =  http.get(`${this.baseURL}/events`);
         this.afterHook()
         return res
     }

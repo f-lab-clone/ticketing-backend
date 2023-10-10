@@ -2,6 +2,7 @@ import { check } from "k6";
 import Request from "../lib/request.js";
 import generator from "../lib/generator.js";
 import hooks from "../lib/hooks.js";
+import { isSuccess } from "../lib/helpers.js";
 
 export const setup = hooks.setup
 export const handleSummary = hooks.handleSummary
@@ -16,6 +17,6 @@ export default function () {
    
    const res = req.access_token_info()
 
-   check(res, { "status == 200": (r) => r.status == 200 });
-   check(res, { "res has userId key": (r) => r.json().userId > 0 });
+   check(res, { "isSuccess": isSuccess });
+   check(res, { "res has userId key": (r) => r.json().data.userId > 0 });
 }

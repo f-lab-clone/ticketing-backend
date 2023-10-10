@@ -37,11 +37,11 @@ JWT_ISSUER=
 
 # Monitoring Configuration (Optional)
 GRAFANA_HOST=
-K6_OUT= #experimental-prometheus-rw
+K6_OUT= # experimental-prometheus-rw
 K6_PROMETHEUS_RW_SERVER_URL=
 K6_PROMETHEUS_RW_USERNAME=
 K6_PROMETHEUS_RW_PASSWORD=
-K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM= #true
+K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=true
 ```
 
 ### 4. Run the following commands
@@ -53,11 +53,8 @@ You can change the `ENTRYPOINT` variable to run different test files:
 
 
 ```shell 
-# To run the `a_test.js` file
-ENTRYPOINT=a_test.js docker-compose up
-
-# To run the `b_test.js` file
-ENTRYPOINT=b_test.js docker-compose up
+# To run the `smokeTest/healthCheck.js` file
+ENTRYPOINT=smokeTest/healthCheck.js docker-compose up
 ```
 
 

@@ -15,19 +15,32 @@ const User = (ID) => {
         let pw = Number(ID) % 1000
         if (pw == 0) pw = 1000
         return {
-            name: `${ID}`,
+            name: `${ID}-name`,
             email: `K6-${ID}@email.com`,
             password: `K6-${pw}-password`,
+            phoneNumber: '010-1234-1234',
         }
     } else {
         return {
             name: `${getPrefix()}-name`,
             email: `${getPrefix()}@email.com`,
             password: `${getPrefix()}-password`,
+            phoneNumber: '010-1234-1234',
         }
     }
 }
 
+const Reservation = (eventId) => {
+    return {
+        eventId,
+        name: "name",
+        phoneNumber: "010-1234-1234",
+        postCode: 12345,
+        address: "address",
+    }
+}
+
 export default {
-    User
+    User,
+    Reservation,
 }

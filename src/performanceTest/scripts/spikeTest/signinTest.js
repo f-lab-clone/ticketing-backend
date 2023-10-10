@@ -1,8 +1,8 @@
 import { check } from "k6";
-import Request from "./lib/request.js";
-import generator from "./lib/generator.js";
-import hooks from "./lib/hooks.js";
-import { isSuccess, randomInt } from "./lib/helpers.js";
+import Request from "../lib/request.js";
+import generator from "../lib/generator.js";
+import hooks from "../lib/hooks.js";
+import { isSuccess, randomInt } from "../lib/helpers.js";
 
 export const setup = hooks.setup
 export const handleSummary = hooks.handleSummary
@@ -43,7 +43,7 @@ export default function () {
   const user = generator.User(ID)
   const res = req.signin(user)
   if (!isSuccess(res)) {
-    console.log(user, res.body)
+    console.log(user, res.status, res.body)
   }
   check(res, {"Success SignIn": (r) => isSuccess(r) && r.json().Authorization});
 }
