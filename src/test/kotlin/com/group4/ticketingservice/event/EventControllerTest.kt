@@ -116,7 +116,7 @@ class EventControllerTest(
     fun `POST events should return created event`() {
         every { eventService.createEvent(any(), any(), any(), any(), any(), any()) } returns sampleEvent
 
-        val eventCreateRequest = "{\"title\":\"test title\"," +
+        val eventCreateRequest = "{\"name\":\"test title\"," +
             "\"startDate\":\"2044-02-04T21:00:00.001+09:00\"," +
             "\"endDate\":\"2044-02-04T21:00:00.001+09:00\"," +
             "\"reservationStartTime\":\"2044-01-01T22:00:00.001+09:00\"," +
@@ -131,7 +131,7 @@ class EventControllerTest(
             .andExpect(status().isCreated)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.data.id").value(sampleEvent.id))
-            .andExpect(jsonPath("$.data.title").value(sampleEvent.name))
+            .andExpect(jsonPath("$.data.name").value(sampleEvent.name))
             .andExpect(jsonPath("$.data.maxAttendees").value(sampleEvent.maxAttendees))
     }
 
@@ -185,7 +185,7 @@ class EventControllerTest(
             get("/events")
                 .param("page", "1")
                 .param("size", "4")
-                .param("sort", "title")
+                .param("sort", "name")
         )
 
         // Then
