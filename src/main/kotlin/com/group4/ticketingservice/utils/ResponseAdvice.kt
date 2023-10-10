@@ -101,7 +101,8 @@ class ResponseAdvice<T>(
                 EventResponse(
                     id = it.id!!,
                     title = it.title,
-                    date = it.date,
+                    startDate = it.startDate,
+                    endDate = it.endDate,
                     reservationStartTime = it.reservationStartTime,
                     reservationEndTime = it.reservationEndTime,
                     maxAttendees = it.maxAttendees
@@ -113,7 +114,11 @@ class ResponseAdvice<T>(
                     id = it.id!!,
                     eventId = it.event.id!!,
                     userId = it.user.id!!,
-                    bookedAt = it.bookedAt
+                    createdAt = it.createdAt,
+                    name = it.name,
+                    phoneNumber = it.phoneNumber,
+                    postCode = it.postCode,
+                    address = it.address
                 )
             }
         }

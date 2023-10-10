@@ -52,7 +52,8 @@ class UserControllerTest(
     val sampleSignUpRequest = SignUpRequest(
         email = testUserName,
         name = testName,
-        password = password
+        password = password,
+        phoneNumber = "010-1234-5678"
     )
     val sampleUserDTO = UserDto(
         name = testName,
@@ -63,7 +64,8 @@ class UserControllerTest(
     val invalidSignUpRequest = SignUpRequest(
         email = "a",
         name = "a",
-        password = "1234"
+        password = "1234",
+        phoneNumber = "010-1234-5678"
     )
 
     /**

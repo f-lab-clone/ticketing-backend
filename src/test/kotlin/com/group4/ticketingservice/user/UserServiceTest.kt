@@ -26,7 +26,8 @@ class UserServiceTest {
     val sampleSignUpRequest = SignUpRequest(
         email = "minjun3021@qwer.com",
         name = "minjun",
-        password = "1234"
+        password = "1234",
+        phoneNumber = "010-1234-5678"
     )
     val sampleUserDTO = UserDto(
         name = "minjun3021@qwer.com",
@@ -38,7 +39,8 @@ class UserServiceTest {
         name = "minjun3021@qwer.com",
         email = "minjun",
         password = "1234",
-        authority = Authority.USER
+        authority = Authority.USER,
+        phone = "010-1234-5678"
     )
 
     @Test

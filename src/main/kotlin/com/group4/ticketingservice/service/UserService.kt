@@ -23,7 +23,8 @@ class UserService(
             name = request.name!!,
             email = request.email,
             password = encoder.encode(request.password),
-            authority = Authority.USER
+            authority = Authority.USER,
+            phone = request.phoneNumber!!
         )
 
         userRepository.save(newUser)

@@ -68,11 +68,16 @@ class ReservationControllerTest(
         name = testFields.testName,
         email = testFields.testUserName,
         password = testFields.password,
-        authority = Authority.USER
+        authority = Authority.USER,
+        phone = "010-1234-5678"
     )
 
     private val sampleReservationCreateRequest = ReservationCreateRequest(
-        eventId = 1
+        eventId = 1,
+        name = "asdf",
+        phoneNumber = "010-1234-5678",
+        postCode = 1,
+        address = "qwer"
     )
     private val sampleReservationDeleteRequest = ReservationDeleteRequest(
         id = 1
@@ -81,7 +86,8 @@ class ReservationControllerTest(
     private val sampleEvent: Event = Event(
         id = 1,
         title = "test title",
-        date = OffsetDateTime.now(),
+        startDate = OffsetDateTime.now(),
+        endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),
         reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 10
@@ -89,8 +95,7 @@ class ReservationControllerTest(
     private val sampleReservation: Reservation = Reservation(
         id = 1,
         user = sampleUser.apply { id = 1 },
-        event = sampleEvent,
-        bookedAt = OffsetDateTime.now()
+        event = sampleEvent
     )
 
     private val gson: Gson = GsonBuilder().create()
@@ -98,7 +103,7 @@ class ReservationControllerTest(
     @Test
     @WithAuthUser(email = testUserName, id = testUserId)
     fun `POST reservations should return created reservation`() {
-        every { reservationService.createReservation(1, 1) } returns sampleReservation
+        every { reservationService.createReservation(1, 1, any(), any(), any(), any()) } returns sampleReservation
 
         val result = mockMvc.perform(
             post("/reservations")
@@ -146,12 +151,13 @@ class ReservationControllerTest(
             event = Event(
                 id = 2,
                 title = "test title 2",
-                date = OffsetDateTime.now(),
+                startDate = OffsetDateTime.now(),
+                endDate = OffsetDateTime.now(),
                 reservationEndTime = OffsetDateTime.now(),
                 reservationStartTime = OffsetDateTime.now(),
                 maxAttendees = 10
-            ),
-            bookedAt = OffsetDateTime.now()
+            )
+
         )
         every { reservationService.updateReservation(1, 2) } returns updatedReservation
 

@@ -43,7 +43,8 @@ class JwtAuthenticationFilterTest {
         name = "minjun3021@qwer.com",
         email = "minjun",
         password = "1234",
-        authority = Authority.USER
+        authority = Authority.USER,
+        phone = "010-1234-5678"
     )
     val sample = "{}"
 

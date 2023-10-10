@@ -35,16 +35,17 @@ class EventController @Autowired constructor(
     ): ResponseEntity<EventResponse> {
         val event = eventService.createEvent(
             request.title!!,
-            request.date!!,
+            request.startDate!!,
+            request.endDate!!,
             request.reservationStartTime!!,
             request.reservationEndTime!!,
             request.maxAttendees!!
         )
-
         val response = EventResponse(
             id = event.id!!,
             title = event.title,
-            date = event.date,
+            startDate = event.startDate,
+            endDate = event.endDate,
             reservationStartTime = event.reservationStartTime,
             reservationEndTime = event.reservationEndTime,
             maxAttendees = event.maxAttendees
@@ -57,15 +58,13 @@ class EventController @Autowired constructor(
     }
 
     @GetMapping("/{id}")
-    fun getEvent(
-        request: HttpServletRequest,
-        @PathVariable id: Int
-    ): ResponseEntity<EventResponse?> {
+    fun getEvent(request: HttpServletRequest, @PathVariable id: Int): ResponseEntity<EventResponse?> {
         val foundEvent = eventService.getEvent(id)?.let {
             EventResponse(
                 id = it.id!!,
                 title = it.title,
-                date = it.date,
+                startDate = it.startDate,
+                endDate = it.endDate,
                 reservationStartTime = it.reservationStartTime,
                 reservationEndTime = it.reservationEndTime,
                 maxAttendees = it.maxAttendees
@@ -73,7 +72,6 @@ class EventController @Autowired constructor(
         } ?: kotlin.run {
             null
         }
-
         val headers = HttpHeaders()
         headers.set("Content-Location", request.requestURI)
 
@@ -84,7 +82,7 @@ class EventController @Autowired constructor(
     fun getEvents(
         request: HttpServletRequest,
         @RequestParam(required = false) title: String?,
-        @PageableDefault(size = 10, sort = ["date", "id"]) pageable: Pageable
+        @PageableDefault(size = 10, sort = ["startDate", "id"]) pageable: Pageable
     ): ResponseEntity<Page<Event>> {
         val page = eventService.getEvents(title, pageable)
 

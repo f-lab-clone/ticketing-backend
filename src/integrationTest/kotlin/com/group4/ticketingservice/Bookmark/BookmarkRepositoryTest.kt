@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.transaction.annotation.Transactional
+import java.time.Duration.ofHours
 import java.time.OffsetDateTime
 
 class BookmarkRepositoryTest(
@@ -30,12 +31,15 @@ class BookmarkRepositoryTest(
         name = "james",
         email = "james@example.com",
         password = "12345678",
-        authority = Authority.USER
+        authority = Authority.USER,
+        phone = "010-1234-5678"
     )
 
     private val sampleEvent: Event = Event(
         title = "test title",
-        date = OffsetDateTime.now(),
+        startDate = OffsetDateTime.now(),
+        endDate = OffsetDateTime.now(),
+
         reservationEndTime = OffsetDateTime.now(),
         reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 10
@@ -44,37 +48,42 @@ class BookmarkRepositoryTest(
     val sampleEvents = mutableListOf(
         Event(
             title = "정섭이의 코딩쇼",
-            date = OffsetDateTime.now(),
-            reservationEndTime = OffsetDateTime.now(),
-            reservationStartTime = OffsetDateTime.now(),
+            startDate = OffsetDateTime.now(),
+            endDate = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now() + ofHours(2),
+            reservationStartTime = OffsetDateTime.now() - ofHours(2),
             maxAttendees = 10
         ),
         Event(
             title = "민준이의 전국군가잘함",
-            date = OffsetDateTime.now(),
-            reservationEndTime = OffsetDateTime.now(),
-            reservationStartTime = OffsetDateTime.now(),
+            startDate = OffsetDateTime.now(),
+            endDate = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now() + ofHours(2),
+            reservationStartTime = OffsetDateTime.now() - ofHours(2),
             maxAttendees = 10
         ),
         Event(
             title = "하영이의 신작도서 팬싸인회",
-            date = OffsetDateTime.now(),
-            reservationEndTime = OffsetDateTime.now(),
-            reservationStartTime = OffsetDateTime.now(),
+            startDate = OffsetDateTime.now(),
+            endDate = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now() + ofHours(2),
+            reservationStartTime = OffsetDateTime.now() - ofHours(2),
             maxAttendees = 10
         ),
         Event(
             title = "준하의 스파르타 코딩 동아리 설명회",
-            date = OffsetDateTime.now(),
-            reservationEndTime = OffsetDateTime.now(),
-            reservationStartTime = OffsetDateTime.now(),
+            startDate = OffsetDateTime.now(),
+            endDate = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now() + ofHours(2),
+            reservationStartTime = OffsetDateTime.now() - ofHours(2),
             maxAttendees = 10
         ),
         Event(
             title = "군대에서 코딩 직군으로 복무하기 설명회",
-            date = OffsetDateTime.now(),
-            reservationEndTime = OffsetDateTime.now(),
-            reservationStartTime = OffsetDateTime.now(),
+            startDate = OffsetDateTime.now(),
+            endDate = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now() + ofHours(2),
+            reservationStartTime = OffsetDateTime.now() - ofHours(2),
             maxAttendees = 10
         )
     )

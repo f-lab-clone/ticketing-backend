@@ -328,9 +328,13 @@ components:
           format: int32
     ReservationResponse:
       required:
-      - bookedAt
+      - address
+      - createdAt
       - eventId
       - id
+      - name
+      - phoneNumber
+      - postCode
       - userId
       type: object
       properties:
@@ -343,14 +347,24 @@ components:
         userId:
           type: integer
           format: int32
-        bookedAt:
+        createdAt:
           type: string
           format: date-time
+        name:
+          type: string
+        phoneNumber:
+          type: string
+        postCode:
+          type: integer
+          format: int32
+        address:
+          type: string
     SignUpRequest:
       required:
       - email
       - name
       - password
+      - phoneNumber
       type: object
       properties:
         email:
@@ -362,6 +376,9 @@ components:
         password:
           maxLength: 128
           minLength: 9
+          type: string
+        phoneNumber:
+          pattern: "^01(?:0|1|[6-9])[.-](\\d{3}|\\d{4})[.-](\\d{4})$"
           type: string
     UserDto:
       required:
@@ -385,18 +402,33 @@ components:
           type: string
     ReservationCreateRequest:
       required:
+      - address
       - eventId
+      - name
+      - phoneNumber
+      - postCode
       type: object
       properties:
         eventId:
           type: integer
           format: int32
+        name:
+          type: string
+        phoneNumber:
+          pattern: "^01(?:0|1|[6-9])[.-](\\d{3}|\\d{4})[.-](\\d{4})$"
+          type: string
+        postCode:
+          type: integer
+          format: int32
+        address:
+          type: string
     EventCreateRequest:
       required:
-      - date
+      - endDate
       - maxAttendees
       - reservationEndTime
       - reservationStartTime
+      - startDate
       - title
       type: object
       properties:
@@ -404,7 +436,10 @@ components:
           maxLength: 255
           minLength: 1
           type: string
-        date:
+        startDate:
+          type: string
+          format: date-time
+        endDate:
           type: string
           format: date-time
         reservationStartTime:
@@ -418,11 +453,12 @@ components:
           format: int32
     EventResponse:
       required:
-      - date
+      - endDate
       - id
       - maxAttendees
       - reservationEndTime
       - reservationStartTime
+      - startDate
       - title
       type: object
       properties:
@@ -431,7 +467,10 @@ components:
           format: int32
         title:
           type: string
-        date:
+        startDate:
+          type: string
+          format: date-time
+        endDate:
           type: string
           format: date-time
         reservationStartTime:
@@ -491,13 +530,14 @@ components:
       required:
       - bookmarks
       - createdAt
-      - currentReservationCount
-      - date
+      - endDate
       - maxAttendees
       - reservationEndTime
       - reservationStartTime
       - reservations
+      - startDate
       - title
+      - totalAttendees
       - updatedAt
       type: object
       properties:
@@ -506,7 +546,10 @@ components:
           format: int32
         title:
           type: string
-        date:
+        startDate:
+          type: string
+          format: date-time
+        endDate:
           type: string
           format: date-time
         reservationStartTime:
@@ -518,7 +561,7 @@ components:
         maxAttendees:
           type: integer
           format: int32
-        currentReservationCount:
+        totalAttendees:
           type: integer
           format: int32
         createdAt:
@@ -592,8 +635,13 @@ components:
           type: boolean
     Reservation:
       required:
-      - bookedAt
+      - address
+      - createdAt
       - event
+      - name
+      - phoneNumber
+      - postCode
+      - updatedAt
       - user
       type: object
       properties:
@@ -604,9 +652,21 @@ components:
           $ref: '#/components/schemas/User'
         event:
           $ref: '#/components/schemas/Event'
-        bookedAt:
+        createdAt:
           type: string
           format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        name:
+          type: string
+        phoneNumber:
+          type: string
+        postCode:
+          type: integer
+          format: int32
+        address:
+          type: string
     SortObject:
       type: object
       properties:
@@ -627,6 +687,7 @@ components:
       - isEnabled
       - name
       - password
+      - phoneNumber
       - pw
       - role
       - updatedAt
@@ -647,6 +708,9 @@ components:
         id:
           type: integer
           format: int32
+        phone:
+          type: string
+          writeOnly: true
         createdAt:
           type: string
           format: date-time
@@ -654,6 +718,8 @@ components:
           type: string
           format: date-time
         pw:
+          type: string
+        phoneNumber:
           type: string
         role:
           type: string

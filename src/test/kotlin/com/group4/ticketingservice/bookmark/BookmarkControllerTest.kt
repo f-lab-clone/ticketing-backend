@@ -37,9 +37,9 @@ import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.Duration
 import java.time.OffsetDateTime
 
 @ExtendWith(MockKExtension::class)
@@ -63,13 +63,15 @@ class BookmarkControllerTest(
         name = "james",
         email = "james@example.com",
         password = "12345678",
-        authority = Authority.USER
+        authority = Authority.USER,
+        phone = "010-1234-5678"
     )
 
     private val sampleEvent: Event = Event(
         id = 1,
         title = "test title",
-        date = OffsetDateTime.now(),
+        startDate = OffsetDateTime.now(),
+        endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),
         reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 10
@@ -93,21 +95,24 @@ class BookmarkControllerTest(
             event = Event(
                 id = 1,
                 title = "정섭이의 코딩쇼",
-                date = OffsetDateTime.now(),
-                reservationEndTime = OffsetDateTime.now(),
-                reservationStartTime = OffsetDateTime.now(),
+                startDate = OffsetDateTime.now(),
+                endDate = OffsetDateTime.now(),
+                reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
+                reservationStartTime = OffsetDateTime.now() - Duration.ofHours(2),
                 maxAttendees = 10
             )
         ),
+
         Bookmark(
             id = 12,
             user = sampleUser,
             event = Event(
                 id = 2,
                 title = "민준이의 전국군가잘함",
-                date = OffsetDateTime.now(),
-                reservationEndTime = OffsetDateTime.now(),
-                reservationStartTime = OffsetDateTime.now(),
+                startDate = OffsetDateTime.now(),
+                endDate = OffsetDateTime.now(),
+                reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
+                reservationStartTime = OffsetDateTime.now() - Duration.ofHours(2),
                 maxAttendees = 10
             )
         ),
@@ -117,9 +122,10 @@ class BookmarkControllerTest(
             event = Event(
                 id = 3,
                 title = "하영이의 신작도서 팬싸인회",
-                date = OffsetDateTime.now(),
-                reservationEndTime = OffsetDateTime.now(),
-                reservationStartTime = OffsetDateTime.now(),
+                startDate = OffsetDateTime.now(),
+                endDate = OffsetDateTime.now(),
+                reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
+                reservationStartTime = OffsetDateTime.now() - Duration.ofHours(2),
                 maxAttendees = 10
             )
         ),
@@ -129,9 +135,10 @@ class BookmarkControllerTest(
             event = Event(
                 id = 4,
                 title = "준하의 스파르타 코딩 동아리 설명회",
-                date = OffsetDateTime.now(),
-                reservationEndTime = OffsetDateTime.now(),
-                reservationStartTime = OffsetDateTime.now(),
+                startDate = OffsetDateTime.now(),
+                endDate = OffsetDateTime.now(),
+                reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
+                reservationStartTime = OffsetDateTime.now() - Duration.ofHours(2),
                 maxAttendees = 10
             )
         )

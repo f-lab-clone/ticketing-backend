@@ -14,7 +14,10 @@ data class EventCreateRequest(
     val title: String?,
     @field:NotNull
     @field:Future
-    val date: OffsetDateTime?,
+    val startDate: OffsetDateTime?,
+    @field:NotNull
+    @field:Future
+    val endDate: OffsetDateTime?,
     @field:NotNull
     @field:FutureOrPresent
     val reservationStartTime: OffsetDateTime?,
@@ -35,7 +38,8 @@ data class EventDeleteRequest(
 data class EventResponse(
     val id: Int,
     val title: String,
-    val date: OffsetDateTime,
+    val startDate: OffsetDateTime,
+    val endDate: OffsetDateTime,
     val reservationStartTime: OffsetDateTime,
     val reservationEndTime: OffsetDateTime,
     val maxAttendees: Int

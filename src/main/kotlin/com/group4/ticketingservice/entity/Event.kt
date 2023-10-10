@@ -21,7 +21,10 @@ class Event(
     var title: String,
 
     @NotNull
-    var date: OffsetDateTime,
+    var startDate: OffsetDateTime,
+
+    @NotNull
+    var endDate: OffsetDateTime,
 
     @NotNull
     var reservationStartTime: OffsetDateTime,
@@ -33,7 +36,7 @@ class Event(
     var maxAttendees: Int,
 
     @NotNull
-    var currentReservationCount: Int = 0
+    var totalAttendees: Int = 0
 
 ) : BaseTimeEntity() {
 

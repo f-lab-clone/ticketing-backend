@@ -14,14 +14,16 @@ class EventService(
 ) {
     fun createEvent(
         title: String,
-        date: OffsetDateTime,
+        startDate: OffsetDateTime,
+        endDate: OffsetDateTime,
         reservationStartTime: OffsetDateTime,
         reservationEndTime: OffsetDateTime,
         maxAttendees: Int
     ): Event {
         val event = Event(
             title = title,
-            date = date,
+            startDate = startDate,
+            endDate = endDate,
             reservationStartTime = reservationStartTime,
             reservationEndTime = reservationEndTime,
             maxAttendees = maxAttendees

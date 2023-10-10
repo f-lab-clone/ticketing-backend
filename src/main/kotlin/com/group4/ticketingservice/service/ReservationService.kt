@@ -21,14 +21,22 @@ class ReservationService @Autowired constructor(
     private val reservationRepository: ReservationRepository
 ) {
     @Transactional
-    fun createReservation(eventId: Int, userId: Int): Reservation {
+    fun createReservation(eventId: Int, userId: Int, name: String, phoneNumber: String, postCode: Int, address: String): Reservation {
         val user = userRepository.getReferenceById(userId)
         val event = eventRepository.findByIdWithPesimisticLock(eventId) ?: throw CustomException(ErrorCodes.ENTITY_NOT_FOUND)
 
-        val reservation = Reservation(user = user, event = event, bookedAt = OffsetDateTime.now())
+        val now = OffsetDateTime.now()
+        if (now.isBefore(event.reservationStartTime) || now.isAfter(event.reservationEndTime)) throw CustomException(ErrorCodes.DATE_NOT_ALLOWED)
 
-        if (event.maxAttendees > event.currentReservationCount) {
-            event.currentReservationCount += 1
+        val reservation = Reservation(user = user, event = event)
+        reservation.apply {
+            this.name = name
+            this.phoneNumber = phoneNumber
+            this.postCode = postCode
+            this.address = address
+        }
+        if (event.maxAttendees > event.totalAttendees) {
+            event.totalAttendees += 1
             eventRepository.saveAndFlush(event)
 
             reservationRepository.saveAndFlush(reservation)
