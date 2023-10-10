@@ -21,7 +21,7 @@ class EventService(
         maxAttendees: Int
     ): Event {
         val event = Event(
-            title = title,
+            name = title,
             startDate = startDate,
             endDate = endDate,
             reservationStartTime = reservationStartTime,

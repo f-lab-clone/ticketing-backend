@@ -5,7 +5,6 @@ import com.group4.ticketingservice.dto.UserDto
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.service.UserService
-import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.exception.CustomException
 import io.mockk.every
 import io.mockk.mockk
@@ -39,7 +38,7 @@ class UserServiceTest {
         name = "minjun3021@qwer.com",
         email = "minjun",
         password = "1234",
-        authority = Authority.USER,
+
         phone = "010-1234-5678"
     )
 

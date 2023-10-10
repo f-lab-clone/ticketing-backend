@@ -14,7 +14,7 @@ class EventSpecifications {
                 val predicates = mutableListOf<Predicate>()
 
                 if (!title.isNullOrBlank()) {
-                    predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%${title.toLowerCase()}%"))
+                    predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%${title.toLowerCase()}%"))
                 }
 
                 criteriaBuilder.and(*predicates.toTypedArray())

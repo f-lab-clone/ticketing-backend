@@ -18,7 +18,7 @@ class Event(
     val id: Int? = null,
 
     @NotNull
-    var title: String,
+    var name: String,
 
     @NotNull
     var startDate: OffsetDateTime,

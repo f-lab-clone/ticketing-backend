@@ -21,7 +21,6 @@ import com.group4.ticketingservice.reservation.ReservationControllerTest.testFie
 import com.group4.ticketingservice.reservation.ReservationControllerTest.testFields.testUserName
 import com.group4.ticketingservice.service.ReservationService
 import com.group4.ticketingservice.user.WithAuthUser
-import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.OffsetDateTimeAdapter
 import com.group4.ticketingservice.utils.TokenProvider
 import com.ninjasquad.springmockk.MockkBean
@@ -68,7 +67,7 @@ class ReservationControllerTest(
         name = testFields.testName,
         email = testFields.testUserName,
         password = testFields.password,
-        authority = Authority.USER,
+
         phone = "010-1234-5678"
     )
 
@@ -85,7 +84,7 @@ class ReservationControllerTest(
 
     private val sampleEvent: Event = Event(
         id = 1,
-        title = "test title",
+        name = "test title",
         startDate = OffsetDateTime.now(),
         endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),
@@ -150,7 +149,7 @@ class ReservationControllerTest(
             user = sampleUser,
             event = Event(
                 id = 2,
-                title = "test title 2",
+                name = "test title 2",
                 startDate = OffsetDateTime.now(),
                 endDate = OffsetDateTime.now(),
                 reservationEndTime = OffsetDateTime.now(),

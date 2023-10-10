@@ -7,7 +7,6 @@ import com.group4.ticketingservice.dto.SignInRequest
 import com.group4.ticketingservice.dto.SignUpRequest
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.UserRepository
-import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.TokenProvider
 import org.hamcrest.core.StringContains
 import org.junit.jupiter.api.AfterEach
@@ -59,7 +58,7 @@ class UserControllerTest : AbstractIntegrationTest() {
         name = testFields.testName,
         email = testFields.testUserName,
         password = BCryptPasswordEncoder().encode(testFields.password),
-        authority = Authority.USER,
+
         phone = "010-1234-5678"
     )
 

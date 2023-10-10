@@ -4,7 +4,6 @@ import com.group4.ticketingservice.dto.SignUpRequest
 import com.group4.ticketingservice.dto.UserDto
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.UserRepository
-import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.exception.CustomException
 import com.group4.ticketingservice.utils.exception.ErrorCodes
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -23,7 +22,6 @@ class UserService(
             name = request.name!!,
             email = request.email,
             password = encoder.encode(request.password),
-            authority = Authority.USER,
             phone = request.phoneNumber!!
         )
 

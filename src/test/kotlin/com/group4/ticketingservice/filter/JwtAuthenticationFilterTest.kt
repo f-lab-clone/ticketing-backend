@@ -6,7 +6,6 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.group4.ticketingservice.dto.SignInRequest
 import com.group4.ticketingservice.entity.User
-import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.OffsetDateTimeAdapter
 import com.group4.ticketingservice.utils.TokenProvider
 import io.mockk.every
@@ -43,7 +42,7 @@ class JwtAuthenticationFilterTest {
         name = "minjun3021@qwer.com",
         email = "minjun",
         password = "1234",
-        authority = Authority.USER,
+
         phone = "010-1234-5678"
     )
     val sample = "{}"
