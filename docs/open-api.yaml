@@ -532,11 +532,11 @@ components:
       - createdAt
       - endDate
       - maxAttendees
+      - name
       - reservationEndTime
       - reservationStartTime
       - reservations
       - startDate
-      - title
       - totalAttendees
       - updatedAt
       type: object
@@ -544,7 +544,7 @@ components:
         id:
           type: integer
           format: int32
-        title:
+        name:
           type: string
         startDate:
           type: string
@@ -604,15 +604,15 @@ components:
           format: int32
         sort:
           $ref: '#/components/schemas/SortObject'
-        first:
-          type: boolean
-        last:
-          type: boolean
         numberOfElements:
           type: integer
           format: int32
         pageable:
           $ref: '#/components/schemas/PageableObject'
+        first:
+          type: boolean
+        last:
+          type: boolean
         empty:
           type: boolean
     PageableObject:
@@ -689,7 +689,6 @@ components:
       - password
       - phoneNumber
       - pw
-      - role
       - updatedAt
       - username
       type: object
@@ -700,11 +699,6 @@ components:
           type: string
         password:
           type: string
-        authority:
-          type: string
-          writeOnly: true
-          enum:
-          - USER
         id:
           type: integer
           format: int32
@@ -721,10 +715,6 @@ components:
           type: string
         phoneNumber:
           type: string
-        role:
-          type: string
-          enum:
-          - USER
         isEnabled:
           type: boolean
         authorities:
@@ -760,15 +750,15 @@ components:
           format: int32
         sort:
           $ref: '#/components/schemas/SortObject'
-        first:
-          type: boolean
-        last:
-          type: boolean
         numberOfElements:
           type: integer
           format: int32
         pageable:
           $ref: '#/components/schemas/PageableObject'
+        first:
+          type: boolean
+        last:
+          type: boolean
         empty:
           type: boolean
     PageBookmark:
@@ -792,14 +782,14 @@ components:
           format: int32
         sort:
           $ref: '#/components/schemas/SortObject'
-        first:
-          type: boolean
-        last:
-          type: boolean
         numberOfElements:
           type: integer
           format: int32
         pageable:
           $ref: '#/components/schemas/PageableObject'
+        first:
+          type: boolean
+        last:
+          type: boolean
         empty:
           type: boolean

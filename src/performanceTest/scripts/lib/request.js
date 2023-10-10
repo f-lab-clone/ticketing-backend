@@ -19,7 +19,7 @@ export default class Request {
     }
 
     setToken(token) {
-        if (token.substring(0, 7) === 'Bearer ') {
+        if (token && token.substring(0, 7) === 'Bearer ') {
             // set this.token = token without 'Bearer '
             this.Token = token.substring(7);
         }

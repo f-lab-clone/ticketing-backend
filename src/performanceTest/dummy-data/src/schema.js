@@ -1,6 +1,5 @@
 const { faker } = require('@faker-js/faker')
 const userpassword = require('./userpassword.js')
-const defaultValue = (value) => () => value
 
 class Field {
     constructor(name, generator) {
@@ -17,18 +16,22 @@ class Table {
 }
 
 const event = new Table('event', [
+    new Field('id', (i) => i + 1),
     new Field('title', (i) => faker.music.songName()),
-    new Field('date', (i) => faker.date.recent()),
+    new Field('start_date', (i) => faker.date.recent()),
+    new Field('end_date', (i) => faker.date.future()),
     new Field('reservation_start_time', (i) => faker.date.recent()),
-    new Field('reservation_end_time', (i) => faker.date.future()),
-    new Field('max_attendees', (i) => faker.number.int(1000)),
-    new Field('current_reservation_count', (i) => defaultValue(0)),
+    new Field('reservation_end_time', (i) => faker.date.future({ years: 1 })),
+    new Field('max_attendees', (i) => faker.number.int(10000)),
+    new Field('total_attendees', (i) => 0),
     new Field('created_at', (i) => faker.date.recent()),
     new Field('updated_at', (i) => faker.date.recent()),
 ])
 const user = new Table('user', [
+    new Field('id', (i) => `${i + 1}`),
     new Field('email', (i) => `K6-${i + 1}@email.com`),
     new Field('name', (i) => `${i + 1}`),
+    new Field('phone_number', (i) => "010-1234-1234"),
     new Field('pw', (i) => userpassword[i % 1000]),
     new Field('created_at', (i) => faker.date.recent()),
     new Field('updated_at', (i) => faker.date.recent()),

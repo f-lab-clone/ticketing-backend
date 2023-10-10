@@ -8,8 +8,10 @@ if (GENERATE_COUNT == null) {
     process.exit(1)
 }
 
+const FORLDER_NAME = path.join(__dirname, '../')
 module.exports = {
-    SQL_FILE_NAME: path.join(__dirname, '../../initdb/sqls/initdata.sql'),
+    FORLDER_NAME,
+    SQL_FILE_NAME: FORLDER_NAME + '/initdata.sql',
     GENERATE_COUNT,
     GENERATE_PER_LOOP,
 }
