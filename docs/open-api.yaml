@@ -426,13 +426,13 @@ components:
       required:
       - endDate
       - maxAttendees
+      - name
       - reservationEndTime
       - reservationStartTime
       - startDate
-      - title
       type: object
       properties:
-        title:
+        name:
           maxLength: 255
           minLength: 1
           type: string
@@ -456,16 +456,16 @@ components:
       - endDate
       - id
       - maxAttendees
+      - name
       - reservationEndTime
       - reservationStartTime
       - startDate
-      - title
       type: object
       properties:
         id:
           type: integer
           format: int32
-        title:
+        name:
           type: string
         startDate:
           type: string
