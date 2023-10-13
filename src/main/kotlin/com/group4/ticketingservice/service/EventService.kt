@@ -1,7 +1,10 @@
 package com.group4.ticketingservice.service
 
+import com.group4.ticketingservice.dto.EventSpecifications
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.repository.EventRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
 
@@ -10,15 +13,17 @@ class EventService(
     private val eventRepository: EventRepository
 ) {
     fun createEvent(
-        title: String,
-        date: OffsetDateTime,
+        name: String,
+        startDate: OffsetDateTime,
+        endDate: OffsetDateTime,
         reservationStartTime: OffsetDateTime,
         reservationEndTime: OffsetDateTime,
         maxAttendees: Int
     ): Event {
         val event = Event(
-            title = title,
-            date = date,
+            name = name,
+            startDate = startDate,
+            endDate = endDate,
             reservationStartTime = reservationStartTime,
             reservationEndTime = reservationEndTime,
             maxAttendees = maxAttendees
@@ -30,7 +35,8 @@ class EventService(
         return eventRepository.findById(id).orElse(null)
     }
 
-    fun getEvents(): List<Event> {
-        return eventRepository.findAll()
+    fun getEvents(name: String?, pageable: Pageable): Page<Event> {
+        val specification = EventSpecifications.withName(name)
+        return eventRepository.findAll(specification, pageable)
     }
 }

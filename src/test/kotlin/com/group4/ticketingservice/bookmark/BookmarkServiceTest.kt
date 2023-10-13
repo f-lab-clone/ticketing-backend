@@ -8,12 +8,17 @@ import com.group4.ticketingservice.repository.BookmarkRepository
 import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.service.BookmarkService
-import com.group4.ticketingservice.utils.Authority
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.modelmapper.ModelMapper
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import java.time.Duration
 import java.time.OffsetDateTime
 
 class BookmarkServiceTest() {
@@ -27,15 +32,17 @@ class BookmarkServiceTest() {
         name = "james",
         email = "james@example.com",
         password = "12345678",
-        authority = Authority.USER
+
+        phone = "010-1234-5678"
     )
 
     val sampleUserId = 1
 
     private val sampleEvent: Event = Event(
         id = 1,
-        title = "test title",
-        date = OffsetDateTime.now(),
+        name = "test title",
+        startDate = OffsetDateTime.now(),
+        endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),
         reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 10
@@ -50,30 +57,103 @@ class BookmarkServiceTest() {
         event_id = 1
     )
 
+    val pageable: Pageable = PageRequest.of(0, 4)
+    val content = mutableListOf(
+        Bookmark(
+            id = 11,
+            user = sampleUser,
+            event = Event(
+                id = 1,
+                name = "정섭이의 코딩쇼",
+                startDate = OffsetDateTime.now(),
+                endDate = OffsetDateTime.now(),
+                reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
+                reservationStartTime = OffsetDateTime.now() - Duration.ofHours(2),
+                maxAttendees = 10
+            )
+        ),
+        Bookmark(
+            id = 12,
+            user = sampleUser,
+            event = Event(
+                id = 2,
+                name = "민준이의 전국군가잘함",
+                startDate = OffsetDateTime.now(),
+                endDate = OffsetDateTime.now(),
+                reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
+                reservationStartTime = OffsetDateTime.now() - Duration.ofHours(2),
+                maxAttendees = 10
+            )
+        ),
+        Bookmark(
+            id = 13,
+            user = sampleUser,
+            event = Event(
+                id = 3,
+                name = "하영이의 신작도서 팬싸인회",
+                startDate = OffsetDateTime.now(),
+                endDate = OffsetDateTime.now(),
+                reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
+                reservationStartTime = OffsetDateTime.now() - Duration.ofHours(2),
+                maxAttendees = 10
+            )
+        ),
+        Bookmark(
+            id = 14,
+            user = sampleUser,
+            event = Event(
+                id = 4,
+                name = "준하의 스파르타 코딩 동아리 설명회",
+                startDate = OffsetDateTime.now(),
+                endDate = OffsetDateTime.now(),
+                reservationEndTime = OffsetDateTime.now() + Duration.ofHours(2),
+                reservationStartTime = OffsetDateTime.now() - Duration.ofHours(2),
+                maxAttendees = 10
+            )
+        )
+    )
+    val totalElements: Long = 100
+    val page: Page<Bookmark> = PageImpl(content, pageable, totalElements)
+
     @Test
     fun `bookmarkService_getList() invoke repository_findByUser`() {
         // given
 
-        every { repository.findByUserId(sampleUserId) } returns listOf(sampleBookmark)
+        every { repository.findByUserId(sampleUserId, pageable) } returns page
 
         // when
-        bookmarkService.getList(sampleUserId)
+        bookmarkService.getBookmarks(sampleUserId, pageable)
 
         // then
-        verify(exactly = 1) { repository.findByUserId(sampleUserId) }
+        verify(exactly = 1) { repository.findByUserId(sampleUserId, pageable) }
+    }
+
+    @Test
+    fun `bookmarkService_getBookmarks() return page with pagination`() {
+        // given
+        every { repository.findByUserId(sampleUserId, pageable) } returns page
+
+        // when
+        val result: Page<Bookmark> = bookmarkService.getBookmarks(sampleUserId, pageable)
+
+        // then
+        assertThat(result.totalElements).isEqualTo(totalElements)
+        assertThat(result.numberOfElements).isEqualTo(content.size)
+        assertThat(result.content[0].id).isEqualTo(content[0].id)
+        assertThat(result.content[1].id).isEqualTo(content[1].id)
     }
 
     @Test
     fun `bookmarkService_getList() should return emptyList`() {
         // given
-        every { repository.findByUserId(sampleUserId) } returns listOf()
+        every { repository.findByUserId(sampleUserId, pageable) } returns page
 
         // when
-        val result: List<Bookmark> = bookmarkService.getList(sampleUserId)
+        val result = bookmarkService.getBookmarks(sampleUserId, pageable)
 
         // then
-        verify(exactly = 1) { repository.findByUserId(sampleUserId) }
-        assert(result == listOf<Bookmark>())
+        verify(exactly = 1) { repository.findByUserId(sampleUserId, pageable) }
+        assert(result == page)
     }
 
     @Test

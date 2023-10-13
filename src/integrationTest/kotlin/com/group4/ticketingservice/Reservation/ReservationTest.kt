@@ -7,7 +7,6 @@ import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.ReservationRepository
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.service.ReservationService
-import com.group4.ticketingservice.utils.Authority
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -16,6 +15,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.test.context.TestPropertySource
+import java.time.Duration.ofHours
 import java.time.OffsetDateTime
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
@@ -37,14 +37,16 @@ class ReservationTest @Autowired constructor(
         name = testFields.testName,
         email = testFields.testUserName,
         password = BCryptPasswordEncoder().encode(testFields.password),
-        authority = Authority.USER
+
+        phone = "010-1234-5678"
     )
 
     private val sampleEvent = Event(
-        title = "test title",
-        date = OffsetDateTime.now(),
-        reservationEndTime = OffsetDateTime.now(),
-        reservationStartTime = OffsetDateTime.now(),
+        name = "test title",
+        startDate = OffsetDateTime.now(),
+        endDate = OffsetDateTime.now(),
+        reservationEndTime = OffsetDateTime.now() + ofHours(2),
+        reservationStartTime = OffsetDateTime.now() - ofHours(2),
         maxAttendees = 100
     )
 
@@ -53,7 +55,7 @@ class ReservationTest @Autowired constructor(
         eventRepository.save(sampleEvent)
 
         val event = eventRepository.findById(1).get()
-        event.currentReservationCount = 0
+        event.totalAttendees = 0
 
         eventRepository.save(event)
     }
@@ -72,7 +74,7 @@ class ReservationTest @Autowired constructor(
         for (i in 0 until threadCount) {
             executorService.submit {
                 try {
-                    reservationService.createReservation(1, 1)
+                    reservationService.createReservation(1, 1, "", "", 1, "")
                 } finally {
                     countDownLatch.countDown()
                 }

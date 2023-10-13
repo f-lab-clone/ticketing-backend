@@ -8,7 +8,6 @@ import com.group4.ticketingservice.config.WebConfig
 import com.group4.ticketingservice.dto.SignInRequest
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.UserRepository
-import com.group4.ticketingservice.utils.Authority
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -43,7 +42,8 @@ class TimeE2ETest @Autowired constructor(
         name = testName,
         email = testUserName,
         password = password,
-        authority = Authority.USER
+
+        phone = "010-1234-5678"
     )
 
     @BeforeEach
@@ -58,8 +58,9 @@ class TimeE2ETest @Autowired constructor(
 
     @Test
     fun `All API only returns OffsetDateTime in UTC without any offset info`() {
-        val eventCreateRequest = "{\"title\":\"test title\"," +
-            "\"date\":\"2044-02-04T21:00:00.001+09:00\"," +
+        val eventCreateRequest = "{\"name\":\"test title\"," +
+            "\"startDate\":\"2044-02-04T21:00:00.001+09:00\"," +
+            "\"endDate\":\"2044-02-04T21:00:00.001+09:00\"," +
             "\"reservationStartTime\":\"2044-01-01T22:00:00.001+09:00\"," +
             "\"reservationEndTime\":\"2044-01-01T23:00:00.001+09:00\"," +
             "\"maxAttendees\":10}"
@@ -69,10 +70,11 @@ class TimeE2ETest @Autowired constructor(
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(eventCreateRequest)
         )
-            .andExpect(status().isOk)
+            .andExpect(status().isCreated)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.date").value("2044-02-04T12:00:00.001Z"))
-            .andExpect(jsonPath("$.reservationStartTime").value("2044-01-01T13:00:00.001Z"))
-            .andExpect(jsonPath("$.reservationEndTime").value("2044-01-01T14:00:00.001Z"))
+            .andExpect(jsonPath("$.data.startDate").value("2044-02-04T12:00:00.001Z"))
+            .andExpect(jsonPath("$.data.endDate").value("2044-02-04T12:00:00.001Z"))
+            .andExpect(jsonPath("$.data.reservationStartTime").value("2044-01-01T13:00:00.001Z"))
+            .andExpect(jsonPath("$.data.reservationEndTime").value("2044-01-01T14:00:00.001Z"))
     }
 }

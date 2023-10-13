@@ -32,6 +32,9 @@ services:
       GRAFANA_HOST: ${GRAFANA_HOST}
       OUTPUT_HTML_DIR: "/results"
 
+      JWT_RAW_SECRET: ${JWT_RAW_SECRET}
+      JWT_ISSUER: ${JWT_ISSUER}
+      
       # https://k6.io/docs/using-k6/k6-options/reference/#results-output
       K6_OUT: ${K6_OUT}
       K6_PROMETHEUS_RW_SERVER_URL: ${K6_PROMETHEUS_RW_SERVER_URL}

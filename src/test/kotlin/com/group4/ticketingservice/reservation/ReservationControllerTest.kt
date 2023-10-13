@@ -1,12 +1,18 @@
 package com.group4.ticketingservice.reservation
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.group4.ticketingservice.config.GsonConfig
 import com.group4.ticketingservice.config.SecurityConfig
 import com.group4.ticketingservice.controller.ReservationController
 import com.group4.ticketingservice.dto.ReservationCreateRequest
 import com.group4.ticketingservice.dto.ReservationDeleteRequest
+import com.group4.ticketingservice.dto.ReservationResponse
 import com.group4.ticketingservice.dto.ReservationUpdateRequest
+import com.group4.ticketingservice.dto.SuccessResponseDTO
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.entity.Reservation
 import com.group4.ticketingservice.entity.User
@@ -15,15 +21,17 @@ import com.group4.ticketingservice.reservation.ReservationControllerTest.testFie
 import com.group4.ticketingservice.reservation.ReservationControllerTest.testFields.testUserName
 import com.group4.ticketingservice.service.ReservationService
 import com.group4.ticketingservice.user.WithAuthUser
-import com.group4.ticketingservice.utils.Authority
+import com.group4.ticketingservice.utils.OffsetDateTimeAdapter
 import com.group4.ticketingservice.utils.TokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
@@ -38,7 +46,7 @@ import java.time.OffsetDateTime
 @WebMvcTest(
     ReservationController::class,
     includeFilters = arrayOf(
-        ComponentScan.Filter(value = [ (SecurityConfig::class), (TokenProvider::class), (JwtAuthorizationEntryPoint::class)], type = FilterType.ASSIGNABLE_TYPE)
+        ComponentScan.Filter(value = [ (SecurityConfig::class), (TokenProvider::class), (GsonConfig::class), (OffsetDateTimeAdapter::class), (JwtAuthorizationEntryPoint::class)], type = FilterType.ASSIGNABLE_TYPE)
     )
 
 )
@@ -59,11 +67,16 @@ class ReservationControllerTest(
         name = testFields.testName,
         email = testFields.testUserName,
         password = testFields.password,
-        authority = Authority.USER
+
+        phone = "010-1234-5678"
     )
 
     private val sampleReservationCreateRequest = ReservationCreateRequest(
-        eventId = 1
+        eventId = 1,
+        name = "asdf",
+        phoneNumber = "010-1234-5678",
+        postCode = 1,
+        address = "qwer"
     )
     private val sampleReservationDeleteRequest = ReservationDeleteRequest(
         id = 1
@@ -71,8 +84,9 @@ class ReservationControllerTest(
 
     private val sampleEvent: Event = Event(
         id = 1,
-        title = "test title",
-        date = OffsetDateTime.now(),
+        name = "test title",
+        startDate = OffsetDateTime.now(),
+        endDate = OffsetDateTime.now(),
         reservationEndTime = OffsetDateTime.now(),
         reservationStartTime = OffsetDateTime.now(),
         maxAttendees = 10
@@ -80,8 +94,7 @@ class ReservationControllerTest(
     private val sampleReservation: Reservation = Reservation(
         id = 1,
         user = sampleUser.apply { id = 1 },
-        event = sampleEvent,
-        bookedAt = OffsetDateTime.now()
+        event = sampleEvent
     )
 
     private val gson: Gson = GsonBuilder().create()
@@ -89,18 +102,24 @@ class ReservationControllerTest(
     @Test
     @WithAuthUser(email = testUserName, id = testUserId)
     fun `POST reservations should return created reservation`() {
-        every { reservationService.createReservation(1, 1) } returns sampleReservation
+        every { reservationService.createReservation(1, 1, any(), any(), any(), any()) } returns sampleReservation
 
-        mockMvc.perform(
+        val result = mockMvc.perform(
             post("/reservations")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(Gson().toJson(sampleReservationCreateRequest))
-        )
-            .andExpect(status().isOk)
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(sampleReservation.id))
-            .andExpect(jsonPath("$.userId").value(sampleReservation.user.id))
-            .andExpect(jsonPath("$.eventId").value(sampleReservation.event.id))
+        ).andReturn()
+
+        val response = result.response
+        val objectMapper = ObjectMapper().registerModule(JavaTimeModule()).registerModule(KotlinModule())
+        val successResponseDTO = objectMapper.readValue(response.contentAsString, SuccessResponseDTO::class.java)
+        val data = objectMapper.convertValue(successResponseDTO.data, ReservationResponse::class.java)
+
+        assertEquals(HttpStatus.CREATED.value(), result.response.status)
+        assertEquals(MediaType.APPLICATION_JSON.toString(), result.response.contentType)
+        assertEquals(sampleReservation.id, data.id)
+        assertEquals(sampleReservation.user.id, data.userId)
+        assertEquals(sampleReservation.event.id, data.eventId)
     }
 
     @Test
@@ -114,9 +133,9 @@ class ReservationControllerTest(
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(sampleReservation.id))
-            .andExpect(jsonPath("$.userId").value(sampleReservation.user.id))
-            .andExpect(jsonPath("$.eventId").value(sampleReservation.event.id))
+            .andExpect(jsonPath("$.data.id").value(sampleReservation.id))
+            .andExpect(jsonPath("$.data.userId").value(sampleReservation.user.id))
+            .andExpect(jsonPath("$.data.eventId").value(sampleReservation.event.id))
     }
 
     @Test
@@ -130,13 +149,14 @@ class ReservationControllerTest(
             user = sampleUser,
             event = Event(
                 id = 2,
-                title = "test title 2",
-                date = OffsetDateTime.now(),
+                name = "test title 2",
+                startDate = OffsetDateTime.now(),
+                endDate = OffsetDateTime.now(),
                 reservationEndTime = OffsetDateTime.now(),
                 reservationStartTime = OffsetDateTime.now(),
                 maxAttendees = 10
-            ),
-            bookedAt = OffsetDateTime.now()
+            )
+
         )
         every { reservationService.updateReservation(1, 2) } returns updatedReservation
 
@@ -147,9 +167,9 @@ class ReservationControllerTest(
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id").value(updatedReservation.id))
-            .andExpect(jsonPath("$.userId").value(updatedReservation.user.id))
-            .andExpect(jsonPath("$.eventId").value(updatedReservation.event.id))
+            .andExpect(jsonPath("$.data.id").value(updatedReservation.id))
+            .andExpect(jsonPath("$.data.userId").value(updatedReservation.user.id))
+            .andExpect(jsonPath("$.data.eventId").value(updatedReservation.event.id))
     }
 
     @Test
@@ -161,6 +181,6 @@ class ReservationControllerTest(
             delete("/reservations/${sampleReservationDeleteRequest.id}")
                 .contentType(MediaType.APPLICATION_JSON)
         )
-            .andExpect(status().isNoContent)
+            .andExpect(status().isOk)
     }
 }

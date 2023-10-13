@@ -52,7 +52,8 @@ class UserControllerTest(
     val sampleSignUpRequest = SignUpRequest(
         email = testUserName,
         name = testName,
-        password = password
+        password = password,
+        phoneNumber = "010-1234-5678"
     )
     val sampleUserDTO = UserDto(
         name = testName,
@@ -63,7 +64,8 @@ class UserControllerTest(
     val invalidSignUpRequest = SignUpRequest(
         email = "a",
         name = "a",
-        password = "1234"
+        password = "1234",
+        phoneNumber = "010-1234-5678"
     )
 
     /**
@@ -77,8 +79,8 @@ class UserControllerTest(
         val resultActions: ResultActions =
             mockMvc.perform(MockMvcRequestBuilders.get("/users/access_token_info"))
         resultActions.andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.expires_in").exists())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.userId").value(testUserId))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.expires_in").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.userId").value(testUserId))
     }
 
     @Test
@@ -114,7 +116,7 @@ class UserControllerTest(
 
         // then
         resultActions.andExpect(MockMvcResultMatchers.status().isCreated)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(testUserName))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value(testUserName))
     }
 
     @Test

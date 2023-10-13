@@ -7,7 +7,6 @@ import com.group4.ticketingservice.dto.SignInRequest
 import com.group4.ticketingservice.dto.SignUpRequest
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.UserRepository
-import com.group4.ticketingservice.utils.Authority
 import com.group4.ticketingservice.utils.TokenProvider
 import org.hamcrest.core.StringContains
 import org.junit.jupiter.api.AfterEach
@@ -47,7 +46,8 @@ class UserControllerTest : AbstractIntegrationTest() {
     val sampleSignUpRequest = SignUpRequest(
         email = testFields.testUserName,
         name = testFields.testName,
-        password = testFields.password
+        password = testFields.password,
+        phoneNumber = "010-1234-5678"
     )
 
     val sampleSignInRequest = SignInRequest().apply {
@@ -58,7 +58,8 @@ class UserControllerTest : AbstractIntegrationTest() {
         name = testFields.testName,
         email = testFields.testUserName,
         password = BCryptPasswordEncoder().encode(testFields.password),
-        authority = Authority.USER
+
+        phone = "010-1234-5678"
     )
 
     @BeforeEach fun addUser() {
@@ -121,8 +122,8 @@ class UserControllerTest : AbstractIntegrationTest() {
                     .header("Authorization", jwt)
             )
         resultActions.andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.expires_in").exists())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.userId").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.expires_in").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.userId").exists())
     }
 
     @Test

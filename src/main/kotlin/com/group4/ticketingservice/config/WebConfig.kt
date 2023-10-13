@@ -21,7 +21,7 @@ class WebConfig(private val gson: Gson) : WebMvcConfigurer {
     fun loggingFilter(): FilterRegistrationBean<LogFilter> {
         val registrationBean: FilterRegistrationBean<LogFilter> = FilterRegistrationBean<LogFilter>()
         registrationBean.setFilter(LogFilter())
-        registrationBean.addUrlPatterns("/*")
+        registrationBean.addUrlPatterns("/users/*", "/bookmarks/*", "/event/*", "/reservations/*")
         return registrationBean
     }
 }

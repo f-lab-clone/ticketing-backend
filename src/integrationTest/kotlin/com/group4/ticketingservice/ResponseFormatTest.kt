@@ -32,7 +32,6 @@ class ResponseFormatTest : AbstractIntegrationTest() {
         assertEquals(HttpStatus.NOT_FOUND.value(), response.status)
 
         val errorResponse = objectMapper.readValue(response.contentAsString, ErrorResponseDTO::class.java)
-
         assertNotNull(errorResponse.timestamp)
         assertEquals(ErrorCodes.END_POINT_NOT_FOUND.errorCode, errorResponse.errorCode)
         assertNotNull(errorResponse.message)

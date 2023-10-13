@@ -3,7 +3,6 @@ package com.group4.ticketingservice.User
 import com.group4.ticketingservice.AbstractIntegrationTest
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.UserRepository
-import com.group4.ticketingservice.utils.Authority
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
@@ -25,7 +24,8 @@ class UserRepositoryTest(
         name = testFields.testName,
         email = testFields.testUserName,
         password = BCryptPasswordEncoder().encode(testFields.password),
-        authority = Authority.USER
+
+        phone = "010-1234-5678"
     )
 
     @AfterEach fun removeUser() {

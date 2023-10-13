@@ -3,7 +3,6 @@ package com.group4.ticketingservice.user
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.service.UserDetailService
-import com.group4.ticketingservice.utils.Authority
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -19,7 +18,8 @@ class UserDetailServiceTest {
         name = "minjun3021@qwer.com",
         email = "minjun",
         password = "1234",
-        authority = Authority.USER
+
+        phone = "010-1234-5678"
     )
 
     @Test

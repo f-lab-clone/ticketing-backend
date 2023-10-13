@@ -32,7 +32,7 @@ export default {
     K6 (Native Histogram)        : ${config.GRAFANA_HOST}/d/a3b2aaa8-bb66-4008-a1d8-16c49afedbf0/k6-prometheus-native-histograms?${query}&var-DS_PROMETHEUS=prometheus&var-testid=${__ENV.ENTRYPOINT}&var-quantile=0.95
 
     [Cluster Resources]
-    CLUSTER                      : ${config.GRAFANA_HOST}/d/85a562078cdf77779eaa1add43ccec1e/kubernetes-compute-resources-namespace-pods?${query}&var-datasource=default&var-cluster=&var-namespace=default
+    CLUSTER                      : ${config.GRAFANA_HOST}/d/4b545447f/1-kubernetes-all-in-one-cluster-monitoring-kr??${query}&var-datasource=default&var-cluster=&var-namespace=default
 
     [Nginx]
     Official NGINX               : ${config.GRAFANA_HOST}/d/nginx/nginx-ingress-controller?${query}

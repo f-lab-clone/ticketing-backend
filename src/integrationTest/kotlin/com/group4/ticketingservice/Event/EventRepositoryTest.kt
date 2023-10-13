@@ -2,21 +2,24 @@ package com.group4.ticketingservice.Event
 
 import com.group4.ticketingservice.AbstractIntegrationTest
 import com.group4.ticketingservice.Reservation.ReservationTest
+import com.group4.ticketingservice.dto.EventSpecifications
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.UserRepository
-import com.group4.ticketingservice.utils.Authority
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.time.Duration.ofHours
 import java.time.OffsetDateTime
-import java.time.ZoneOffset
 
 class EventRepositoryTest @Autowired constructor(
     @Autowired val eventRepository: EventRepository,
@@ -27,11 +30,74 @@ class EventRepositoryTest @Autowired constructor(
         name = ReservationTest.testFields.testName,
         email = ReservationTest.testFields.testUserName,
         password = BCryptPasswordEncoder().encode(ReservationTest.testFields.password),
-        authority = Authority.USER
+
+        phone = "010-1234-5678"
     )
 
-    @BeforeEach fun saveUser() {
+    val sampleEvent = Event(
+        name = "test title",
+        startDate = OffsetDateTime.now(),
+        endDate = OffsetDateTime.now(),
+        reservationEndTime = OffsetDateTime.now() + ofHours(2),
+        reservationStartTime = OffsetDateTime.now() - ofHours(1),
+        maxAttendees = 10
+    )
+
+    val sampleEvents = mutableListOf(
+        Event(
+            name = "정섭이의 코딩쇼",
+            startDate = OffsetDateTime.now(),
+            endDate = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now() + ofHours(2),
+            reservationStartTime = OffsetDateTime.now() - ofHours(1),
+            maxAttendees = 10
+        ),
+        Event(
+            name = "민준이의 전국군가잘함",
+            startDate = OffsetDateTime.now(),
+            endDate = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now() + ofHours(2),
+            reservationStartTime = OffsetDateTime.now() - ofHours(1),
+            maxAttendees = 10
+        ),
+        Event(
+            name = "하영이의 신작도서 팬싸인회",
+            startDate = OffsetDateTime.now(),
+            endDate = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now() + ofHours(2),
+            reservationStartTime = OffsetDateTime.now() - ofHours(1),
+            maxAttendees = 10
+        ),
+        Event(
+            name = "준하의 스파르타 코딩 동아리 설명회",
+            startDate = OffsetDateTime.now(),
+            endDate = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now() + ofHours(2),
+            reservationStartTime = OffsetDateTime.now() - ofHours(1),
+            maxAttendees = 10
+        ),
+        Event(
+            name = "군대에서 코딩 직군으로 복무하기 설명회",
+            startDate = OffsetDateTime.now(),
+            endDate = OffsetDateTime.now(),
+            reservationEndTime = OffsetDateTime.now() + ofHours(2),
+            reservationStartTime = OffsetDateTime.now() - ofHours(1),
+            maxAttendees = 10
+        )
+    )
+
+    @BeforeEach
+    fun addData() {
         userRepository.save(sampleUser)
+        sampleEvents.forEach {
+            eventRepository.save(it)
+        }
+    }
+
+    @AfterEach
+    fun removeData() {
+        userRepository.deleteAll()
+        eventRepository.deleteAll()
     }
 
     @Test
@@ -39,10 +105,11 @@ class EventRepositoryTest @Autowired constructor(
         // given
         val now = OffsetDateTime.now()
         val sampleEvent = Event(
-            title = "test title",
-            date = now,
+            name = "test title",
+            startDate = now,
+            endDate = now,
             reservationEndTime = now + ofHours(2),
-            reservationStartTime = now + ofHours(1),
+            reservationStartTime = now - ofHours(1),
             maxAttendees = 10
 
         )
@@ -57,12 +124,13 @@ class EventRepositoryTest @Autowired constructor(
     @Test
     fun `EventRepository_findByIdOrNull should return event`() {
         // given
-        val now = OffsetDateTime.now(ZoneOffset.UTC)
+        val now = OffsetDateTime.now()
         val sampleEvent = Event(
-            title = "test title",
-            date = now,
+            name = "test title",
+            startDate = now,
+            endDate = now,
             reservationEndTime = now + ofHours(2),
-            reservationStartTime = now + ofHours(1),
+            reservationStartTime = now - ofHours(2),
             maxAttendees = 10
 
         )
@@ -80,12 +148,13 @@ class EventRepositoryTest @Autowired constructor(
     @Test
     fun `EventRepository_findAll should return list of events`() {
         // given
-        val now = OffsetDateTime.now(ZoneOffset.UTC)
+        val now = OffsetDateTime.now()
         val sampleEvent = Event(
-            title = "test title",
-            date = now,
+            name = "test title",
+            startDate = now,
+            endDate = now,
             reservationEndTime = now + ofHours(2),
-            reservationStartTime = now + ofHours(1),
+            reservationStartTime = now - ofHours(2),
             maxAttendees = 10
 
         )
@@ -100,14 +169,66 @@ class EventRepositoryTest @Autowired constructor(
     }
 
     @Test
+    fun `EventRepository_findAll should return page of events with searching`() {
+        // given
+        val pageSize = 10
+        val pageable: Pageable = PageRequest.of(0, pageSize)
+        val name = "코딩"
+        val specification = EventSpecifications.withName(name)
+        val `totalElementsTitleLike코딩`: Long = 3
+
+        // when
+        val result = eventRepository.findAll(specification, pageable)
+
+        // then
+        assertThat(result.totalElements).isEqualTo(`totalElementsTitleLike코딩`)
+    }
+
+    @Test
+    fun `EventRepository_findAll should return page of events with pagination`() {
+        // given
+        val pageSize = 2
+        val pageable: Pageable = PageRequest.of(0, pageSize)
+
+        // when
+        val result = eventRepository.findAll(pageable)
+
+        // then
+        assertThat(result.totalElements).isEqualTo(sampleEvents.size.toLong())
+        assertThat(result.pageable.pageSize).isEqualTo(pageSize)
+        assertThat(result.numberOfElements).isEqualTo(pageSize)
+        assertThat(result.content.size).isEqualTo(pageSize)
+    }
+
+    @Test
+    fun `EventRepository_findAll should return page of events with sorting`() {
+        // given
+        val pageSize = 10
+        val pageable: Pageable = PageRequest.of(0, pageSize, Sort.by("name").ascending())
+        val sortedItemIndexs = mutableListOf(4, 1, 0, 3, 2)
+
+        // when
+        val result = eventRepository.findAll(pageable)
+
+        // then
+        assertThat(result.totalElements).isEqualTo(sampleEvents.size.toLong())
+        assertThat(result.content[0].name).isEqualTo(sampleEvents[sortedItemIndexs[0]].name)
+        assertThat(result.content[1].name).isEqualTo(sampleEvents[sortedItemIndexs[1]].name)
+        assertThat(result.content[2].name).isEqualTo(sampleEvents[sortedItemIndexs[2]].name)
+        assertThat(result.content[3].name).isEqualTo(sampleEvents[sortedItemIndexs[3]].name)
+        assertThat(result.content[4].name).isEqualTo(sampleEvents[sortedItemIndexs[4]].name)
+    }
+
+    @Test
     fun `EventRepository_delete should delete event`() {
         // given
-        val now = OffsetDateTime.now(ZoneOffset.UTC)
+        val now = OffsetDateTime.now()
         val sampleEvent = Event(
-            title = "test title",
-            date = now,
+            name = "test title",
+            startDate = now,
+            endDate = now,
             reservationEndTime = now + ofHours(2),
-            reservationStartTime = now + ofHours(1),
+            reservationStartTime = now - ofHours(2),
             maxAttendees = 10
 
         )

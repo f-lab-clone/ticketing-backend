@@ -1,23 +1,19 @@
 package com.group4.ticketingservice.entity
 
 import com.group4.ticketingservice.dto.UserDto
-import com.group4.ticketingservice.utils.Authority
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import jakarta.validation.constraints.NotNull
 import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 @Entity
 @Table(name = "user")
-class User(name: String, email: String, password: String, authority: Authority, id: Int? = null) : BaseTimeEntity(), UserDetails {
+class User(name: String, email: String, password: String, id: Int? = null, phone: String) : BaseTimeEntity(), UserDetails {
     companion object {
         fun toDto(user: User) = UserDto(
             name = user.name,
@@ -48,13 +44,11 @@ class User(name: String, email: String, password: String, authority: Authority, 
 
     @Column(nullable = false)
     @NotNull
-    @Enumerated(EnumType.STRING)
-    var role: Authority = authority
+    var phoneNumber: String = phone
+        protected set
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        val authority = mutableListOf<GrantedAuthority>()
-        authority.add(SimpleGrantedAuthority(role.toString()))
-        return authority
+        return mutableListOf<GrantedAuthority>()
     }
 
     override fun getPassword(): String = pw
