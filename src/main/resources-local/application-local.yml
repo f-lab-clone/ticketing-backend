@@ -21,7 +21,7 @@ logging:
         SQL: debug
 
 server:
-  port: 8081
+  port: ${PORT}
 
 ticketing:
   jwt:
