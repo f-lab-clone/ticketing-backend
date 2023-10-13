@@ -64,6 +64,10 @@ paths:
       responses:
         "200":
           description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
   /users/signup:
     post:
       tags:
@@ -83,6 +87,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserDto'
   /reservations:
+    get:
+      tags:
+      - reservation-controller
+      operationId: getReservations
+      parameters:
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/Pageable'
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageReservation'
     post:
       tags:
       - reservation-controller
@@ -105,13 +126,19 @@ paths:
       tags:
       - bookmark-controller
       operationId: getBookmarks
+      parameters:
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/Pageable'
       responses:
         "200":
           description: OK
           content:
             '*/*':
               schema:
-                type: object
+                $ref: '#/components/schemas/PageBookmark'
     post:
       tags:
       - bookmark-controller
@@ -155,6 +182,29 @@ paths:
             '*/*':
               schema:
                 type: object
+  /events:
+    get:
+      tags:
+      - event-controller
+      operationId: getEvents
+      parameters:
+      - name: name
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/Pageable'
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageEvent'
   /events/{id}:
     get:
       tags:
@@ -174,20 +224,6 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/EventResponse'
-  /events/:
-    get:
-      tags:
-      - event-controller
-      operationId: getEvents
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/EventResponse'
   /bookmarks/{id}:
     get:
       tags:
@@ -249,9 +285,13 @@ components:
           format: int32
     ReservationResponse:
       required:
-      - bookedAt
+      - address
+      - createdAt
       - eventId
       - id
+      - name
+      - phoneNumber
+      - postCode
       - userId
       type: object
       properties:
@@ -264,14 +304,24 @@ components:
         userId:
           type: integer
           format: int32
-        bookedAt:
+        createdAt:
           type: string
           format: date-time
+        name:
+          type: string
+        phoneNumber:
+          type: string
+        postCode:
+          type: integer
+          format: int32
+        address:
+          type: string
     SignUpRequest:
       required:
       - email
       - name
       - password
+      - phoneNumber
       type: object
       properties:
         email:
@@ -283,6 +333,9 @@ components:
         password:
           maxLength: 128
           minLength: 9
+          type: string
+        phoneNumber:
+          pattern: "^01(?:0|1|[6-9])[.-](\\d{3}|\\d{4})[.-](\\d{4})$"
           type: string
     UserDto:
       required:
@@ -299,12 +352,26 @@ components:
           format: date-time
     ReservationCreateRequest:
       required:
+      - address
       - eventId
+      - name
+      - phoneNumber
+      - postCode
       type: object
       properties:
         eventId:
           type: integer
           format: int32
+        name:
+          type: string
+        phoneNumber:
+          pattern: "^01(?:0|1|[6-9])[.-](\\d{3}|\\d{4})[.-](\\d{4})$"
+          type: string
+        postCode:
+          type: integer
+          format: int32
+        address:
+          type: string
     BookmarkFromdto:
       required:
       - event_id
@@ -313,22 +380,66 @@ components:
         event_id:
           type: integer
           format: int32
-    EventResponse:
+    Pageable:
+      type: object
+      properties:
+        page:
+          minimum: 0
+          type: integer
+          format: int32
+        size:
+          minimum: 1
+          type: integer
+          format: int32
+        sort:
+          type: array
+          items:
+            type: string
+    Bookmark:
       required:
-      - date
-      - id
-      - maxAttendees
-      - reservationEndTime
-      - reservationStartTime
-      - title
+      - createdAt
+      - event
+      - updatedAt
+      - user
       type: object
       properties:
         id:
           type: integer
           format: int32
-        title:
+        user:
+          $ref: '#/components/schemas/User'
+        event:
+          $ref: '#/components/schemas/Event'
+        createdAt:
           type: string
-        date:
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Event:
+      required:
+      - bookmarks
+      - createdAt
+      - endDate
+      - maxAttendees
+      - name
+      - reservationEndTime
+      - reservationStartTime
+      - reservations
+      - startDate
+      - totalAttendees
+      - updatedAt
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
           type: string
           format: date-time
         reservationStartTime:
@@ -340,3 +451,266 @@ components:
         maxAttendees:
           type: integer
           format: int32
+        totalAttendees:
+          type: integer
+          format: int32
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        bookmarks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bookmark'
+        reservations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reservation'
+    GrantedAuthority:
+      type: object
+      properties:
+        authority:
+          type: string
+    PageReservation:
+      type: object
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reservation'
+        number:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
+    PageableObject:
+      type: object
+      properties:
+        offset:
+          type: integer
+          format: int64
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        paged:
+          type: boolean
+        unpaged:
+          type: boolean
+    Reservation:
+      required:
+      - address
+      - createdAt
+      - event
+      - name
+      - phoneNumber
+      - postCode
+      - updatedAt
+      - user
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        user:
+          $ref: '#/components/schemas/User'
+        event:
+          $ref: '#/components/schemas/Event'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        name:
+          type: string
+        phoneNumber:
+          type: string
+        postCode:
+          type: integer
+          format: int32
+        address:
+          type: string
+    SortObject:
+      type: object
+      properties:
+        empty:
+          type: boolean
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean
+    User:
+      required:
+      - authorities
+      - createdAt
+      - email
+      - isAccountNonExpired
+      - isAccountNonLocked
+      - isCredentialsNonExpired
+      - isEnabled
+      - name
+      - password
+      - phoneNumber
+      - pw
+      - updatedAt
+      - username
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        id:
+          type: integer
+          format: int32
+        phone:
+          type: string
+          writeOnly: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        pw:
+          type: string
+        phoneNumber:
+          type: string
+        isEnabled:
+          type: boolean
+        authorities:
+          type: array
+          items:
+            $ref: '#/components/schemas/GrantedAuthority'
+        username:
+          type: string
+        isAccountNonExpired:
+          type: boolean
+        isAccountNonLocked:
+          type: boolean
+        isCredentialsNonExpired:
+          type: boolean
+    PageEvent:
+      type: object
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        number:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
+    EventResponse:
+      required:
+      - endDate
+      - id
+      - maxAttendees
+      - name
+      - reservationEndTime
+      - reservationStartTime
+      - startDate
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        reservationStartTime:
+          type: string
+          format: date-time
+        reservationEndTime:
+          type: string
+          format: date-time
+        maxAttendees:
+          type: integer
+          format: int32
+    PageBookmark:
+      type: object
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bookmark'
+        number:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
