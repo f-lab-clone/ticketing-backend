@@ -22,6 +22,13 @@ spring:
     log-resolved-exception: 'false'
     throw-exception-if-no-handler-found: 'true'
 
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true
+
+
+
 
 
 springdoc:

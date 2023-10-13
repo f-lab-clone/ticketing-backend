@@ -12,6 +12,11 @@ spring:
     hibernate:
       ddl-auto: update
 
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true
+
 ticketing:
   jwt:
     secret: d2VhcmVuYXZ5c3dkZXZlbG9wZXJzLmFuZGlhbW1pbmp1bjMwMjE=
