@@ -6,7 +6,7 @@ spring:
   datasource:
     password: ${MYSQL_PASSWORD}
     username: ${MYSQL_USERNAME}
-    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_SCHEMA}?createDatabaseIfNotExist=true&serverTimezone=UTC&characterEncoding=UTF-8&useLegacyDatetimeCode=false
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_SCHEMA}?serverTimezone=UTC&characterEncoding=UTF-8&useLegacyDatetimeCode=false
 
 server:
   port: ${PORT}
