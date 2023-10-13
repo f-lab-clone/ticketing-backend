@@ -7,11 +7,6 @@ spring:
           time_zone: UTC
 
 
-  security:
-    user:
-      password: '1234'
-      name: user
-
   web:
     resources:
       add-mappings: 'false'
@@ -42,10 +37,3 @@ management:
         include: prometheus
     prometheus:
       enabled: 'true'
-
-
-
-#ticketing.jwt.secret=d2VhcmVuYXZ5c3dkZXZlbG9wZXJzLmFuZGlhbW1pbmp1bjMwMjE=
-#The JWT specification requires HMAC keys to be >= 256 bits long.
-#ticketing.jwt.expiration-hours=24
-#ticketing.jwt.issuer=minjun

@@ -3,6 +3,10 @@ spring:
     activate:
       on-profile: dev
 
+  jpa:
+    hibernate:
+      ddl-auto: none
+
   datasource:
     password: ${MYSQL_PASSWORD}
     username: ${MYSQL_USERNAME}

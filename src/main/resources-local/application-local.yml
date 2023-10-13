@@ -7,7 +7,6 @@ spring:
     properties:
       hibernate:
         highlight_sql: 'true'
-
     hibernate:
       ddl-auto: update
 
