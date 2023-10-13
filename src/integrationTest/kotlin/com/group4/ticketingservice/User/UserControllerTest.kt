@@ -79,7 +79,7 @@ class UserControllerTest : AbstractIntegrationTest() {
                 .contentType(MediaType.APPLICATION_JSON)
         ).andReturn()
         val jwt = gson.fromJson(result.response.contentAsString, JsonObject::class.java)
-        return jwt.get("Authorization").asString
+        return (jwt.get("data") as JsonObject).get("Authorization").asString
     }
 
     @Test
