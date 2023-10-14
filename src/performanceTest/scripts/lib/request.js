@@ -90,7 +90,7 @@ export default class Request {
         this.beforeHook()
         const res =  http.post(`${this.baseURL}/users/signin`, JSON.stringify({ email: body.email, password: body.password }), this.getParams());
         if (res.body) {
-            this.setToken(res.json()['Authorization'])
+            this.setToken(res.json().data.Authorization)
         }
         this.afterHook()
         return res

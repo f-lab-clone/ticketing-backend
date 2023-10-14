@@ -15,5 +15,5 @@ export default function () {
    
    const res = req.access_token_info()
    check(res, { "status == 200": (r) => r.status == 200 });
-   check(res, { "res has userId key": (r) => r.json().userId > 0 });
+   check(res, { "res has userId key": (r) => r.json().data.userId > 0 });
 }
