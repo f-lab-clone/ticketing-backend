@@ -3,6 +3,7 @@ package com.group4.ticketingservice.filter
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
 import com.group4.ticketingservice.dto.SignInRequest
+import com.group4.ticketingservice.dto.SuccessResponseDTO
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.utils.TokenProvider
 import jakarta.servlet.FilterChain
@@ -43,7 +44,13 @@ class JwtAuthenticationFilter(
     ) {
         val user = authResult.principal as User
         val jwt = tokenProvider.createToken("${user.id}")
-        val body = gson.toJson(mapOf("Authorization" to "Bearer $jwt"))
+        val body = gson.toJson(
+            SuccessResponseDTO(
+                path = request.requestURI,
+                data = mapOf("Authorization" to "Bearer $jwt")
+            )
+        )
+
         response.contentType = "application/json"
         val writer: PrintWriter = response.writer
         writer.println(body)
