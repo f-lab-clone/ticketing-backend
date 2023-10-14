@@ -100,6 +100,20 @@ noArg {
     annotation("jakarta.persistence.Embeddable")
 }
 
+val profile by extra { if (hasProperty("spring.profiles.active")) property("spring.profiles.active") else "local" }
+
+sourceSets {
+    main {
+        resources {
+            srcDirs("src/main/resources", "src/main/resources-$profile")
+        }
+    }
+}
+
+tasks.withType<Copy> {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
 val installLocalGitHook = tasks.register<Copy>("installLocalGitHook") {
     from("${rootProject.rootDir}/.github/hooks")
     into(File("${rootProject.rootDir}/.git/hooks"))
@@ -161,4 +175,9 @@ tasks.jacocoTestCoverageVerification {
             excludes = Qdomains
         }
     }
+}
+
+tasks.bootRun {
+    val activeProfile = project.findProperty("spring.profiles.active") as String?
+    systemProperty("spring.profiles.active", activeProfile ?: "local")
 }

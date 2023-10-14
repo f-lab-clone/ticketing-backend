@@ -17,7 +17,7 @@ import java.util.Date
 import javax.crypto.spec.SecretKeySpec
 
 @Component
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application.yml")
 class TokenProvider(
     @Value("\${ticketing.jwt.secret}")
     private val secretKey: String,

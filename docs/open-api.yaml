@@ -86,20 +86,6 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/UserDto'
-  /test:
-    post:
-      tags:
-      - test-controller
-      operationId: test
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SampleDTO'
-        required: true
-      responses:
-        "200":
-          description: OK
   /reservations:
     get:
       tags:
@@ -135,46 +121,6 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ReservationResponse'
-  /events:
-    get:
-      tags:
-      - event-controller
-      operationId: getEvents
-      parameters:
-      - name: name
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: pageable
-        in: query
-        required: true
-        schema:
-          $ref: '#/components/schemas/Pageable'
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/PageEvent'
-    post:
-      tags:
-      - event-controller
-      operationId: createEvent
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/EventCreateRequest'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/EventResponse'
   /bookmarks:
     get:
       tags:
@@ -224,18 +170,6 @@ paths:
                 type: object
                 additionalProperties:
                   type: object
-  /test500:
-    get:
-      tags:
-      - test-controller
-      operationId: throwError
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: string
   /health:
     get:
       tags:
@@ -248,6 +182,29 @@ paths:
             '*/*':
               schema:
                 type: object
+  /events:
+    get:
+      tags:
+      - event-controller
+      operationId: getEvents
+      parameters:
+      - name: name
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/Pageable'
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageEvent'
   /events/{id}:
     get:
       tags:
@@ -393,13 +350,6 @@ components:
         createdAt:
           type: string
           format: date-time
-    SampleDTO:
-      required:
-      - text
-      type: object
-      properties:
-        text:
-          type: string
     ReservationCreateRequest:
       required:
       - address
@@ -422,66 +372,6 @@ components:
           format: int32
         address:
           type: string
-    EventCreateRequest:
-      required:
-      - endDate
-      - maxAttendees
-      - name
-      - reservationEndTime
-      - reservationStartTime
-      - startDate
-      type: object
-      properties:
-        name:
-          maxLength: 255
-          minLength: 1
-          type: string
-        startDate:
-          type: string
-          format: date-time
-        endDate:
-          type: string
-          format: date-time
-        reservationStartTime:
-          type: string
-          format: date-time
-        reservationEndTime:
-          type: string
-          format: date-time
-        maxAttendees:
-          type: integer
-          format: int32
-    EventResponse:
-      required:
-      - endDate
-      - id
-      - maxAttendees
-      - name
-      - reservationEndTime
-      - reservationStartTime
-      - startDate
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int32
-        name:
-          type: string
-        startDate:
-          type: string
-          format: date-time
-        endDate:
-          type: string
-          format: date-time
-        reservationStartTime:
-          type: string
-          format: date-time
-        reservationEndTime:
-          type: string
-          format: date-time
-        maxAttendees:
-          type: integer
-          format: int32
     BookmarkFromdto:
       required:
       - event_id
@@ -761,6 +651,37 @@ components:
           type: boolean
         empty:
           type: boolean
+    EventResponse:
+      required:
+      - endDate
+      - id
+      - maxAttendees
+      - name
+      - reservationEndTime
+      - reservationStartTime
+      - startDate
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        reservationStartTime:
+          type: string
+          format: date-time
+        reservationEndTime:
+          type: string
+          format: date-time
+        maxAttendees:
+          type: integer
+          format: int32
     PageBookmark:
       type: object
       properties:

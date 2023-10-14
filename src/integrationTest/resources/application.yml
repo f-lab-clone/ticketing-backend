@@ -1,0 +1,24 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+    prometheus:
+      enabled: 'true'
+
+spring:
+  jpa:
+    generate-ddl: 'true'
+    hibernate:
+      ddl-auto: update
+
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true
+
+ticketing:
+  jwt:
+    secret: d2VhcmVuYXZ5c3dkZXZlbG9wZXJzLmFuZGlhbW1pbmp1bjMwMjE=
+    expiration-hours: '24'
+    issuer: minjun
