@@ -9,11 +9,11 @@ import com.group4.ticketingservice.utils.TokenProvider
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import java.io.PrintWriter
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import java.io.PrintWriter
 
 class JwtAuthenticationFilter(
     private val authenticationManager: AuthenticationManager?,
@@ -42,13 +42,14 @@ class JwtAuthenticationFilter(
         chain: FilterChain,
         authResult: Authentication
     ) {
-
         val user = authResult.principal as User
         val jwt = tokenProvider.createToken("${user.id}")
-        val body = gson.toJson(SuccessResponseDTO(
+        val body = gson.toJson(
+            SuccessResponseDTO(
                 path = request.requestURI,
-                data =mapOf("Authorization" to "Bearer $jwt")
-        ))
+                data = mapOf("Authorization" to "Bearer $jwt")
+            )
+        )
 
         response.contentType = "application/json"
         val writer: PrintWriter = response.writer
