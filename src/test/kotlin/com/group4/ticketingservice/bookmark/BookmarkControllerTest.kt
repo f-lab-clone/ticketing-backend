@@ -142,8 +142,8 @@ class BookmarkControllerTest(
             )
         )
     )
-    val totalElements: Long = 100
-    val page: Page<Bookmark> = PageImpl(content, pageable, totalElements)
+
+    val page: Page<Bookmark> = PageImpl(content)
 
     @Test
     @WithAuthUser(email = testUserName, id = testUserId)
@@ -239,7 +239,6 @@ class BookmarkControllerTest(
         // then
         result
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.totalElements").value(totalElements))
             .andExpect(jsonPath("$.data.[0].id").value(11))
             .andExpect(jsonPath("$.data.[1].id").value(12))
     }

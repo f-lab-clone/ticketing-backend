@@ -125,8 +125,7 @@ class ResponseAdvice<T>(
 
         return SuccessResponseDTO(
             data = data,
-            path = response.headers.getFirst("Content-Location"),
-            totalElements = page.totalElements
+            path = response.headers.getFirst("Content-Location")
         ) as T?
         // return page as T?
     }

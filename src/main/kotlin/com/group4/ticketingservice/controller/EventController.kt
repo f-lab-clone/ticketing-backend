@@ -10,6 +10,7 @@ import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -84,7 +85,7 @@ class EventController @Autowired constructor(
     fun getEvents(
         request: HttpServletRequest,
         @RequestParam(required = false) name: String?,
-        @PageableDefault(size = 10, sort = ["startDate", "id"]) pageable: Pageable
+        @PageableDefault(size = 10, sort = ["id"], direction = Sort.Direction.DESC) pageable: Pageable
     ): ResponseEntity<Page<Event>> {
         val page = eventService.getEvents(name, pageable)
 
