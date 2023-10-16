@@ -51,6 +51,7 @@ class ResponseAdvice<T>(
         response: ServerHttpResponse
     ): T? {
         if (body == null) {
+            @Suppress("UNCHECKED_CAST")
             return SuccessResponseDTO(
                 data = null,
                 path = response.headers.getFirst("Content-Location")
@@ -62,6 +63,7 @@ class ResponseAdvice<T>(
         }
 
         if (body !is Page<*>) {
+            @Suppress("UNCHECKED_CAST")
             return SuccessResponseDTO(
                 data = body as Any,
                 path = response.headers.getFirst("Content-Location")
@@ -97,6 +99,7 @@ class ResponseAdvice<T>(
         if (data.isEmpty()) {
             data = listOf()
         } else if (data[0] is Event) {
+            @Suppress("UNCHECKED_CAST")
             data = (page.content as List<Event>).map {
                 EventResponse(
                     id = it.id!!,
@@ -109,6 +112,7 @@ class ResponseAdvice<T>(
                 )
             }
         } else if (data[0] is Reservation) {
+            @Suppress("UNCHECKED_CAST")
             data = (page.content as List<Reservation>).map {
                 ReservationResponse(
                     id = it.id!!,
@@ -122,7 +126,7 @@ class ResponseAdvice<T>(
                 )
             }
         }
-
+        @Suppress("UNCHECKED_CAST")
         return SuccessResponseDTO(
             data = data,
             path = response.headers.getFirst("Content-Location"),
