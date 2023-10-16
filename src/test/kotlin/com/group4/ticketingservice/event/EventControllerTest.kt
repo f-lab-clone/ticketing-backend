@@ -108,8 +108,8 @@ class EventControllerTest(
             maxAttendees = 10
         )
     )
-    val totalElements: Long = 100
-    val page: Page<Event> = PageImpl(content, pageable, totalElements)
+
+    val page: Page<Event> = PageImpl(content)
     val emptyPage: Page<Event> = PageImpl(listOf(), pageable, listOf<Event>().size.toLong())
 
     @Test
@@ -191,7 +191,6 @@ class EventControllerTest(
         // Then
         result
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.totalElements").value(totalElements))
             .andExpect(jsonPath("$.data.[0].id").value(2))
             .andExpect(jsonPath("$.data.[1].id").value(1))
     }
