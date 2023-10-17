@@ -129,8 +129,7 @@ class ResponseAdvice<T>(
         @Suppress("UNCHECKED_CAST")
         return SuccessResponseDTO(
             data = data,
-            path = response.headers.getFirst("Content-Location"),
-            totalElements = page.totalElements
+            path = response.headers.getFirst("Content-Location")
         ) as T?
         // return page as T?
     }

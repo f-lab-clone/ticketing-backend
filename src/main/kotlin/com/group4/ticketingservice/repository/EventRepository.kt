@@ -2,6 +2,8 @@ package com.group4.ticketingservice.repository
 
 import com.group4.ticketingservice.entity.Event
 import jakarta.persistence.LockModeType
+import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Lock
@@ -17,4 +19,7 @@ interface EventRepository : JpaRepository<Event, Int>, JpaSpecificationExecutor<
     @Lock(LockModeType.OPTIMISTIC)
     @Query("select e from Event e where e.id = :id")
     fun findByIdWithOptimisicLock(id: Int): Event?
+
+    @Query("select e from Event e")
+    fun findAllBy(name: Specification<Event>, pageable: Pageable): List<Event>
 }

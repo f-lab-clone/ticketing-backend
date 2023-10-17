@@ -84,8 +84,8 @@ class EventServiceTest {
             maxAttendees = 10
         )
     )
-    val totalElements: Long = 100
-    val page: Page<Event> = PageImpl(content, pageable, totalElements)
+
+    val page: Page<Event> = PageImpl(content)
     val emptyPage: Page<Event> = PageImpl(listOf(), pageable, listOf<Event>().size.toLong())
 
     val name = "코딩"
@@ -115,21 +115,21 @@ class EventServiceTest {
 
     @Test
     fun `EventService_getEvents invoke EventRepository_findAll`() {
-        every { eventRepository.findAll(any(), pageable) } returns page
+        every { eventRepository.findAllBy(any(), pageable) } returns content
         eventService.getEvents(name, pageable)
-        verify(exactly = 1) { eventRepository.findAll(any(), pageable) }
+        verify(exactly = 1) { eventRepository.findAllBy(any(), pageable) }
     }
 
     @Test
     fun `EventService_getEvents return page with pagination and sorting`() {
         // Given
-        every { eventRepository.findAll(any(), pageable) } returns page
+        every { eventRepository.findAllBy(any(), pageable) } returns content
 
         // When
         val result: Page<Event> = eventService.getEvents(null, pageable)
 
         // Then
-        assertThat(result.totalElements).isEqualTo(totalElements)
+
         assertThat(result.numberOfElements).isEqualTo(content.size)
         assertThat(result.content[0].id).isEqualTo(content[0].id)
         assertThat(result.content[1].id).isEqualTo(content[1].id)
