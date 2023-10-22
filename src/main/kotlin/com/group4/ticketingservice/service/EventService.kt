@@ -37,10 +37,7 @@ class EventService(
         return eventRepository.findById(id).orElse(null)
     }
 
-    fun getEvents(sort: String?, id: Int?, time: OffsetDateTime?): Page<Event> {
-//        val specification = EventSpecifications.withName(name)
-//        val lastAccessId=13
-//        val lastAccessTime= OffsetDateTime.of(2024,9,6,0,0,0,0, ZoneOffset.UTC)
+    fun getEvents(sort: String, id: Int?, time: OffsetDateTime?): Page<Event> {
         return PageImpl(eventRepositorySupport.getEvent(sort, id, time))
     }
 }

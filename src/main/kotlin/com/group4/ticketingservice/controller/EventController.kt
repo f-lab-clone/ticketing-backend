@@ -4,6 +4,8 @@ import com.group4.ticketingservice.dto.EventCreateRequest
 import com.group4.ticketingservice.dto.EventResponse
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.service.EventService
+import com.group4.ticketingservice.utils.exception.CustomException
+import com.group4.ticketingservice.utils.exception.ErrorCodes
 import io.swagger.v3.oas.annotations.Hidden
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
@@ -26,6 +28,13 @@ import java.time.OffsetDateTime
 class EventController @Autowired constructor(
     val eventService: EventService
 ) {
+    companion object {
+        const val DESCENDING = "desc"
+        const val ASCENDING = "asc"
+        const val SORT_BY_DEADLINE = "deadline"
+        const val SORT_BY_START_DATE = "startDate"
+        const val SORT_BY_CREATED_AT = "createdAt"
+    }
 
     // TimeE2ETest를 위한 임시 EndPoint입니다.
     @Hidden
@@ -82,11 +91,28 @@ class EventController @Autowired constructor(
     @GetMapping
     fun getEvents(
         request: HttpServletRequest,
-        @RequestParam sort: String?,
+        @RequestParam sort: String,
         @RequestParam id: Int?,
         @RequestParam time: OffsetDateTime?
     ): ResponseEntity<Page<Event>> {
-        val page = eventService.getEvents(sort, id, time)
+        val sortProperties = sort.split(",").toTypedArray()
+
+        val fieldName = sortProperties.getOrNull(0)
+        val direction = sortProperties.getOrNull(1)
+
+        when (Pair(fieldName, direction)) {
+            Pair(SORT_BY_DEADLINE, null),
+            Pair(SORT_BY_START_DATE, null),
+            Pair(SORT_BY_CREATED_AT, null),
+            Pair(SORT_BY_DEADLINE, ASCENDING),
+            Pair(SORT_BY_START_DATE, ASCENDING),
+            Pair(SORT_BY_CREATED_AT, DESCENDING) -> {
+                // Valid request
+            }
+            else -> throw CustomException(ErrorCodes.INVALID_SORT_FORMAT)
+        }
+
+        val page = eventService.getEvents(fieldName!!, id, time)
 
         val headers = HttpHeaders()
         headers.set("Content-Location", request.requestURI)
