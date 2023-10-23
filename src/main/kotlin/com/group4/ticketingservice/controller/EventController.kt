@@ -58,7 +58,9 @@ class EventController @Autowired constructor(
             endDate = event.endDate,
             reservationStartTime = event.reservationStartTime,
             reservationEndTime = event.reservationEndTime,
-            maxAttendees = event.maxAttendees
+            maxAttendees = event.maxAttendees,
+            createdAt = event.createdAt,
+            updatedAt = event.updatedAt
         )
 
         val headers = HttpHeaders()
@@ -77,7 +79,9 @@ class EventController @Autowired constructor(
                 endDate = it.endDate,
                 reservationStartTime = it.reservationStartTime,
                 reservationEndTime = it.reservationEndTime,
-                maxAttendees = it.maxAttendees
+                maxAttendees = it.maxAttendees,
+                createdAt = it.createdAt,
+                updatedAt = it.updatedAt
             )
         } ?: kotlin.run {
             null

@@ -108,7 +108,9 @@ class ResponseAdvice<T>(
                     endDate = it.endDate,
                     reservationStartTime = it.reservationStartTime,
                     reservationEndTime = it.reservationEndTime,
-                    maxAttendees = it.maxAttendees
+                    maxAttendees = it.maxAttendees,
+                    createdAt = it.createdAt,
+                    updatedAt = it.updatedAt
                 )
             }
         } else if (data[0] is Reservation) {
