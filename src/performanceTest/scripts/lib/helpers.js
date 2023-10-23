@@ -9,7 +9,7 @@ export const isSuccess = (r) => r.status >= 200 && r.status < 300;
 export const isFail = (r) => !isSuccess(r);
 
 
-export const isAlreadReservedAll = (r) => r.status == 409 && r.json().data.errorCode == 50001;
+export const isAlreadReservedAll = (r) => r.status == 409 && r.json().errorCode == 50001;
 
 export const randomInt = (start, end) => randomIntBetween(start, end);
 

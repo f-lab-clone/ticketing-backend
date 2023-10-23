@@ -24,7 +24,7 @@ export const options = {
   scenarios: {
     contacts: {
       executor: 'per-vu-iterations',
-      vus: 1,
+      vus: 2000,
       iterations: 1,
       maxDuration: '1m', 
     },
@@ -57,7 +57,6 @@ export default function () {
   check(req.getEvent(eventId), {"EVENT 98 maxAttendees = 191": (r) => r.json().data.maxAttendees === 191})
   
   const res = req.createReservation(generator.Reservation(eventId))
-  console.log(res.status, res.json())
   check(res, {"Success Reservation": isSuccess});
   check(res, {"Already reserved": isAlreadReservedAll});
 }
