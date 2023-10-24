@@ -109,6 +109,12 @@ class EventControllerTest(
         )
     )
 
+    val DESCENDING = "desc"
+    val ASCENDING = "asc"
+    val SORT_BY_DEADLINE = "deadline"
+    val SORT_BY_START_DATE = "startDate"
+    val SORT_BY_CREATED_AT = "createdAt"
+
     val page: Page<Event> = PageImpl(content)
     val emptyPage: Page<Event> = PageImpl(listOf(), pageable, listOf<Event>().size.toLong())
 
@@ -158,36 +164,51 @@ class EventControllerTest(
     }
 
     @Test
-    fun `GET List of events should return list of events`() {
+    fun `GET List of events should return 400 bad request when request invalid sort`() {
         // Given
-        every { eventService.getEvents(any(), any()) } returns page
+        every { eventService.getEvents(any(), any(), any()) } returns page
 
         // When
         val result = mockMvc.perform(
             get("/events")
-                .contentType(MediaType.APPLICATION_JSON)
+                .param("sort", "$SORT_BY_DEADLINE,$DESCENDING")
         )
 
         // Then
         result
-            .andExpect(status().isOk)
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.data.[0].id").value(content[0].id))
+            .andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.errorCode").value(10004))
     }
 
     @Test
-    fun `GET List of events should return list of events with pagination and sorting`() {
+    fun `GET List of events should return list of events when request valid sort`() {
         // Given
-        every { eventService.getEvents(any(), any()) } returns page
+        every { eventService.getEvents(any(), any(), any()) } returns page
 
         // When
         val result = mockMvc.perform(
             get("/events")
-                .param("page", "1")
-                .param("size", "4")
-                .param("sort", "name")
+                .param("sort", "$SORT_BY_DEADLINE,$ASCENDING")
         )
+        // Then
+        result
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.data.[0].id").value(2))
+            .andExpect(jsonPath("$.data.[1].id").value(1))
+    }
 
+    @Test
+    fun `GET List of events should return list of events when request valid sort and last access id and time`() {
+        // Given
+        every { eventService.getEvents(any(), any(), any()) } returns page
+
+        // When
+        val result = mockMvc.perform(
+            get("/events")
+                .param("sort", "$SORT_BY_DEADLINE,$ASCENDING")
+                .param("time", "2024-10-19T00:46:00.123123Z")
+                .param("id", "3538937")
+        )
         // Then
         result
             .andExpect(status().isOk)
@@ -197,9 +218,10 @@ class EventControllerTest(
 
     @Test
     fun `GET List of events should return empty list`() {
-        every { eventService.getEvents(any(), any()) } returns emptyPage
+        every { eventService.getEvents(any(), any(), any()) } returns emptyPage
         mockMvc.perform(
             get("/events")
+                .param("sort", SORT_BY_DEADLINE)
                 .contentType(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
