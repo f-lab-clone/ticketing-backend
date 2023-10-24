@@ -168,6 +168,20 @@ tasks.jacocoTestReport {
         html.outputLocation.set(layout.buildDirectory.dir("${rootProject.rootDir}/jacocoReport"))
     }
 
+    val Qdomains = mutableListOf<String>()
+
+    for (qPattern in 'A'..'Z') {
+        Qdomains.add("**/Q$qPattern*")
+    }
+    classDirectories.setFrom(
+        files(
+            classDirectories.files.map {
+                fileTree(it) {
+                    setExcludes(Qdomains)
+                }
+            }
+        )
+    )
     finalizedBy(tasks.jacocoTestCoverageVerification)
 }
 
