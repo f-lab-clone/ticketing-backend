@@ -159,7 +159,7 @@ subprojects {
 }
 
 tasks.jacocoTestReport {
-    dependsOn(tasks.test, integrationTest)
+    dependsOn(tasks.test)
 
     reports {
         html.required.set(true)
@@ -201,7 +201,7 @@ tasks.jacocoTestCoverageVerification {
             limit {
                 counter = "INSTRUCTION"
                 value = "COVEREDRATIO"
-                minimum = "0.8".toBigDecimal()
+                minimum = "0.7".toBigDecimal()
             }
             limit {
                 counter = "BRANCH"

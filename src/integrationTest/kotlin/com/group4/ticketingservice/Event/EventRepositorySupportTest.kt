@@ -19,7 +19,6 @@ class EventRepositorySupportTest(
     @Autowired val userRepository: UserRepository
 ) : AbstractIntegrationTest() {
     val sampleEvents = mutableListOf<Event>()
-    val sortedEvents = mutableListOf<Event>()
 
     @BeforeEach
     fun addData() {
@@ -36,21 +35,18 @@ class EventRepositorySupportTest(
             sampleEvents.add(event)
         }
         eventRepository.saveAll(sampleEvents)
+    }
 
-        val sortedData = sampleEvents.sortedWith(
+    @Test
+    fun `eventRepositorySupportTest_getEvents should return sorted events by deadline`() {
+        // given
+        val sortBy = "deadline"
+        val sortedEvents = sampleEvents.sortedWith(
             compareBy(
                 { it.reservationEndTime },
                 { -it.id!! }
             )
         )
-
-        sortedEvents.addAll(sortedData)
-    }
-
-    @Test
-    fun `eventRepositorySupportTest_getEvents should return sorted events by s`() {
-        // given
-        val sortBy = "deadline"
 
         // when
         val firstResponse = eventRepositorySupport.getEvent(sortBy, null, null)
