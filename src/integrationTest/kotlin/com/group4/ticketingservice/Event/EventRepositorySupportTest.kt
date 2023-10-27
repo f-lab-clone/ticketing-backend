@@ -5,12 +5,12 @@ import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.EventRepositorySupport
 import com.group4.ticketingservice.repository.UserRepository
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
 class EventRepositorySupportTest(
     @Autowired val eventRepositorySupport: EventRepositorySupport,
