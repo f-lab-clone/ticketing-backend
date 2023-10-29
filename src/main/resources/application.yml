@@ -29,6 +29,10 @@ springdoc:
   api-docs:
     path: /api-docs
 
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: 'true'
 
 management:
   endpoints:
