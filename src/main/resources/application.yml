@@ -31,6 +31,8 @@ springdoc:
 
 server:
   tomcat:
+    threads:
+      min-spare: 200
     mbeanregistry:
       enabled: 'true'
 
