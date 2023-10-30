@@ -1,5 +1,7 @@
 package com.group4.ticketingservice.service
 
+import com.group4.ticketingservice.dto.QueueResponseDTO
+import com.group4.ticketingservice.dto.TicketRequest
 import com.group4.ticketingservice.entity.Reservation
 import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.ReservationRepository
@@ -7,21 +9,49 @@ import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.utils.exception.CustomException
 import com.group4.ticketingservice.utils.exception.ErrorCodes
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.client.RestTemplate
 import java.time.OffsetDateTime
 
 @Service
 class ReservationService @Autowired constructor(
     private val userRepository: UserRepository,
     private val eventRepository: EventRepository,
-    private val reservationRepository: ReservationRepository
+    private val reservationRepository: ReservationRepository,
+    private val restTemplate: RestTemplate,
+    @Value("\${ticketing.queue.server.url}")
+    private val queueServerURL: String
+
 ) {
     @Transactional
-    fun createReservation(eventId: Int, userId: Int, name: String, phoneNumber: String, postCode: Int, address: String): Reservation {
+    fun createReservation(eventId: Int, userId: Int, name: String, phoneNumber: String, postCode: Int, address: String): Any {
+        var waitingStatusResponse: QueueResponseDTO?
+
+        try {
+            waitingStatusResponse = restTemplate.exchange("$queueServerURL/$eventId/$userId", HttpMethod.GET, null, QueueResponseDTO::class.java).body
+        } catch (e: HttpClientErrorException) {
+            val headers = HttpHeaders()
+            headers.contentType = MediaType.APPLICATION_JSON
+            val requestDTO = TicketRequest(eventId, userId)
+            val request: HttpEntity<TicketRequest> = HttpEntity<TicketRequest>(requestDTO, headers)
+
+            return restTemplate.exchange(queueServerURL, HttpMethod.POST, request, QueueResponseDTO::class.java).body!!.data!!
+        }
+
+        if (waitingStatusResponse?.data!!.isWaiting) {
+            return waitingStatusResponse.data!!
+        }
+
         val user = userRepository.getReferenceById(userId)
         val event = eventRepository.findByIdWithPesimisticLock(eventId) ?: throw CustomException(ErrorCodes.ENTITY_NOT_FOUND)
 

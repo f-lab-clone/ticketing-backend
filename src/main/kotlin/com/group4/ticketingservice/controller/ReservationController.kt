@@ -31,8 +31,8 @@ class ReservationController(val reservationService: ReservationService) {
         @AuthenticationPrincipal userId: Int,
         @RequestBody @Valid
         request: ReservationCreateRequest
-    ): ResponseEntity<ReservationResponse> {
-        val reservation: Reservation = reservationService.createReservation(
+    ): ResponseEntity<Any> {
+        val response = reservationService.createReservation(
             request.eventId!!,
             userId,
             request.name!!,
@@ -40,21 +40,26 @@ class ReservationController(val reservationService: ReservationService) {
             request.postCode!!,
             request.address!!
         )
-        val response = ReservationResponse(
-            id = reservation.id!!,
-            eventId = reservation.event.id!!,
-            userId = reservation.user.id!!,
-            createdAt = reservation.createdAt,
-            name = reservation.name,
-            phoneNumber = reservation.phoneNumber,
-            address = reservation.address,
-            postCode = reservation.postCode
-        )
+        if (response is Reservation) {
+            val reservation = response
+            val response = ReservationResponse(
+                id = reservation.id!!,
+                eventId = reservation.event.id!!,
+                userId = reservation.user.id!!,
+                createdAt = reservation.createdAt,
+                name = reservation.name,
+                phoneNumber = reservation.phoneNumber,
+                address = reservation.address,
+                postCode = reservation.postCode
+            )
 
-        val headers = HttpHeaders()
-        headers.set("Content-Location", "/reservations/%d".format(reservation.id!!))
+            val headers = HttpHeaders()
+            headers.set("Content-Location", "/reservations/%d".format(reservation.id!!))
 
-        return ResponseEntity(response, headers, HttpStatus.CREATED)
+            return ResponseEntity(response, headers, HttpStatus.CREATED)
+        }
+
+        return ResponseEntity(response, HttpStatus.CREATED)
     }
 
     @GetMapping("/{id}")

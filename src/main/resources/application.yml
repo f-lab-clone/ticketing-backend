@@ -43,3 +43,8 @@ management:
         include: prometheus
     prometheus:
       enabled: 'true'
+
+ticketing:
+  queue:
+    server:
+      url: ${QUEUE_SERVER_URL}

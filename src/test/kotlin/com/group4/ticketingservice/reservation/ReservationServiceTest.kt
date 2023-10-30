@@ -14,6 +14,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.springframework.web.client.RestTemplate
 import java.time.Duration.ofHours
 import java.time.OffsetDateTime
 import java.util.Optional
@@ -22,10 +23,14 @@ class ReservationServiceTest() {
     private val userRepository: UserRepository = mockk()
     private val eventRepository: EventRepository = mockk()
     private val reservationRepository: ReservationRepository = mockk()
+    private val restTemplate: RestTemplate = mockk()
+
     private val reservationService: ReservationService = ReservationService(
         userRepository = userRepository,
         eventRepository = eventRepository,
-        reservationRepository = reservationRepository
+        reservationRepository = reservationRepository,
+        queueServerURL = "url",
+        restTemplate = restTemplate
     )
 
     val sampleUserId = 1
