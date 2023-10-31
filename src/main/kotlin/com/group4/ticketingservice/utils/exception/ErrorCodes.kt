@@ -19,6 +19,7 @@ enum class ErrorCodes(val status: HttpStatus, val message: String, val errorCode
     // 404  Not Found
     ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 레코드를 찾을수 없습니다.", 40000),
     END_POINT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 엔드포인트를 찾을수업습니다.", 40400),
+    WAITING_TICKET_NOT_FOUND(HttpStatus.NOT_FOUND, "대기열 티켓이 존재하지않아 예약 불가합니다.", 40402),
     TEST_ERROR(HttpStatus.NOT_FOUND, "테스트 입니다.", 40401),
 
     // 409  Conflict

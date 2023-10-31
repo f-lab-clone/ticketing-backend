@@ -1,7 +1,6 @@
 package com.group4.ticketingservice.service
 
 import com.group4.ticketingservice.dto.QueueResponseDTO
-import com.group4.ticketingservice.dto.TicketRequest
 import com.group4.ticketingservice.entity.Reservation
 import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.ReservationRepository
@@ -13,10 +12,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
-import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.HttpClientErrorException
@@ -34,22 +30,11 @@ class ReservationService @Autowired constructor(
 
 ) {
     @Transactional
-    fun createReservation(eventId: Int, userId: Int, name: String, phoneNumber: String, postCode: Int, address: String): Any {
-        var waitingStatusResponse: QueueResponseDTO?
-
+    fun createReservation(eventId: Int, userId: Int, name: String, phoneNumber: String, postCode: Int, address: String): Reservation {
         try {
-            waitingStatusResponse = restTemplate.exchange("$queueServerURL/$eventId/$userId", HttpMethod.GET, null, QueueResponseDTO::class.java).body
+            restTemplate.exchange("$queueServerURL/running/$eventId/$userId", HttpMethod.DELETE, null, QueueResponseDTO::class.java).body
         } catch (e: HttpClientErrorException) {
-            val headers = HttpHeaders()
-            headers.contentType = MediaType.APPLICATION_JSON
-            val requestDTO = TicketRequest(eventId, userId)
-            val request: HttpEntity<TicketRequest> = HttpEntity<TicketRequest>(requestDTO, headers)
-
-            return restTemplate.exchange(queueServerURL, HttpMethod.POST, request, QueueResponseDTO::class.java).body!!.data!!
-        }
-
-        if (waitingStatusResponse?.data!!.isWaiting) {
-            return waitingStatusResponse.data!!
+            throw CustomException(ErrorCodes.WAITING_TICKET_NOT_FOUND)
         }
 
         val user = userRepository.getReferenceById(userId)
