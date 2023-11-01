@@ -1,20 +1,26 @@
 package com.group4.ticketingservice.Reservation
 
 import com.group4.ticketingservice.AbstractIntegrationTest
+import com.group4.ticketingservice.dto.QueueResponseDTO
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.ReservationRepository
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.service.ReservationService
+import io.mockk.every
+import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpMethod
+import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.test.context.TestPropertySource
+import org.springframework.web.client.RestTemplate
 import java.time.Duration.ofHours
 import java.time.OffsetDateTime
 import java.util.concurrent.CountDownLatch
@@ -50,6 +56,12 @@ class ReservationTest @Autowired constructor(
         maxAttendees = 100
     )
 
+    private val queueSuccess: QueueResponseDTO = QueueResponseDTO(
+        status = true,
+        message = "",
+        data = null
+    )
+
     @BeforeEach fun addUserAndEvent() {
         userRepository.save(sampleUser)
         eventRepository.save(sampleEvent)
@@ -67,6 +79,9 @@ class ReservationTest @Autowired constructor(
     @RepeatedTest(3)
     @Test
     fun `ReservationService_createReservation should not exceed the limit in the concurrency test`() {
+        val restTemplate: RestTemplate = mockk()
+        every { restTemplate.exchange(any() as String, HttpMethod.DELETE, null, QueueResponseDTO::class.java) } returns ResponseEntity.ok(queueSuccess)
+        reservationService.restTemplate = restTemplate
         val threadCount = 1000
         val executorService = Executors.newFixedThreadPool(32)
         val countDownLatch = CountDownLatch(threadCount)

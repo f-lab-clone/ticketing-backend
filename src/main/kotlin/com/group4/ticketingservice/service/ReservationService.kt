@@ -24,7 +24,7 @@ class ReservationService @Autowired constructor(
     private val userRepository: UserRepository,
     private val eventRepository: EventRepository,
     private val reservationRepository: ReservationRepository,
-    private val restTemplate: RestTemplate,
+    var restTemplate: RestTemplate,
     @Value("\${ticketing.queue.server.url}")
     private val queueServerURL: String
 
