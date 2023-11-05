@@ -22,3 +22,7 @@ ticketing:
     secret: d2VhcmVuYXZ5c3dkZXZlbG9wZXJzLmFuZGlhbW1pbmp1bjMwMjE=
     expiration-hours: '24'
     issuer: minjun
+
+  queue:
+    server:
+      url: http://localhost:8082/ticket
