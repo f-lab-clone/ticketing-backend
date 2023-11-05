@@ -6,38 +6,37 @@ import com.group4.ticketingservice.repository.EventRepository
 import com.group4.ticketingservice.repository.EventRepositorySupport
 import com.group4.ticketingservice.repository.UserRepository
 import org.assertj.core.api.Assertions
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class EventRepositorySupportTest(
     @Autowired val eventRepositorySupport: EventRepositorySupport,
     @Autowired val eventRepository: EventRepository,
     @Autowired val userRepository: UserRepository
 ) : AbstractIntegrationTest() {
-    val sampleEvents = mutableListOf<Event>()
-    var isSetup = false
 
-    @BeforeEach
+    val sampleEvents = mutableListOf<Event>()
+
+    @BeforeAll
     fun addData() {
-        if (!isSetup) {
-            eventRepository.deleteAll()
-            for (i in 1..20) {
-                val event = Event(
-                    name = i.toString(),
-                    startDate = OffsetDateTime.now().plusDays((1..20).random().toLong()),
-                    endDate = OffsetDateTime.now(),
-                    reservationEndTime = OffsetDateTime.of(2024, 6, 30, 0, 0, 0, 0, ZoneOffset.UTC).plusDays((1..20).random().toLong()),
-                    reservationStartTime = OffsetDateTime.now(),
-                    maxAttendees = 10
-                )
-                sampleEvents.add(event)
-            }
-            eventRepository.saveAll(sampleEvents)
+        eventRepository!!.deleteAll()
+        for (i in 1..20) {
+            val event = Event(
+                name = i.toString(),
+                startDate = OffsetDateTime.now().plusDays((1..20).random().toLong()),
+                endDate = OffsetDateTime.now(),
+                reservationEndTime = OffsetDateTime.of(2024, 6, 30, 0, 0, 0, 0, ZoneOffset.UTC).plusDays((1..20).random().toLong()),
+                reservationStartTime = OffsetDateTime.now(),
+                maxAttendees = 10
+            )
+            sampleEvents.add(event)
         }
-        isSetup = true
+        eventRepository.saveAll(sampleEvents)
     }
 
     @Test
