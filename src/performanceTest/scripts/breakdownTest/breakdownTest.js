@@ -21,14 +21,11 @@ export const options = {
       ]
     }
   },
-  scenarios: {
-    contacts: {
-      executor: 'per-vu-iterations',
-      vus: 500,
-      iterations: 1,
-      maxDuration: '1m', 
-    },
-  },
+
+  executor: 'ramping-arrival-rate', //Assure load increase if the system slows
+  stages: [
+    { duration: '30m', target: 10000 }, // just slowly ramp-up to a HUGE load
+  ],
   
   thresholds: {
     http_req_failed: ['rate<0.01'], // http errors should be less than 1%
