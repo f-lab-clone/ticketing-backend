@@ -42,6 +42,7 @@ services:
       JWT_SECRET: d2VhcmVuYXZ5c3dkZXZlbG9wZXJzLmFuZGlhbW1pbmp1bjMwMjE=
       JWT_EXPIRATION_HOURS: 24
       JWT_ISSUER: minjun
+      QUEUE_SERVER_URL : http://localhost
       SPRING_PROFILES_ACTIVE: local
     depends_on:
       db:
