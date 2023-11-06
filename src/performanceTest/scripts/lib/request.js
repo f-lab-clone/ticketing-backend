@@ -110,4 +110,21 @@ export default class Request {
         this.afterHook()
         return res
     }
+
+
+    createQueueTicket(eventId, userId) {
+        this.beforeHook()
+        const res =  http.post(`${this.baseURL}/ticket`, JSON.stringify({eventId, userId}), this.getParams());
+        this.afterHook()
+        return res
+    }
+
+    getQueueTicket(eventId, userId) {
+        this.beforeHook()
+        const res =  http.get(`${this.baseURL}/ticket/${eventId}/${userId}`, this.getParams());
+        this.afterHook()
+        this.afterHook()
+        this.afterHook()
+        return res
+    }
 }

@@ -3,7 +3,7 @@ import Request from "../lib/request.js";
 import { encode } from "../lib/jwt.js";
 import hooks from "../lib/hooks.js";
 import generator from "../lib/generator.js";
-import { isSuccess, randomInt, isAlreadReservedAll } from "../lib/helpers.js";
+import { isSuccess, randomInt, isAlreadReservedAll, isRunningQueueTicket } from "../lib/helpers.js";
 
 export const setup = hooks.setup
 export const handleSummary = hooks.handleSummary
@@ -56,6 +56,12 @@ export default function () {
   const eventId = 98 // maxAttendees = 191
   check(req.getEvent(eventId), {"EVENT 98 maxAttendees = 191": (r) => r.json().data.maxAttendees === 191})
   
+  const res1 = req.createQueueTicket(eventId, ID)
+  check(res1, { "createQueueTicket status == 201": (r) => r.status == 201 });
+
+  while (!isRunningQueueTicket(req.getQueueTicket(eventId, ID))) {}
+
+
   const res = req.createReservation(generator.Reservation(eventId))
   check(res, {"Success Reservation": isSuccess});
   check(res, {"Already reserved": isAlreadReservedAll});
