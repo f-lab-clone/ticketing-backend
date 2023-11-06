@@ -13,10 +13,8 @@ export default function () {
    const user = generator.User()
    req.signup(user)
    req.signin(user)
-   
-   const event = getOneFromList(req.getEvents().json())
-
-   const res = req.createReservation({ eventId: event.id }) 
-   check(res, { "status == 200": (r) => r.status == 200 });
-   check(res, { "created.eventId == event.id": (r) => r.json().eventId == event.id });
+   const event = getOneFromList(req.getEvents().json().data)
+   const res = req.createReservation(generator.Reservation(event.id))
+   check(res, { "status == 201": (r) => r.status == 201 });
+   check(res, { "created.eventId == event.id": (r) => r.json().data.eventId == event.id });
 }

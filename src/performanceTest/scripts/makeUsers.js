@@ -1,19 +1,19 @@
 import { check } from "k6";
-import Request from "../lib/request.js";
-import hooks from "../lib/hooks.js";
-import generator from "../lib/generator.js";
-import { getUserIDFromExec, isSuccess } from "../lib/helpers.js";
+import Request from "./lib/request.js";
+import hooks from "./lib/hooks.js";
+import generator from "./lib/generator.js";
+import { getUserIDFromExec, isSuccess } from "./lib/helpers.js";
 
 export const setup = hooks.setup
 export const handleSummary = hooks.handleSummary
 
-const VU_COUNT = 100
+const VU_COUNT = 10
 export const options = {
   scenarios: {
     contacts: {
       executor: 'per-vu-iterations',
       vus: VU_COUNT,
-      iterations: 20,
+      iterations: 10,
       maxDuration: '10m', 
     },
   },

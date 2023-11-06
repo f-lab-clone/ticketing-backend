@@ -1,8 +1,8 @@
 import { check } from "k6";
-import Request from "./lib/request.js";
-import generator from "./lib/generator.js";
-import hooks from "./lib/hooks.js";
-import { isSuccess, getOneFromList } from "./lib/helpers.js";
+import Request from "../lib/request.js";
+import generator from "../lib/generator.js";
+import hooks from "../lib/hooks.js";
+import { isSuccess, getOneFromList } from "../lib/helpers.js";
 
 export const setup = hooks.setup
 export const handleSummary = hooks.handleSummary
@@ -37,15 +37,6 @@ export default function () {
   const getAvaliableReservation = () => {
     const events = req.getEvents()
     return getOneFromList(events.json())
-    
-    
-    // for (const event of events) {
-    //   if (event.currentReservationCount < event.maxAttendees) {
-    //     return event.id
-    //   }
-    // }
-
-    // return null
   }
 
   const user = generator.User()

@@ -2,7 +2,19 @@ import http from "k6/http";
 import { sleep } from "k6";
 import config from "./config.js";
 
-
+function parseQuery(query) {
+    if (query == null) {
+        return ''
+    }
+    const keys = Object.keys(query)
+    const queryList = []
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i]
+        const value = query[key]
+        queryList.push(`${key}=${value}`)
+    }
+    return '?' + queryList.join('&')
+}
 export default class Request {
     constructor(baseURL = config.HOST) {
         this.baseURL = baseURL
@@ -56,9 +68,9 @@ export default class Request {
         return res
     }
 
-    getEvents() {
+    getEvents(query) {
         this.beforeHook()
-        const res =  http.get(`${this.baseURL}/events/`);
+        const res =  http.get(`${this.baseURL}/events` + parseQuery(query), this.getParams());
         this.afterHook()
         return res
     }
@@ -78,7 +90,7 @@ export default class Request {
         this.beforeHook()
         const res =  http.post(`${this.baseURL}/users/signin`, JSON.stringify({ email: body.email, password: body.password }), this.getParams());
         if (res.body) {
-            this.setToken(res.json()['Authorization'])
+            this.setToken(res.json().data.Authorization)
         }
         this.afterHook()
         return res
@@ -95,6 +107,23 @@ export default class Request {
     createReservation(body) {
         this.beforeHook()
         const res =  http.post(`${this.baseURL}/reservations`, JSON.stringify(body), this.getParams());
+        this.afterHook()
+        return res
+    }
+
+
+    createQueueTicket(eventId, userId) {
+        this.beforeHook()
+        const res =  http.post(`${this.baseURL}/ticket`, JSON.stringify({eventId, userId}), this.getParams());
+        this.afterHook()
+        return res
+    }
+
+    getQueueTicket(eventId, userId) {
+        this.beforeHook()
+        const res =  http.get(`${this.baseURL}/ticket/${eventId}/${userId}`, this.getParams());
+        this.afterHook()
+        this.afterHook()
         this.afterHook()
         return res
     }
