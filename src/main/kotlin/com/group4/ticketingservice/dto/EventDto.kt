@@ -42,5 +42,7 @@ data class EventResponse(
     val endDate: OffsetDateTime,
     val reservationStartTime: OffsetDateTime,
     val reservationEndTime: OffsetDateTime,
-    val maxAttendees: Int
+    val maxAttendees: Int,
+    val createdAt: OffsetDateTime,
+    val updatedAt: OffsetDateTime
 )

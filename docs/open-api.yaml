@@ -188,16 +188,23 @@ paths:
       - event-controller
       operationId: getEvents
       parameters:
-      - name: name
+      - name: sort
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: time
         in: query
         required: false
         schema:
           type: string
-      - name: pageable
-        in: query
-        required: true
-        schema:
-          $ref: '#/components/schemas/Pageable'
+          format: date-time
       responses:
         "200":
           description: OK
@@ -653,6 +660,7 @@ components:
           type: boolean
     EventResponse:
       required:
+      - createdAt
       - endDate
       - id
       - maxAttendees
@@ -660,6 +668,7 @@ components:
       - reservationEndTime
       - reservationStartTime
       - startDate
+      - updatedAt
       type: object
       properties:
         id:
@@ -682,6 +691,12 @@ components:
         maxAttendees:
           type: integer
           format: int32
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
     PageBookmark:
       type: object
       properties:

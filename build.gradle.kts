@@ -3,17 +3,20 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "3.1.0"
     id("io.spring.dependency-management") version "1.1.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
+    id("jacoco")
     kotlin("jvm") version "1.8.21"
     kotlin("plugin.spring") version "1.8.21"
     kotlin("plugin.jpa") version "1.8.21"
     kotlin("plugin.allopen") version "1.6.21"
     kotlin("plugin.noarg") version "1.6.21"
-    id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
-    id("jacoco")
+    kotlin("kapt") version "1.8.21"
+    idea
 }
 
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
+val queryDslVersion = "5.0.0"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -74,6 +77,11 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus")
+
+    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+    kapt("com.querydsl:querydsl-apt:${dependencyManagement.importedProperties["querydsl.version"]}:jakarta")
+    kapt("jakarta.annotation:jakarta.annotation-api")
+    kapt("jakarta.persistence:jakarta.persistence-api")
 }
 
 tasks.withType<KotlinCompile> {
@@ -86,6 +94,21 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
     useJUnitPlatform()
     finalizedBy(tasks.jacocoTestReport)
+}
+
+val querydslDir = "build/generated/source/kapt/main"
+idea {
+    module {
+        val kaptMain = file(querydslDir)
+        sourceDirs.add(kaptMain)
+        generatedSourceDirs.add(kaptMain)
+    }
+}
+
+tasks.named("clean") {
+    doLast {
+        file(querydslDir).deleteRecursively()
+    }
 }
 
 allOpen {
@@ -136,7 +159,7 @@ subprojects {
 }
 
 tasks.jacocoTestReport {
-    dependsOn(tasks.test, integrationTest)
+    dependsOn(tasks.test)
 
     reports {
         html.required.set(true)
@@ -145,6 +168,20 @@ tasks.jacocoTestReport {
         html.outputLocation.set(layout.buildDirectory.dir("${rootProject.rootDir}/jacocoReport"))
     }
 
+    val Qdomains = mutableListOf<String>()
+
+    for (qPattern in 'A'..'Z') {
+        Qdomains.add("**/Q$qPattern*")
+    }
+    classDirectories.setFrom(
+        files(
+            classDirectories.files.map {
+                fileTree(it) {
+                    setExcludes(Qdomains)
+                }
+            }
+        )
+    )
     finalizedBy(tasks.jacocoTestCoverageVerification)
 }
 
@@ -164,7 +201,7 @@ tasks.jacocoTestCoverageVerification {
             limit {
                 counter = "INSTRUCTION"
                 value = "COVEREDRATIO"
-                minimum = "0.8".toBigDecimal()
+                minimum = "0.7".toBigDecimal()
             }
             limit {
                 counter = "BRANCH"

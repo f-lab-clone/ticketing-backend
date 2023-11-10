@@ -4,6 +4,7 @@ import com.group4.ticketingservice.dto.EventSpecifications
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.entity.User
 import com.group4.ticketingservice.repository.EventRepository
+import com.group4.ticketingservice.repository.EventRepositorySupport
 import com.group4.ticketingservice.repository.UserRepository
 import com.group4.ticketingservice.service.EventService
 import io.mockk.every
@@ -23,8 +24,10 @@ import java.util.Optional
 class EventServiceTest {
     private val eventRepository: EventRepository = mockk()
     private val userRepository: UserRepository = mockk()
+    private val eventRepositorySupport: EventRepositorySupport = mockk()
     private val eventService: EventService = EventService(
-        eventRepository = eventRepository
+        eventRepository = eventRepository,
+        eventRepositorySupport = eventRepositorySupport
     )
     val sampleUserId = 1
 
@@ -85,6 +88,12 @@ class EventServiceTest {
         )
     )
 
+    val DESCENDING = "desc"
+    val ASCENDING = "asc"
+    val SORT_BY_DEADLINE = "deadline"
+    val SORT_BY_START_DATE = "startDate"
+    val SORT_BY_CREATED_AT = "createdAt"
+
     val page: Page<Event> = PageImpl(content)
     val emptyPage: Page<Event> = PageImpl(listOf(), pageable, listOf<Event>().size.toLong())
 
@@ -115,18 +124,18 @@ class EventServiceTest {
 
     @Test
     fun `EventService_getEvents invoke EventRepository_findAll`() {
-        every { eventRepository.findAllBy(any(), pageable) } returns content
-        eventService.getEvents(name, pageable)
-        verify(exactly = 1) { eventRepository.findAllBy(any(), pageable) }
+        every { eventRepositorySupport.getEvent(any(), any(), any()) } returns content
+        eventService.getEvents(SORT_BY_DEADLINE, null, null)
+        verify(exactly = 1) { eventRepositorySupport.getEvent(any(), any(), any()) }
     }
 
     @Test
     fun `EventService_getEvents return page with pagination and sorting`() {
         // Given
-        every { eventRepository.findAllBy(any(), pageable) } returns content
+        every { eventRepositorySupport.getEvent(any(), any(), any()) } returns content
 
         // When
-        val result: Page<Event> = eventService.getEvents(null, pageable)
+        val result: Page<Event> = eventService.getEvents(SORT_BY_DEADLINE, null, null)
 
         // Then
 
