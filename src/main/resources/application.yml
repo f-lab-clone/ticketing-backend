@@ -22,6 +22,10 @@ spring:
         one-indexed-parameters: true
 
 
+  datasource:
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 20
 
 
 
