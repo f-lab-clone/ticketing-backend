@@ -83,7 +83,6 @@ class EventController @Autowired constructor(
     }
 
     @GetMapping
-    // cache 구현체 를 설정해햐 하나 ?,https://yeon-kr.tistory.com/177
     @Cacheable(value = ["getEvents"], key = "#pageable.pageNumber")
     fun getEvents(
         request: HttpServletRequest,
