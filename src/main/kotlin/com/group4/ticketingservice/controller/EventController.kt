@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Hidden
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -82,6 +83,8 @@ class EventController @Autowired constructor(
     }
 
     @GetMapping
+    // cache 구현체 를 설정해햐 하나 ?,https://yeon-kr.tistory.com/177
+    @Cacheable(value = ["getEvents"], key = "#pageable.pageNumber")
     fun getEvents(
         request: HttpServletRequest,
         @RequestParam(required = false) name: String?,
