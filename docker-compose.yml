@@ -21,6 +21,22 @@ services:
     networks:
       - spring-network
 
+  redis:
+      image: redis:latest
+      container_name: redis
+      ports:
+        - 6379:6379
+
+      labels:
+        - 'name=redis'
+        - 'mode=standalone'
+
+      restart: 'no'
+      command: redis-server
+
+      networks:
+        - spring-network
+
   api:
     container_name: api
     build:
@@ -44,9 +60,16 @@ services:
       JWT_ISSUER: minjun
       QUEUE_SERVER_URL : http://localhost
       SPRING_PROFILES_ACTIVE: local
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
+
+
     networks:
       - spring-network
 
