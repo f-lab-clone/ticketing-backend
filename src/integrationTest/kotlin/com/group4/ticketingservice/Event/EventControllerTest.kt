@@ -26,7 +26,7 @@ class EventControllerTest : AbstractIntegrationTest() {
         )
 
         val cache = cacheManager.getCache("getEvents")
-        val cachedValue = cache!!.get(0)
+        val cachedValue = cache!!.get("0-10-id: DESC-null")
 
         assert(cachedValue != null)
     }

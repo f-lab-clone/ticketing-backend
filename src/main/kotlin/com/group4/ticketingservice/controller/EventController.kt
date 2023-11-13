@@ -83,14 +83,14 @@ class EventController @Autowired constructor(
     }
 
     @GetMapping
-    @Cacheable(value = ["getEvents"], key = "#pageable.pageNumber+#name")
+    @Cacheable(value = ["getEvents"], key = "#pageable.pageNumber+'-'+#pageable.pageSize+'-'+#pageable.sort.toString()+'-'+#name")
     fun getEvents(
         request: HttpServletRequest,
         @RequestParam(required = false) name: String?,
         @PageableDefault(size = 10, sort = ["id"], direction = Sort.Direction.DESC) pageable: Pageable
     ): ResponseEntity<Page<Event>> {
         val page = eventService.getEvents(name, pageable)
-
+        print(pageable.sort.toString())
         val headers = HttpHeaders()
         headers.set("Content-Location", request.requestURI)
 
