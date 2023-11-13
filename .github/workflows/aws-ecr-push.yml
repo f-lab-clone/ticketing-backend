@@ -1,4 +1,5 @@
-name: push to ECCR
+name: push to ECR
+
 on:
   push:
     branches:
