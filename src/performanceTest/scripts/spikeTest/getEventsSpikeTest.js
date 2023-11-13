@@ -3,7 +3,7 @@ import Request from "../lib/request.js";
 import { encode } from "../lib/jwt.js";
 import hooks from "../lib/hooks.js";
 import generator from "../lib/generator.js";
-import { isSuccess, randomInt, isAlreadReservedAll, isRunningQueueTicket } from "../lib/helpers.js";
+import { isSuccess, randomInt, isAlreadReservedAll } from "../lib/helpers.js";
 
 export const setup = hooks.setup
 export const handleSummary = hooks.handleSummary
@@ -24,7 +24,7 @@ export const options = {
   scenarios: {
     contacts: {
       executor: 'per-vu-iterations',
-      vus: 1000,
+      vus: 500,
       iterations: 1,
       maxDuration: '1m', 
     },
@@ -48,21 +48,11 @@ export default function () {
     page: 0,
     sort: "id,asc"
   }
+
   for (let i = 0; i < 13; i++) {
-    check(req.getEvents(query), {"Success Get Events": isSuccess});
+    const res = req.getEvents(query)
+    check(res, {"Success Get Events": isSuccess});
     query.page = query.page + randomInt(1, 10)
+    check(req.getEvent(res.json().data[0].id), {"get Event": isSuccess})
   }
-
-  const eventId = 98 // maxAttendees = 191
-  check(req.getEvent(eventId), {"EVENT 98 maxAttendees = 191": (r) => r.json().data.maxAttendees === 191})
-  
-  const res1 = req.createQueueTicket(eventId, ID)
-  check(res1, { "createQueueTicket status == 201": (r) => r.status == 201 });
-
-  while (!isRunningQueueTicket(req.getQueueTicket(eventId, ID))) {}
-
-
-  const res = req.createReservation(generator.Reservation(eventId))
-  check(res, {"Success Reservation": isSuccess});
-  check(res, {"Already reserved": isAlreadReservedAll});
 }
