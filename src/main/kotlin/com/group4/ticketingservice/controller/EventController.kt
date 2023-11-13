@@ -83,7 +83,7 @@ class EventController @Autowired constructor(
     }
 
     @GetMapping
-    @Cacheable(value = ["getEvents"], key = "#pageable.pageNumber")
+    @Cacheable(value = ["getEvents"], key = "#pageable.pageNumber+#name")
     fun getEvents(
         request: HttpServletRequest,
         @RequestParam(required = false) name: String?,
