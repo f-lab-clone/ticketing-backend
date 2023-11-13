@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.cache.CacheManager
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.data.domain.Page
@@ -34,11 +35,12 @@ import java.time.OffsetDateTime
 @WebMvcTest(
     EventController::class,
     includeFilters = arrayOf(
-        ComponentScan.Filter(value = [(SecurityConfig::class), (TokenProvider::class), (JwtAuthorizationEntryPoint::class)], type = FilterType.ASSIGNABLE_TYPE)
+        ComponentScan.Filter(value = [(SecurityConfig::class), (TokenProvider::class), (JwtAuthorizationEntryPoint::class), (CacheManager::class)], type = FilterType.ASSIGNABLE_TYPE)
     )
 )
 class EventControllerTest(
-    @Autowired val mockMvc: MockMvc
+    @Autowired val mockMvc: MockMvc,
+    @Autowired val cacheManager: CacheManager
 ) {
     @MockkBean
     private lateinit var eventService: EventService
@@ -178,6 +180,7 @@ class EventControllerTest(
     @Test
     fun `GET List of events should return list of events with pagination and sorting`() {
         // Given
+
         every { eventService.getEvents(any(), any()) } returns page
 
         // When

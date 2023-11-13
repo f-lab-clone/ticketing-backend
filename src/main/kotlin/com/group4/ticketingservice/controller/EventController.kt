@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Hidden
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -82,13 +83,14 @@ class EventController @Autowired constructor(
     }
 
     @GetMapping
+    @Cacheable(value = ["getEvents"], key = "#pageable.pageNumber+'-'+#pageable.pageSize+'-'+#pageable.sort.toString()+'-'+#name")
     fun getEvents(
         request: HttpServletRequest,
         @RequestParam(required = false) name: String?,
         @PageableDefault(size = 10, sort = ["id"], direction = Sort.Direction.DESC) pageable: Pageable
     ): ResponseEntity<Page<Event>> {
         val page = eventService.getEvents(name, pageable)
-
+        print(pageable.sort.toString())
         val headers = HttpHeaders()
         headers.set("Content-Location", request.requestURI)
 
