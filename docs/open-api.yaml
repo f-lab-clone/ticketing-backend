@@ -607,12 +607,12 @@ components:
           type: string
         isEnabled:
           type: boolean
+        username:
+          type: string
         authorities:
           type: array
           items:
             $ref: '#/components/schemas/GrantedAuthority'
-        username:
-          type: string
         isAccountNonExpired:
           type: boolean
         isAccountNonLocked:
