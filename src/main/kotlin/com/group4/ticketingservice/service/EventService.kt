@@ -1,5 +1,6 @@
 package com.group4.ticketingservice.service
 
+import com.group4.ticketingservice.dto.EventResponse
 import com.group4.ticketingservice.dto.EventSpecifications
 import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.repository.EventRepository
@@ -36,8 +37,20 @@ class EventService(
         return eventRepository.findById(id).orElse(null)
     }
 
-    fun getEvents(name: String?, pageable: Pageable): Page<Event> {
+    fun getEvents(name: String?, pageable: Pageable): Page<EventResponse> {
         val specification = EventSpecifications.withName(name)
-        return PageImpl(eventRepository.findAllBy(specification, pageable))
+        return PageImpl(
+            eventRepository.findAllBy(specification, pageable).map {
+                EventResponse(
+                    id = it.id!!,
+                    name = it.name,
+                    startDate = it.startDate,
+                    endDate = it.endDate,
+                    reservationStartTime = it.reservationStartTime,
+                    reservationEndTime = it.reservationEndTime,
+                    maxAttendees = it.maxAttendees
+                )
+            }
+        )
     }
 }

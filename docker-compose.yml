@@ -60,7 +60,7 @@ services:
       JWT_ISSUER: minjun
       QUEUE_SERVER_URL : http://localhost
       SPRING_PROFILES_ACTIVE: local
-      REDIS_HOST: redis
+      REDIS_HOST: localhost
       REDIS_PORT: 6379
 
     depends_on:

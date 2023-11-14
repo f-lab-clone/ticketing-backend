@@ -2,14 +2,12 @@ package com.group4.ticketingservice.controller
 
 import com.group4.ticketingservice.dto.EventCreateRequest
 import com.group4.ticketingservice.dto.EventResponse
-import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.service.EventService
 import io.swagger.v3.oas.annotations.Hidden
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.Cacheable
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
@@ -83,12 +81,16 @@ class EventController @Autowired constructor(
     }
 
     @GetMapping
-    @Cacheable(value = ["getEvents"], key = "#pageable.pageNumber+'-'+#pageable.pageSize+'-'+#pageable.sort.toString()+'-'+#name")
+    @Cacheable(
+        value = ["getEvents"],
+        key = "#pageable.pageNumber+'-'+#pageable.pageSize+'-'+#pageable.sort.toString()+'-'+#name",
+        cacheManager = "cacheManager"
+    )
     fun getEvents(
         request: HttpServletRequest,
         @RequestParam(required = false) name: String?,
         @PageableDefault(size = 10, sort = ["id"], direction = Sort.Direction.DESC) pageable: Pageable
-    ): ResponseEntity<Page<Event>> {
+    ): Any {
         val page = eventService.getEvents(name, pageable)
         print(pageable.sort.toString())
         val headers = HttpHeaders()

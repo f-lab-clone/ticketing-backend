@@ -7,6 +7,8 @@ management:
       enabled: 'true'
 
 spring:
+  cache:
+    type: redis
   jpa:
     generate-ddl: 'true'
     hibernate:
@@ -16,6 +18,9 @@ spring:
     web:
       pageable:
         one-indexed-parameters: true
+    redis:
+      host: localhost
+      port: 6379
 
 ticketing:
   jwt:
@@ -26,3 +31,4 @@ ticketing:
   queue:
     server:
       url: http://localhost:8082/ticket
+

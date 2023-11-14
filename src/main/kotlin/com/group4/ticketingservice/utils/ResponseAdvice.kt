@@ -2,10 +2,8 @@ package com.group4.ticketingservice.utils
 
 import com.group4.ticketingservice.controller.HealthController
 import com.group4.ticketingservice.dto.ErrorResponseDTO
-import com.group4.ticketingservice.dto.EventResponse
 import com.group4.ticketingservice.dto.ReservationResponse
 import com.group4.ticketingservice.dto.SuccessResponseDTO
-import com.group4.ticketingservice.entity.Event
 import com.group4.ticketingservice.entity.Reservation
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.MethodParameter
@@ -56,6 +54,13 @@ class ResponseAdvice<T>(
                 path = response.headers.getFirst("Content-Location")
             ) as T?
         }
+        if (body is LinkedHashMap<*, *>) { // cached data
+            val b = body["body"] as LinkedHashMap<String, Any>
+            return SuccessResponseDTO(
+                data = b["content"],
+                path = request.uri.path
+            ) as T?
+        }
 
         if (body is ErrorResponseDTO) {
             return body
@@ -96,18 +101,6 @@ class ResponseAdvice<T>(
 
         if (data.isEmpty()) {
             data = listOf()
-        } else if (data[0] is Event) {
-            data = (page.content as List<Event>).map {
-                EventResponse(
-                    id = it.id!!,
-                    name = it.name,
-                    startDate = it.startDate,
-                    endDate = it.endDate,
-                    reservationStartTime = it.reservationStartTime,
-                    reservationEndTime = it.reservationEndTime,
-                    maxAttendees = it.maxAttendees
-                )
-            }
         } else if (data[0] is Reservation) {
             data = (page.content as List<Reservation>).map {
                 ReservationResponse(
