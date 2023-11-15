@@ -204,7 +204,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/PageEvent'
+                type: object
   /events/{id}:
     get:
       tags:
@@ -519,9 +519,9 @@ components:
         pageSize:
           type: integer
           format: int32
-        unpaged:
-          type: boolean
         paged:
+          type: boolean
+        unpaged:
           type: boolean
     Reservation:
       required:
@@ -613,43 +613,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/GrantedAuthority'
-        isAccountNonExpired:
-          type: boolean
         isAccountNonLocked:
           type: boolean
         isCredentialsNonExpired:
           type: boolean
-    PageEvent:
-      type: object
-      properties:
-        totalElements:
-          type: integer
-          format: int64
-        totalPages:
-          type: integer
-          format: int32
-        size:
-          type: integer
-          format: int32
-        content:
-          type: array
-          items:
-            $ref: '#/components/schemas/Event'
-        number:
-          type: integer
-          format: int32
-        sort:
-          $ref: '#/components/schemas/SortObject'
-        first:
-          type: boolean
-        last:
-          type: boolean
-        numberOfElements:
-          type: integer
-          format: int32
-        pageable:
-          $ref: '#/components/schemas/PageableObject'
-        empty:
+        isAccountNonExpired:
           type: boolean
     EventResponse:
       required:
