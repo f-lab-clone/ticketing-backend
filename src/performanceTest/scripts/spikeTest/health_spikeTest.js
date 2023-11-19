@@ -1,4 +1,4 @@
-import { check } from "k6";
+import { check, sleep } from "k6";
 import Request from "../lib/request.js";
 import { encode } from "../lib/jwt.js";
 import hooks from "../lib/hooks.js";
@@ -43,6 +43,7 @@ export default function () {
   const ID = randomInt(1, 1000000)
   req.setToken(encode(ID))
 
+  sleep(randomInt(0, 10))
   for (let i = 0; i < 10; i++) {
     check(req.helthCheck(), {"Success Health": isSuccess});
   }

@@ -1,6 +1,7 @@
 import http from "k6/http";
 import { sleep } from "k6";
 import config from "./config.js";
+import { randomInt } from "./helpers.js";
 
 function parseQuery(query) {
     if (query == null) {
@@ -27,7 +28,7 @@ export default class Request {
     }
 
     afterHook() {
-        sleep(this.SLEEP)
+        sleep(randomInt(this.SLEEP, this.SLEEP + 10))
     }
 
     setToken(token) {
