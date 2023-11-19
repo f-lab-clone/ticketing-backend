@@ -1,6 +1,9 @@
 name: push to ECR
 
-on: push
+on:
+  push:
+    branches:
+      - main
 
 env:
   AWS_REGION: ap-northeast-2
